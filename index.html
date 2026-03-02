@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-TV - Professional Streaming Worldwide</title>
+    
+    <meta name="description" id="meta-desc" content="Stream Hollywood, Bollywood & South Movies for Free on U-TV.">
+    <meta property="og:title" id="og-title" content="Watch HD Movies on U-TV">
+    <meta property="og:description" id="og-desc" content="Stream Hollywood, Bollywood & South Movies for Free.">
+    <meta property="og:image" content="https://www.themoviedb.org/t/p/w500/wwemzKWzjKYJFfCeiB57q3r4Bcm.jpg">
+    <meta property="og:url" content="https://pri-movies.com">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script async data-cfasync="false" src="https://pl28735283.effectivegatecpm.com/745c1ef3a6af871203febf2e53f94208/invoke.js"></script>
+
+    <style>
+        :root { --watcho-orange: #ff4f00; --bg-primary: #0a0d11; --card-bg: rgba(20, 20, 25, 0.95); }
+        body { background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1d25 50%, #0f141a 100%); color: white; font-family: sans-serif; margin: 0; overflow-x: hidden; scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--watcho-orange); border-radius: 10px; }
+        
+        .logo-box { font-family: 'Arial Black', sans-serif; background: linear-gradient(to right, #fff, #ff4f00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,79,0,0.5)); cursor: pointer; }
+        .movie-card { border-radius: 16px; overflow: hidden; position: relative; cursor: pointer; transition: 0.4s; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); }
+        .movie-card:hover { transform: translateY(-10px); border-color: var(--watcho-orange); box-shadow: 0 20px 40px rgba(255,79,0,0.2); }
+        .gold-review { position: absolute; top: 12px; right: 12px; background: linear-gradient(45deg, #ffd700, #ffa500); color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 900; font-size: 11px; z-index: 10; }
+
+        #hero-slider { position: relative; width: 100%; height: 550px; margin-top: 130px; overflow: hidden; background: #000; }
+        .poster-3d { position: absolute; inset: 0; opacity: 0; transition: 1s ease-in-out; }
+        .poster-active { opacity: 1; z-index: 10; }
+
+        .server-btn { background: rgba(30,30,35,0.9); border: 1px solid rgba(255,255,255,0.1); padding: 12px 24px; border-radius: 50px; font-weight: 700; transition: 0.3s; white-space: nowrap; cursor: pointer; }
+        .server-btn:hover, .server-btn.active { background: linear-gradient(135deg, var(--watcho-orange), #ff8c00); color: white; box-shadow: 0 10px 25px rgba(255,79,0,0.4); }
+        
+        #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; overflow-y: auto; }
+        .play-server { background: #1a1a1a; padding: 10px 20px; border-radius: 10px; font-size: 12px; font-weight: 900; border: 1px solid #333; transition: 0.3s; color: #ccc; text-transform: uppercase; }
+        .play-server.active { background: var(--watcho-orange); color: white; border-color: white; box-shadow: 0 0 15px rgba(255,79,0,0.4); }
+
+        #adblock-msg { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:100000; text-align:center; padding-top:20%; }
+
+        @media (max-width: 768px) { 
+            #hero-slider { height: 380px !important; margin-top: 180px !important; }
+            .filter-nav { top: 135px !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="adblock-msg">
+    <div class="max-w-md mx-auto p-8 bg-[#111] border border-[#ff4f00] rounded-2xl">
+        <h2 class="text-2xl font-bold text-[#ff4f00] mb-4">AD-BLOCK DETECTED!</h2>
+        <p class="text-gray-300 mb-6">Bhai, free movies ke liye please Ad-blocker off karein aur refresh karein.</p>
+        <button onclick="location.reload()" class="bg-[#ff4f00] px-8 py-3 rounded-lg font-bold">I HAVE DISABLED IT</button>
+    </div>
+</div>
+
+<nav class="fixed top-0 w-full z-50 px-6 py-4 bg-black/95 backdrop-blur-xl border-b border-white/10 flex flex-wrap items-center justify-between">
+    <div class="flex items-center gap-4">
+        <h1 class="text-4xl font-black italic logo-box" onclick="location.reload()">U-TV</h1>
+        <div class="hidden md:flex items-center gap-2 bg-red-600/20 px-3 py-1 rounded-full border border-red-600/50">
+            <span class="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span>
+            <span class="text-[10px] font-bold text-red-500">LIVE: <span id="liveCounter">45,120</span></span>
+        </div>
+    </div>
+    <div class="flex gap-2">
+        <input type="text" id="search" onkeypress="handleSearch(event)" placeholder="Search global hits..." class="py-2 px-5 bg-[#111] border border-gray-800 rounded-xl text-sm outline-none w-44 md:w-64">
+        <button onclick="triggerSearch()" class="bg-[#ff4f00] px-5 py-2 rounded-xl font-bold text-xs uppercase shadow-lg">SEARCH</button>
+    </div>
+</nav>
+
+<div class="fixed top-[82px] filter-nav w-full z-40 px-6 py-4 bg-black/95 backdrop-blur-2xl border-b border-white/5 flex gap-3 overflow-x-auto no-scrollbar">
+    <button onclick="filterBy('hi',this)" class="server-btn">🇮🇳 HINDI</button>
+    <button onclick="filterBy('en',this)" class="server-btn">🇺🇸 ENGLISH</button>
+    <button onclick="filterBy('pa',this)" class="server-btn">🌾 PUNJABI</button>
+    <button onclick="filterBy('te',this)" class="server-btn">🔥 SOUTH</button>
+    <button onclick="filterBy('movie',this)" class="server-btn active">🎬 MOVIES</button>
+    <button onclick="filterBy('tv',this)" class="server-btn">📺 WEBSERIES</button>
+</div>
+
+<div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
+
+<div class="relative z-10 pb-32 space-y-12 px-6 md:px-12 mt-10">
+    <section>
+        <h2 class="text-2xl font-black mb-8"><span class="text-[#ff4f00]">|</span> WORLDWIDE TRENDING</h2>
+        <div id="trendingSlider" class="flex gap-6 overflow-x-auto no-scrollbar pb-6"></div>
+    </section>
+    <section>
+        <h2 class="text-2xl font-black mb-8" id="sectionTitle"><span class="text-[#ff4f00]">|</span> POPULAR NOW</h2>
+        <div id="popularGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-6"></div>
+        <div class="flex justify-center mt-12">
+            <button onclick="loadMoreMovies()" class="bg-[#ff4f00] px-12 py-3 rounded-xl font-black shadow-2xl">LOAD MORE</button>
+        </div>
+    </section>
+</div>
+
+<div class="fixed bottom-6 left-6 z-[9999]">
+    <a href="https://t.me/+OtL33EMClMJhMWE1" target="_blank" class="flex items-center gap-3 bg-[#229ED9] text-white px-5 py-3 rounded-full font-bold shadow-2xl transition-all hover:scale-110">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.88.03-.24.37-.48 1.02-.73 4-1.74 6.67-2.88 8-3.43 3.8-1.57 4.59-1.84 5.1-.14z"/></svg>
+        <span class="text-sm">JOIN TELEGRAM</span>
+    </a>
+</div>
+
+<footer class="bg-black/90 p-12 border-t border-white/10 text-center">
+    <p class="text-gray-500 text-[10px]">DMCA & Compliance: HELP.WOWMOVIES@GMAIL.COM</p>
+</footer>
+
+<div id="playerOverlay">
+    <div class="absolute top-0 left-0 w-full p-4 bg-black/95 flex flex-col gap-4 z-50 border-b border-white/10">
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-black text-[#ff4f00] italic" id="playingTitle">U-TV PLAYER PRO</h2>
+            <div class="flex items-center gap-4">
+                <button onclick="shareMovie()" class="bg-green-600 p-2 rounded-lg text-white font-bold text-xs">WHATSAPP SHARE</button>
+                <button onclick="closePlayer()" class="text-white text-3xl font-bold">✕</button>
+            </div>
+        </div>
+        <div class="flex gap-2 overflow-x-auto no-scrollbar" id="serverList"></div>
+    </div>
+    <div class="w-full h-full pt-32 pb-10 flex flex-col items-center">
+        <iframe id="mainIframe" src="" class="w-full aspect-video md:w-4/5 shadow-2xl" frameborder="0" allowfullscreen></iframe>
+        <div class="w-full md:w-4/5 p-6 mt-4 text-left">
+            <h3 class="text-2xl font-black text-[#ff4f00] mb-2 uppercase" id="infoName">Movie Name</h3>
+            <p class="text-gray-400 text-sm leading-relaxed" id="infoDesc">Loading movie description...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_KEYS = ['174d0214bf933dd59b3d5ec68a0c967f', '5bf61a62fd4647aa7debed7d6f2db079'];
+    const DIRECT_LINK = "https://www.profitablecpmrate.com/example_link"; 
+    
+    let currentApiIndex = 0, currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
+    const IMG_URL = 'https://image.tmdb.org/t/p/original';
+
+    let adInterval;
+    function startAdTimer() {
+        clearInterval(adInterval);
+        adInterval = setInterval(() => { window.open(DIRECT_LINK, '_blank'); }, 900000); 
+    }
+
+    function updateCounter() {
+        const count = Math.floor(Math.random() * (70000 - 20000 + 1)) + 20000;
+        document.getElementById('liveCounter').innerText = count.toLocaleString();
+    }
+    setInterval(updateCounter, 3000);
+
+    async function smartApiCall(endpoint) {
+        try {
+            const url = `https://api.themoviedb.org/3${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEYS[currentApiIndex]}`;
+            const res = await fetch(url);
+            return await res.json();
+        } catch {
+            currentApiIndex = 1 - currentApiIndex;
+            return await smartApiCall(endpoint);
+        }
+    }
+
+    async function initSite() {
+        const heroData = await smartApiCall('/trending/movie/day');
+        document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 7).map((m,i)=>`
+            <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="playItem('${m.id}','movie')">
+                <img src="${IMG_URL+m.backdrop_path}" class="w-full h-full object-cover brightness-50">
+                <div class="absolute bottom-16 left-10"><h3 class="text-4xl font-black uppercase">${m.title||m.name}</h3></div>
+            </div>
+        `).join('');
+        setInterval(() => {
+            document.querySelector('.poster-active')?.classList.remove('poster-active');
+            currentSlide = (currentSlide+1)%7;
+            document.getElementById(`slide-${currentSlide}`)?.classList.add('poster-active');
+        }, 5000);
+        const trendData = await smartApiCall('/trending/all/week');
+        document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,15).map(m=>createCard(m,'w-[200px] md:w-[260px] h-[360px]')).join('');
+        loadMoreMovies();
+    }
+
+    function createCard(m, extraClass='w-full h-[400px]') {
+        const type = m.media_type || (currentLang === 'tv' ? 'tv' : 'movie');
+        const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify({id:m.id, type:type, title:m.title||m.name, overview:m.overview}))));
+        return `<div class="${extraClass} movie-card" onclick="playItemFromCard('${encodedData}')">
+            <div class="gold-review">${m.vote_average?.toFixed(1) || '0.0'}⭐</div>
+            <img src="${IMG_URL+m.poster_path}" class="w-full h-full object-cover" loading="lazy">
+            <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black">
+                <h4 class="font-bold truncate text-sm uppercase">${m.title||m.name}</h4>
+            </div>
+        </div>`;
+    }
+
+    async function playItemFromCard(encoded) {
+        const data = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+        playItem(data.id, data.type, data.title, data.overview);
+    }
+
+    // ✅ FIXED PLAYER WITH AUTO-SYNC SEO SYSTEM
+    async function playItem(id, type, title = "WATCHING...", overview = "") {
+        const t = (type === 'tv') ? 'tv' : 'movie';
+        
+        if(!overview) {
+            const detail = await smartApiCall(`/${t}/${id}`);
+            title = detail.title || detail.name;
+            overview = detail.overview;
+        }
+
+        // ✅ AUTO-SYNC SEO STARTS HERE
+        document.title = `Watch ${title} Full Movie HD - U-TV`;
+        document.getElementById('meta-desc').content = overview.substring(0, 160);
+        document.getElementById('og-title').content = `Watch ${title} on U-TV`;
+        document.getElementById('og-desc').content = overview.substring(0, 100);
+        // ✅ AUTO-SYNC SEO ENDS
+
+        document.getElementById('infoName').innerText = title;
+        document.getElementById('infoDesc').innerText = overview;
+        document.getElementById('playingTitle').innerText = title.substring(0, 15) + "...";
+
+        const servers = [
+            { n: "SERVER 1 (4K)", u: `https://vidsrc.to/embed/${t}/${id}` },
+            { n: "SERVER 2 (HD)", u: `https://vidsrc.me/embed/${t}?tmdb=${id}` },
+            { n: "SERVER 3 (PRO)", u: `https://embed.su/embed/${t}/${id}` },
+            { n: "SERVER 4 (FAST)", u: `https://vidsrc.cc/v2/embed/${t}/${id}` },
+            { n: "SERVER 5 (GLOBAL)", u: `https://autoembed.to/movie/tmdb/${id}` }
+        ];
+        
+        document.getElementById('serverList').innerHTML = servers.map((s, i) => `<button class="play-server ${i===0?'active':''}" onclick="changeServer('${s.u}', this)">${s.n}</button>`).join('');
+        document.getElementById('mainIframe').src = servers[0].u;
+        document.getElementById('playerOverlay').style.display = 'block';
+        startAdTimer();
+    }
+
+    function shareMovie() {
+        const title = document.getElementById('infoName').innerText;
+        const text = `Bhai! Ye movie dekh U-TV pe mast chal rahi hai: ${title} - https://pri-movies.com`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function changeServer(u, b) {
+        window.open(DIRECT_LINK, '_blank'); 
+        document.querySelectorAll('.play-server').forEach(btn => btn.classList.remove('active'));
+        b.classList.add('active');
+        document.getElementById('mainIframe').src = u;
+    }
+
+    function closePlayer() {
+        document.getElementById('playerOverlay').style.display = 'none';
+        document.getElementById('mainIframe').src = '';
+        document.title = "U-TV - Professional Streaming Worldwide";
+        clearInterval(adInterval);
+    }
+
+    async function handleSearch(e) {
+        if(e.key==='Enter') {
+            const q = document.getElementById('search').value;
+            const data = await smartApiCall(`/search/multi?query=${q}`);
+            document.getElementById('popularGrid').innerHTML = data.results.map(m=>createCard(m)).join('');
+            document.getElementById('sectionTitle').innerText = `RESULT: ${q.toUpperCase()}`;
+        }
+    }
+
+    async function filterBy(l,b) {
+        document.querySelectorAll('.server-btn').forEach(btn=>btn.classList.remove('active'));
+        b.classList.add('active');
+        currentLang = l; currentPage = 1;
+        document.getElementById('popularGrid').innerHTML = '';
+        loadMoreMovies();
+    }
+
+    async function loadMoreMovies() {
+        if(isLoading) return; isLoading=true;
+        const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : 
+                    currentLang==='tv' ? `/tv/popular?page=${currentPage}` :
+                    `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
+        const data = await smartApiCall(end);
+        document.getElementById('popularGrid').innerHTML += data.results.map(m=>createCard(m)).join('');
+        currentPage++; isLoading=false;
+    }
+
+    function triggerSearch() { handleSearch({key:'Enter'}); }
+    window.onload = initSite;
+</script>
+</body>
+</html>
