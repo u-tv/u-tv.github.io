@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<DOCTYPE html>
 <html lang="hi">
 <head>
     <meta name="google-site-verification" content="1XYvNp3KDylNaVS3TH15kSAKQHPIjMQZm_zIHLQBIt8" />
@@ -195,7 +195,7 @@
         playItem(data.id, data.type, data.title, data.overview);
     }
 
-    // ✅ FIXED PLAYER WITH AUTO-SYNC SEO SYSTEM
+    // ✅ FIXED PLAYER WITH WORLDWIDE PRO SERVERS
     async function playItem(id, type, title = "WATCHING...", overview = "") {
         const t = (type === 'tv') ? 'tv' : 'movie';
         
@@ -216,12 +216,16 @@
         document.getElementById('infoDesc').innerText = overview;
         document.getElementById('playingTitle').innerText = title.substring(0, 15) + "...";
 
+        // ✅ UPDATED 8 WORLDWIDE SERVERS (FIXED UNAVAILABLE ISSUE)
         const servers = [
-            { n: "SERVER 1 (4K)", u: `https://vidsrc.to/embed/${t}/${id}` },
-            { n: "SERVER 2 (HD)", u: `https://vidsrc.me/embed/${t}?tmdb=${id}` },
-            { n: "SERVER 3 (PRO)", u: `https://embed.su/embed/${t}/${id}` },
-            { n: "SERVER 4 (FAST)", u: `https://vidsrc.cc/v2/embed/${t}/${id}` },
-            { n: "SERVER 5 (GLOBAL)", u: `https://autoembed.to/movie/tmdb/${id}` }
+            { n: "SERVER 1 (4K ULTRA)", u: `https://vidsrc.to/embed/${t}/${id}` },
+            { n: "SERVER 2 (MULTI-SUB)", u: `https://multiembed.mov/?video_id=${id}&tmdb=1` },
+            { n: "SERVER 3 (V-SRC XYZ)", u: `https://vidsrc.xyz/embed/${t}/${id}` },
+            { n: "SERVER 4 (EMBED SU)", u: `https://embed.su/embed/${t}/${id}` },
+            { n: "SERVER 5 (PRO V-SRC)", u: `https://vidsrc.pro/embed/${t}/${id}` },
+            { n: "SERVER 6 (FAST CLOUD)", u: `https://vidsrc.cc/v2/embed/${t}/${id}` },
+            { n: "SERVER 7 (AUTO EMBED)", u: `https://autoembed.to/movie/tmdb/${id}` },
+            { n: "SERVER 8 (LEGACY)", u: `https://www.2embed.cc/embed/${id}` }
         ];
         
         document.getElementById('serverList').innerHTML = servers.map((s, i) => `<button class="play-server ${i===0?'active':''}" onclick="changeServer('${s.u}', this)">${s.n}</button>`).join('');
@@ -234,7 +238,6 @@
         const title = document.getElementById('infoName').innerText;
         const text = `Bhai! Ye movie dekh U-TV pe mast chal rahi hai: ${title} - https://pri-movies.com`;
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-        // Optional: extra Smartlink click on share
         window.open(DIRECT_LINK, '_blank');
     }
 
