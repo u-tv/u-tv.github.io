@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+    <meta name="google-site-verification" content="1XYvNp3KDylNaVS3TH15kSAKQHPIjMQZm_zIHLQBIt8" />
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>U-TV - Professional Streaming Worldwide</title>
@@ -9,7 +11,7 @@
     <meta property="og:title" id="og-title" content="Watch HD Movies on U-TV">
     <meta property="og:description" id="og-desc" content="Stream Hollywood, Bollywood & South Movies for Free.">
     <meta property="og:image" content="https://www.themoviedb.org/t/p/w500/wwemzKWzjKYJFfCeiB57q3r4Bcm.jpg">
-    <meta property="og:url" content="https://pri-movies.com">
+    <meta property="og:url" content="https://u-tv-github-io.pages.dev">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -52,7 +54,6 @@
 </head>
 <body>
 
-<!-- ✅ CAPTCHA OVERLAY (From First Code) -->
 <div id="captcha-overlay">
     <div class="text-center p-8 bg-[#141419] border border-[#ff4f00] rounded-2xl shadow-2xl mx-4">
         <h2 class="text-2xl font-black text-[#ff4f00] mb-2 uppercase">Security Check</h2>
@@ -70,7 +71,6 @@
     </div>
 </div>
 
-<!-- NAVIGATION (Same as Second Code) -->
 <nav class="fixed top-0 w-full z-50 px-6 py-4 bg-black/95 backdrop-blur-xl border-b border-white/10 flex flex-wrap items-center justify-between">
     <div class="flex items-center gap-4">
         <h1 class="text-4xl font-black italic logo-box" onclick="location.reload()">U-TV</h1>
@@ -85,7 +85,6 @@
     </div>
 </nav>
 
-<!-- FILTER NAV (Same) -->
 <div class="fixed top-[82px] filter-nav w-full z-40 px-6 py-4 bg-black/95 backdrop-blur-2xl border-b border-white/5 flex gap-3 overflow-x-auto no-scrollbar">
     <button onclick="filterBy('hi',this)" class="server-btn">🇮🇳 HINDI</button>
     <button onclick="filterBy('en',this)" class="server-btn">🇺🇸 ENGLISH</button>
@@ -95,10 +94,8 @@
     <button onclick="filterBy('tv',this)" class="server-btn">📺 WEBSERIES</button>
 </div>
 
-<!-- HERO SLIDER -->
 <div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
 
-<!-- MAIN CONTENT -->
 <div class="relative z-10 pb-32 space-y-12 px-6 md:px-12 mt-10">
     <section>
         <h2 class="text-2xl font-black mb-8"><span class="text-[#ff4f00]">|</span> WORLDWIDE TRENDING</h2>
@@ -113,7 +110,6 @@
     </section>
 </div>
 
-<!-- TELEGRAM BUTTON -->
 <div class="fixed bottom-6 left-6 z-[9999]">
     <a href="https://t.me/+OtL33EMClMJhMWE1" target="_blank" class="flex items-center gap-3 bg-[#229ED9] text-white px-5 py-3 rounded-full font-bold shadow-2xl transition-all hover:scale-110">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.88.03-.24.37-.48 1.02-.73 4-1.74 6.67-2.88 8-3.43 3.8-1.57 4.59-1.84 5.1-.14z"/></svg>
@@ -121,12 +117,10 @@
     </a>
 </div>
 
-<!-- FOOTER -->
 <footer class="bg-black/90 p-12 border-t border-white/10 text-center">
     <p class="text-gray-500 text-[10px]">DMCA & Compliance: HELP.WOWMOVIES@GMAIL.COM</p>
 </footer>
 
-<!-- PLAYER OVERLAY -->
 <div id="playerOverlay">
     <div class="absolute top-0 left-0 w-full p-4 bg-black/95 flex flex-col gap-4 z-50 border-b border-white/10">
         <div class="flex justify-between items-center">
@@ -148,14 +142,12 @@
 </div>
 
 <script>
-    // ✅ FIXED CONFIGURATION
     const API_KEYS = ['174d0214bf933dd59b3d5ec68a0c967f', '5bf61a62fd4647aa7debed7d6f2db079'];
     const DIRECT_LINK = "https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0"; 
     
     let currentApiIndex = 0, currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
     const IMG_URL = 'https://image.tmdb.org/t/p/original';
 
-    // ✅ CAPTCHA SUCCESS (From First Code)
     function onCaptchaSuccess() {
         document.getElementById('captcha-overlay').style.opacity = '0';
         setTimeout(() => {
@@ -164,7 +156,6 @@
         }, 500);
     }
 
-    // ✅ AUTO BYPASS SLOW CONNECTIONS
     setTimeout(() => {
         if(document.getElementById('captcha-overlay').style.display !== 'none') {
             onCaptchaSuccess();
@@ -183,7 +174,6 @@
     }
     setInterval(updateCounter, 3000);
 
-    // ✅ FIXED API CALL
     async function smartApiCall(endpoint) {
         try {
             const url = `https://api.themoviedb.org/3${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEYS[currentApiIndex]}`;
@@ -198,14 +188,11 @@
         }
     }
 
-    // ✅ MAIN INIT (All Functions Working)
     async function initSite() {
         try {
-            // Adblock Check
             fetch("https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js", { mode: 'no-cors' })
             .catch(() => { document.getElementById('adblock-msg').style.display = 'flex'; });
 
-            // Hero Slider
             const heroData = await smartApiCall('/trending/movie/day');
             document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 7).map((m,i)=>`
                 <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="playItem('${m.id}','movie')">
@@ -220,17 +207,14 @@
                 document.getElementById(`slide-${currentSlide}`)?.classList.add('poster-active');
             }, 5000);
 
-            // Trending
             const trendData = await smartApiCall('/trending/all/week');
             document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,15).map(m=>createCard(m,'w-[200px] md:w-[260px] h-[360px]')).join('');
             loadMoreMovies();
         } catch(e) {
-            console.log('Init error:', e);
             document.getElementById('popularGrid').innerHTML = '<p class="text-center text-red-400 col-span-full p-20">Loading movies... Please wait!</p>';
         }
     }
 
-    // ✅ FIXED CARD CREATOR
     function createCard(m, extraClass='w-full h-[400px]') {
         const type = m.media_type || (currentLang === 'tv' ? 'tv' : 'movie');
         const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify({id:m.id, type:type, title:m.title||m.name, overview:m.overview}))));
@@ -252,7 +236,6 @@
         }
     }
 
-    // ✅ FIXED PLAYER (8 Working Servers)
     async function playItem(id, type, title = "WATCHING...", overview = "") {
         const t = (type === 'tv') ? 'tv' : 'movie';
         
@@ -266,7 +249,6 @@
             }
         }
 
-        // SEO Update
         document.title = `Watch ${title} Full Movie HD - U-TV`;
         document.getElementById('meta-desc').content = overview.substring(0, 160);
         document.getElementById('og-title').content = `Watch ${title} on U-TV`;
@@ -295,7 +277,8 @@
 
     function shareMovie() {
         const title = document.getElementById('infoName').innerText;
-        const text = `Bhai! Ye movie dekh U-TV pe mast chal rahi hai: ${title} - https://pri-movies.com`;
+        // ✅ SHARE URL UPDATED
+        const text = `Bhai! Ye movie dekh U-TV pe mast chal rahi hai: ${title} - https://u-tv-github-io.pages.dev`;
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         window.open(DIRECT_LINK, '_blank');
     }
@@ -314,12 +297,10 @@
         clearInterval(adInterval);
     }
 
-    // ✅ FIXED SEARCH FUNCTION
     async function handleSearch(e) {
         if(e.key==='Enter') {
             const q = document.getElementById('search').value.trim();
             if(!q) return;
-            
             try {
                 document.getElementById('loadMoreBtn').style.display = 'none';
                 const data = await smartApiCall(`/search/multi?query=${encodeURIComponent(q)}&page=1`);
@@ -332,7 +313,6 @@
         }
     }
 
-    // ✅ FIXED FILTER
     async function filterBy(l,b) {
         document.querySelectorAll('.server-btn').forEach(btn=>btn.classList.remove('active'));
         b.classList.add('active');
@@ -343,7 +323,6 @@
         setTimeout(() => loadMoreMovies(), 500);
     }
 
-    // ✅ FIXED LOAD MORE
     async function loadMoreMovies() {
         if(isLoading) return; 
         isLoading = true;
@@ -355,19 +334,16 @@
             const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : 
                        currentLang==='tv' ? `/tv/popular?page=${currentPage}` :
                        `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
-            
             const data = await smartApiCall(end);
             if(data.results.length === 0) {
                 loadBtn.textContent = 'NO MORE MOVIES';
                 return;
             }
-            
             document.getElementById('popularGrid').innerHTML += data.results.map(m=>createCard(m)).join('');
             currentPage++; 
         } catch(e) {
             loadBtn.textContent = 'ERROR - RETRY';
         }
-        
         loadBtn.textContent = 'LOAD MORE';
         loadBtn.disabled = false;
         isLoading = false;
@@ -375,7 +351,6 @@
 
     function triggerSearch() { handleSearch({key:'Enter'}); }
 
-    // ✅ AUTO START
     window.onload = () => {
         setTimeout(onCaptchaSuccess, 1000);
     };
