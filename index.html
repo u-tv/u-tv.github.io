@@ -48,18 +48,56 @@
         .filter-nav { position: fixed; top: 65px; width: 100%; z-index: 40; background: rgba(10,13,17,0.98); padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; }
         .server-btn { background: #1a1a1f; border: 1px solid #333; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #eee; cursor: pointer; }
         .server-btn.active { background: var(--watcho-orange); border-color: var(--watcho-orange); }
-        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
+        
+        /* Mobile Friendly Optimized Grid */
+        .movie-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+            padding: 15px; 
+            justify-items: center; /* Centers items in the grid */
+        }
+        @media (min-width: 600px) { .movie-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
-        .movie-card { border-radius: 12px; overflow: hidden; position: relative; background: #141419; aspect-ratio: 2/3; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; }
+
+        .movie-card { 
+            border-radius: 12px; 
+            overflow: hidden; 
+            position: relative; 
+            background: #141419; 
+            aspect-ratio: 2/3; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            transition: 0.3s; 
+            cursor: pointer; 
+            width: 100%; /* Ensures card takes full grid width */
+            max-width: 180px; /* Limits size for premium look */
+        }
         .movie-card:hover { transform: scale(1.05); border-color: var(--watcho-orange); }
         .movie-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Prevents text from going outside */
+        .card-title {
+            position: absolute; 
+            bottom: 0; 
+            width: 100%; 
+            padding: 8px; 
+            background: linear-gradient(transparent, black); 
+            font-size: 10px; 
+            font-weight: bold; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            text-transform: uppercase;
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; }
         iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
         #captcha-overlay { position: fixed; inset: 0; background: #0a0d11; z-index: 1000000; display: flex; align-items: center; justify-content: center; }
-        .social-btn { padding: 10px 20px; border-radius: 12px; font-weight: 900; font-size: 12px; color: white; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        
+        .social-btn { padding: 12px 18px; border-radius: 12px; font-weight: 900; font-size: 11px; color: white; display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; justify-content: center; max-width: 150px; }
         .btn-wa { background: #25D366; } .btn-tg { background: #0088cc; } .btn-cp { background: #6c757d; }
-        .f-btn { padding: 8px 15px; border-radius: 10px; font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; text-decoration: none; display: inline-block; }
+        .f-btn { padding: 10px 18px; border-radius: 10px; font-size: 10px; font-weight: 800; color: white; text-transform: uppercase; text-decoration: none; }
     </style>
 
     <script src="https://cdn.tailwindcss.com" defer></script>
@@ -96,7 +134,7 @@
 <main>
     <div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
 
-    <div class="flex justify-center gap-4 mt-8 px-4">
+    <div class="flex flex-wrap justify-center gap-3 mt-8 px-4">
         <button class="social-btn btn-wa" onclick="window.open('whatsapp://send?text=Watch Free Movies: https://u-tv.pages.dev')">🟢 WHATSAPP</button>
         <button class="social-btn btn-tg" onclick="window.open('https://t.me/share/url?url=https://u-tv.pages.dev')">🔵 TELEGRAM</button>
         <button class="social-btn btn-cp" onclick="copyLink()">🔘 COPY LINK</button>
@@ -105,14 +143,14 @@
     <div class="relative z-10 pb-20 mt-10">
         <section class="px-4">
             <h2 class="text-lg font-black mb-4 text-[#ff4f00]">| TRENDING NOW</h2>
-            <div id="trendingSlider" class="flex gap-4 overflow-x-auto no-scrollbar"></div>
+            <div id="trendingSlider" class="flex gap-4 overflow-x-auto no-scrollbar pb-4"></div>
         </section>
         
         <section class="px-4 mt-10">
             <h2 class="text-lg font-black mb-4 text-[#ff4f00]" id="sectionTitle">| POPULAR RELEASES</h2>
             <div id="popularGrid" class="movie-grid"></div>
             <div class="flex justify-center mt-10">
-                <button onclick="loadMoreMovies()" class="bg-[#ff4f00] px-10 py-3 rounded-xl font-black text-sm" id="loadMoreBtn">LOAD MORE CONTENT</button>
+                <button onclick="loadMoreMovies()" class="bg-[#ff4f00] px-10 py-4 rounded-xl font-black text-sm uppercase tracking-wide" id="loadMoreBtn">Load More Content</button>
             </div>
         </section>
     </div>
@@ -126,11 +164,11 @@
         <a href="disclaimer.html" class="f-btn bg-red-600">Disclaimer</a>
         <a href="privacy.html" class="f-btn bg-gray-600">Security</a>
     </div>
-    <div class="text-white font-bold bg-[#111] p-4 rounded-xl border border-white/5 inline-block">
+    <div class="text-white font-bold bg-[#111] p-4 rounded-xl border border-white/5 inline-block text-xs">
         📧 Support: HELP.WOWMOVIES@GMAIL.COM
     </div>
-    <p class="text-gray-500 text-[10px]">U-TV is a specialized search engine. We do not host any files on our server.</p>
-    <p class="text-[10px] text-gray-700 tracking-[5px]">© 2026 U-TV NETWORK GLOBAL</p>
+    <p class="text-gray-500 text-[10px] leading-relaxed">U-TV is a specialized search engine. We do not host any files on our server.</p>
+    <p class="text-[10px] text-gray-700 tracking-[5px] uppercase">© 2026 U-TV NETWORK GLOBAL</p>
 </footer>
 
 <div id="playerOverlay">
@@ -184,7 +222,7 @@
         const title = m.title || m.name;
         return `<div class="${extraClass}" onclick="handleGlobalClick(); playItem('${m.id}','${type}','${title.replace(/'/g," ")}','${(m.overview||"").substring(0,100).replace(/'/g," ")}')">
             <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy" alt="Watch ${title}">
-            <div class="absolute bottom-0 w-full p-2 bg-gradient-to-t from-black text-[10px] font-bold truncate uppercase">${title}</div>
+            <div class="card-title">${title}</div>
         </div>`;
     }
 
@@ -194,7 +232,6 @@
         document.getElementById('infoDesc').innerText = overview || "Streaming in HD quality.";
         document.getElementById('playingTitle').innerText = title;
         
-        // 8 VISIBLE SERVERS
         const servers = [
             { n: "⭐ HD-1", u: `https://vidsrc.to/embed/${t}/${id}` },
             { n: "🚀 FAST", u: `https://vidsrc.xyz/embed/${t}/${id}` },
@@ -206,7 +243,6 @@
             { n: "🌍 GLOBAL", u: `https://www.2embed.cc/embed/${id}` }
         ];
 
-        // 5 HIDDEN BACKEND SERVERS
         const hiddenBackups = [
             `https://vidsrc.me/embed/${t}?tmdb=${id}`,
             `https://vidsrc.in/embed/${t}/${id}`,
