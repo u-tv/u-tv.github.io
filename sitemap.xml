@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<url>
-  <loc>https://u-tv-github-io.pages.dev/</loc>
-  <lastmod>2026-03-08T18:22:49+00:00</lastmod>
-  <changefreq>daily</changefreq>
-  <priority>1.0</priority>
-</url>
-
-</urlset>
+<urlset xmlns="http://www.urlset.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://u-tv.pages.dev/</loc>
+    <lastmod>2026-03-25</lastmod>
+    <priority>1.0</priority>
+  </url>
+  </urlset>
