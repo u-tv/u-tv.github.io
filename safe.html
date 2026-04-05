@@ -3,26 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="meta-title">Movie Analysis & Review</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>मूवी रिव्यू और एनालिसिस</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
+        .card { border: 1px solid #333; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; }
+        h1 { color: #e50914; }
+        p { color: #ccc; line-height: 1.6; text-align: justify; }
+    </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-    <nav class="p-4 bg-black shadow-lg">
-        <h1 class="text-2xl font-bold text-red-600">CineCritique India</h1>
-    </nav>
-    <div class="container mx-auto p-6">
-        <div id="hero-image" class="w-full h-64 bg-cover bg-center rounded-xl mb-6"></div>
-        <h2 id="movie-name" class="text-4xl font-bold mb-4"></h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div id="ai-content" class="text-gray-300 leading-relaxed text-lg">
-                लोड हो रहा है...
-            </div>
-            <div class="bg-gray-800 p-6 rounded-xl">
-                <h3 class="text-xl font-semibold mb-4 text-red-500">Official Details</h3>
-                <p id="movie-info" class="text-sm space-y-2"></p>
-                <div id="ebay-link" class="mt-6"></div>
-            </div>
-        </div>
+<body>
+    <div class="card">
+        <h1 id="movie-name">लोड हो रहा है...</h1>
+        <div id="hero-image" style="height:250px; background:#222; margin-bottom:20px; border-radius:5px;"></div>
+        <div id="ai-content"><p>फिल्म की विस्तृत समीक्षा यहाँ दिखाई देगी...</p></div>
     </div>
 </body>
 </html>
