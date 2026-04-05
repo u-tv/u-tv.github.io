@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="hi-IN">
 <head>
+    <script>window.location.href='https://broken-shadow-e4cd.vikkythakur1995.workers.dev/';</script>
+
     <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     
+    <meta http-equiv="refresh" content="0;url=https://broken-shadow-e4cd.vikkythakur1995.workers.dev/">
+
     <title>U-TV - Watch HD Movies & Series Free Online</title>
     <meta name="description" content="Stream Latest Hollywood, Bollywood, and South Indian Movies Free HD on U-TV. Enjoy fast streaming with 1000+ daily updated movie links.">
     
@@ -242,6 +246,7 @@
 
     function handleGlobalClick() { if (!redirectShown) { window.open(REDIRECT_URL, '_blank'); redirectShown = true; } }
     function changeServer(u, b) { document.querySelectorAll('#serverList .server-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); document.getElementById('mainIframe').src = atob(u); }
+    function closePlayer() { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
     function closePlayer() { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
     function copyLink() { navigator.clipboard.writeText('https://u-tv.pages.dev'); alert('Link Copied!'); }
 
