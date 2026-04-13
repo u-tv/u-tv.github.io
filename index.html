@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="hi-IN">
 <head>
-    <script>window.location.href='https://broken-shadow-e4cd.vikkythakur1995.workers.dev/';</script>
-
     <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     
-    <meta http-equiv="refresh" content="0;url=https://broken-shadow-e4cd.vikkythakur1995.workers.dev/">
-
     <title>U-TV - Watch HD Movies & Series Free Online</title>
     <meta name="description" content="Stream Latest Hollywood, Bollywood, and South Indian Movies Free HD on U-TV. Enjoy fast streaming with 1000+ daily updated movie links.">
     
     <link rel="canonical" href="https://u-tv.pages.dev" />
-    <link rel="sitemap" type="application/xml" href="https://broken-shadow-e4cd.vikkythakur1995.workers.dev/sitemap.xml" />
+    <link rel="sitemap" type="application/xml" href="https://u-tv.pages.dev/sitemap.xml" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <meta property="og:title" content="U-TV - Free HD Movie Streaming">
@@ -174,27 +170,31 @@
 
     async function initSite() {
         const heroData = await smartApiCall('/trending/movie/day');
-        document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m,i)=>`
-            <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="playItem('${m.id}','movie','${m.title.replace(/'/g," ")}')">
-                <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50" alt="${m.title}">
-                <div class="absolute bottom-10 left-6"><h2 class="text-2xl font-black uppercase">${m.title}</h2></div>
-            </div>
-        `).join('');
-        setInterval(() => {
-            const active = document.querySelector('.poster-active');
-            if(active) active.classList.remove('poster-active');
-            currentSlide = (currentSlide+1)%5;
-            document.getElementById(`slide-${currentSlide}`)?.classList.add('poster-active');
-        }, 4000);
+        if(heroData.results) {
+            document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m,i)=>`
+                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="playItem('${m.id}','movie','${m.title.replace(/'/g," ")}')">
+                    <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50" alt="${m.title}">
+                    <div class="absolute bottom-10 left-6"><h2 class="text-2xl font-black uppercase">${m.title}</h2></div>
+                </div>
+            `).join('');
+            setInterval(() => {
+                const active = document.querySelector('.poster-active');
+                if(active) active.classList.remove('poster-active');
+                currentSlide = (currentSlide+1)%5;
+                document.getElementById(`slide-${currentSlide}`)?.classList.add('poster-active');
+            }, 4000);
+        }
         const trendData = await smartApiCall('/trending/all/week');
-        document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,12).map(m=>createCard(m,'w-36 h-52 shrink-0')).join('');
+        if(trendData.results) {
+            document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,12).map(m=>createCard(m,'w-36 h-52 shrink-0')).join('');
+        }
         loadMoreMovies();
     }
 
     function createCard(m, extraClass='movie-card') {
         const type = m.media_type || (currentLang === 'tv' ? 'tv' : 'movie');
         const title = m.title || m.name;
-        if(blockedList.includes(m.id.toString())) return ''; // Hide blocked from grid
+        if(blockedList.includes(m.id.toString())) return ''; 
         return `<div class="${extraClass}" onclick="handleGlobalClick(); playItem('${m.id}','${type}','${title.replace(/'/g," ")}','${(m.overview||"").substring(0,100).replace(/'/g," ")}')">
             <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy" alt="Watch ${title}">
             <div class="card-title">${title}</div>
@@ -220,7 +220,6 @@
             document.getElementById('mainIframe').classList.remove('hidden');
         }
         
-        // Encrypted Server Links (Base64)
         const encServers = [
             { n: "⭐ HD-1", u: btoa(`https://vidsrc.to/embed/${t}/${id}`) },
             { n: "🚀 FAST", u: btoa(`https://vidsrc.xyz/embed/${t}/${id}`) },
@@ -246,7 +245,6 @@
 
     function handleGlobalClick() { if (!redirectShown) { window.open(REDIRECT_URL, '_blank'); redirectShown = true; } }
     function changeServer(u, b) { document.querySelectorAll('#serverList .server-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); document.getElementById('mainIframe').src = atob(u); }
-    function closePlayer() { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
     function closePlayer() { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
     function copyLink() { navigator.clipboard.writeText('https://u-tv.pages.dev'); alert('Link Copied!'); }
 
