@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     
-    <title>U-TV - Watch HD Movies & Series Free Online</title>
-    <meta name="description" content="Stream Latest Hollywood, Bollywood, and South Indian Movies Free HD on U-TV. Enjoy fast streaming with 1000+ daily updated movie links.">
+    <title>${MOVIE_TITLE}</title>
+    <meta name="description" content="${MOVIE_DESC}">
     
-    <link rel="canonical" href="https://u-tv.pages.dev" />
-    <link rel="sitemap" type="application/xml" href="https://u-tv.pages.dev/sitemap.xml" />
+    <link rel="canonical" href="${CANONICAL_URL}" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-    <meta property="og:title" content="U-TV - Free HD Movie Streaming">
-    <meta property="og:description" content="Watch 1000+ Latest Movies & Web Series Free Online HD.">
-    <meta property="og:url" content="https://u-tv.pages.dev">
+    <meta property="og:title" content="${MOVIE_TITLE}">
+    <meta property="og:description" content="${MOVIE_DESC}">
+    <meta property="og:url" content="${CANONICAL_URL}">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://www.themoviedb.org/t/p/w500/wwemzKWzjKYJFfCeiB57q3r4Bcm.jpg">
 
@@ -274,6 +274,7 @@
         b.classList.add('active'); currentLang = l; currentPage = 1;
         document.getElementById('popularGrid').innerHTML = ''; loadMoreMovies();
     }
+    // FIX: Worker Injection logic
     window.onload = () => { setTimeout(onCaptchaSuccess, 500); };
 </script>
 </body>
