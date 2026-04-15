@@ -1,14 +1,13 @@
-name: Daily Auto Sync Movies (Python)
+# .github/workflows/sync-movies.yml
+name: Daily Auto Sync Movies (sync_movies.py)
 
 on:
   schedule:
-    # Run daily at 3:00 AM UTC (8:30 AM IST)
-    - cron: '0 3 * * *'
+    - cron: '0 3 * * *'   # 3:00 AM UTC (daily)
   workflow_dispatch:
-    # For manual runs from GitHub Actions UI
     inputs:
       manual_run:
-        description: 'Trigger manual run'
+        description: 'Manual sync trigger'
         required: true
         default: "true"
 
@@ -19,7 +18,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -30,10 +29,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run sync_movies.py
+      - name: Run sync script (sync_movies.py)
         run: |
           python sync_movies.py
 
@@ -46,7 +44,7 @@ jobs:
             echo "status=changed" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Commit new/changed movies & sitemap
+      - name: Commit new movies & sitemap
         if: steps.check.outputs.status == 'changed'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
