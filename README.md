@@ -1,5 +1,13 @@
-# 🎬 U-TV - Watch Free HD Movies & Web Series (Global & India)
+# U-TV Movie Sync
 
-Welcome to **U-TV**, your ultimate destination for streaming...
+Automated daily sync of TMDB movies to static HTML pages.
 
-🌐 **Official Site:** https://u-tv.pages.dev
+## Files:
+- `index.html` - Template (required)
+- `sync_movies.py` - Sync script
+- `movies/` - Generated pages
+- `sitemap.xml` - Auto-generated
+
+## Setup:
+1. Put your `index.html` template in root
+2. GitHub Actions runs daily at 7:30 AM IST
