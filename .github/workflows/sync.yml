@@ -1,47 +1,57 @@
-name: DailyAutoUpdate
+name: Daily Auto Sync Movies (Python)
+
 on:
   schedule:
-    - cron: '0 2 * * *'  # 2 AM UTC (7:30 AM IST)
+    # Run daily at 3:00 AM UTC (8:30 AM IST)
+    - cron: '0 3 * * *'
   workflow_dispatch:
+    # For manual runs from GitHub Actions UI
+    inputs:
+      manual_run:
+        description: 'Trigger manual run'
+        required: true
+        default: "true"
+
+permissions:
+  contents: write
 
 jobs:
-  sync-movies:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      
+          python-version: 3.11
+          cache: 'pip'
+
       - name: Install dependencies
         run: |
-          pip install requests --user
-          python -m pip cache purge
-      
-      - name: Run sync script
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run sync_movies.py
         run: |
           python sync_movies.py
-      
-      - name: Check git status
-        id: git-status
+
+      - name: Check if files changed
+        id: check
         run: |
           if git diff --quiet HEAD; then
-            echo "status=unchanged" >> $GITHUB_OUTPUT
+            echo "status=unchanged" >> "$GITHUB_OUTPUT"
           else
-            echo "status=changed" >> $GITHUB_OUTPUT
+            echo "status=changed" >> "$GITHUB_OUTPUT"
           fi
-      
-      - name: Commit and push changes
-        if: steps.git-status.outputs.status == 'changed'
-        run: |
-          git config --global user.name "U-TV Bot"
-          git config --global user.email "bot@u-tv.pages.dev"
-          git add .
-          git diff --staged --name-only | head -20
-          git commit -m "🤖 Daily sync: $(date +%Y-%m-%d) - Added/updated $(find movies -name '*.html' | wc -l) movie pages" || exit 0
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit new/changed movies & sitemap
+        if: steps.check.outputs.status == 'changed'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.ref }}
+          commit_message: "🎬 Synced TMDB movies & sitemap - $(date +%Y-%m-%d)"
+          file_pattern: |
+            movies/*.html
+            sitemap.xml
