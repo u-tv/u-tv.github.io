@@ -1,0 +1,25 @@
+name: DailyAutoUpdate
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Sync
+        run: |
+          pip install requests
+          python sync_movies.py
+      - name: Save
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@u-tv.dev"
+          git add .
+          git commit -m "Daily Sync" || exit 0
+          git push
