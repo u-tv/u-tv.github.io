@@ -18,20 +18,6 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="${POSTER_PATH}">
 
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "U-TV",
-        "url": "https://u-tv.pages.dev",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://u-tv.pages.dev/?search={search_term_string}",
-            "query-input": "required name=search_term_string"
-        }
-    }
-    </script>
-
     <style>
         :root { --watcho-orange: #ff4f00; --bg-primary: #0a0d11; }
         body { background: var(--bg-primary); color: white; font-family: system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; scroll-behavior: smooth; }
@@ -48,19 +34,23 @@
         .filter-nav { position: fixed; top: 65px; width: 100%; z-index: 40; background: rgba(10,13,17,0.98); padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; }
         .server-btn { background: #1a1a1f; border: 1px solid #333; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #eee; cursor: pointer; }
         .server-btn.active { background: var(--watcho-orange); border-color: var(--watcho-orange); }
-        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; justify-items: center; }
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 15px; justify-items: center; }
         @media (min-width: 600px) { .movie-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
-        .movie-card { border-radius: 12px; overflow: hidden; position: relative; background: #141419; aspect-ratio: 2/3; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; width: 100%; max-width: 180px; text-decoration: none; color: white; }
+        
+        .card-container { display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 180px; }
+        .movie-card { border-radius: 12px; overflow: hidden; position: relative; background: #141419; aspect-ratio: 2/3; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; width: 100%; text-decoration: none; color: white; }
         .movie-card:hover { transform: scale(1.05); border-color: var(--watcho-orange); }
         .movie-card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-title { position: absolute; bottom: 0; width: 100%; padding: 8px; background: linear-gradient(transparent, black); font-size: 10px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; }
+        .card-title { position: absolute; bottom: 0; width: 100%; padding: 8px; background: linear-gradient(transparent, black); font-size: 10px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .share-movie-btn { background: #1a1a1f; border: 1px solid #333; color: #25D366; font-size: 9px; font-weight: 900; padding: 6px; border-radius: 6px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .share-movie-btn:hover { background: #25D366; color: white; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; }
         iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
         #captcha-overlay { position: fixed; inset: 0; background: #0a0d11; z-index: 1000000; display: flex; align-items: center; justify-content: center; }
-        .social-btn { padding: 12px 18px; border-radius: 12px; font-weight: 900; font-size: 11px; color: white; display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; justify-content: center; max-width: 150px; }
-        .btn-wa { background: #25D366; } .btn-tg { background: #0088cc; } .btn-cp { background: #6c757d; }
         .f-btn { padding: 10px 18px; border-radius: 10px; font-size: 10px; font-weight: 800; color: white; text-transform: uppercase; text-decoration: none; }
         #adminDeleteBtn { display: none; background: #ff0000; color: white; font-weight: 900; padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; }
     </style>
@@ -99,12 +89,6 @@
 <main id="mainContent">
     <div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
 
-    <div class="flex flex-wrap justify-center gap-3 mt-8 px-4">
-        <button class="social-btn btn-wa" onclick="window.open('whatsapp://send?text=Watch Free Movies: https://u-tv.pages.dev')">🟢 WHATSAPP</button>
-        <button class="social-btn btn-tg" onclick="window.open('https://t.me/share/url?url=https://u-tv.pages.dev')">🔵 TELEGRAM</button>
-        <button class="social-btn btn-cp" onclick="copyLink()">🔘 COPY LINK</button>
-    </div>
-
     <div class="relative z-10 pb-20 mt-10">
         <section class="px-4">
             <h2 class="text-lg font-black mb-4 text-[#ff4f00]">| TRENDING NOW</h2>
@@ -129,7 +113,7 @@
         <a href="/privacy.html" class="f-btn bg-gray-600">Security</a>
     </div>
     <div class="text-white font-bold bg-[#111] p-4 rounded-xl border border-white/5 inline-block text-xs">
-        📧 Support: [HELP.WOWMOVIES@GMAIL.COM](mailto:HELP.WOWMOVIES@GMAIL.COM)
+        📧 Support: HELP.WOWMOVIES@GMAIL.COM
     </div>
     <p class="text-gray-500 text-[10px] leading-relaxed">U-TV is a specialized search engine. We do not host any files on our server.</p>
     <p class="text-[10px] text-gray-700 tracking-[5px] uppercase">© 2026 U-TV NETWORK GLOBAL</p>
@@ -159,7 +143,7 @@
     const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
     const REDIRECT_URL = "https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0"; 
     let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false, redirectShown = false;
-    let isAdmin = false, currentMovieID = "${MOVIE_ID}", blockedList = JSON.parse(localStorage.getItem('utv_blocked') || '[]');
+    let isAdmin = false, currentMovieID = "${MOVIE_ID}";
 
     function onCaptchaSuccess() { 
         document.getElementById('captcha-overlay').style.display = 'none'; 
@@ -167,7 +151,6 @@
         checkAutoPlay(); 
     }
 
-    // Googlebot Auto-Bypass
     const isGoogleBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
     if (isGoogleBot) { window.onload = () => { onCaptchaSuccess(); }; }
 
@@ -186,7 +169,7 @@
         const heroData = await smartApiCall('/trending/movie/day');
         if(heroData.results) {
             document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m,i)=>`
-                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="window.location.href='/movies/${m.title ? m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'watch'}-${m.id}.html'">
+                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="goToMovie('${m.title}', ${m.id})">
                     <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50" alt="${m.title}">
                     <div class="absolute bottom-10 left-6"><h2 class="text-2xl font-black uppercase">${m.title}</h2></div>
                 </div>
@@ -205,4 +188,95 @@
         loadMoreMovies();
     }
 
-    function
+    function createCard(m, extraClass='movie-card') {
+        const title = m.title || m.name;
+        const slug = title ? title.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'watch';
+        const fullUrl = `https://u-tv.pages.dev/movies/${slug}-${m.id}.html`;
+        
+        return `
+        <div class="card-container">
+            <div class="${extraClass}" onclick="goToMovie('${title}', ${m.id})">
+                <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy" alt="Watch ${title}">
+                <div class="card-title">${title}</div>
+            </div>
+            <div class="share-movie-btn" onclick="shareMovie('${title}', '${fullUrl}')">SHARE MOVIE</div>
+        </div>`;
+    }
+
+    function shareMovie(title, url) {
+        event.stopPropagation();
+        const text = `Watch ${title} for Free on U-TV: ${url}`;
+        if (navigator.share) {
+            navigator.share({ title: title, text: text, url: url });
+        } else {
+            navigator.clipboard.writeText(text);
+            alert("Movie Link Copied to Clipboard!");
+        }
+    }
+
+    function goToMovie(title, id) {
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        if (!redirectShown) {
+            window.open(REDIRECT_URL, '_blank');
+            redirectShown = true;
+        }
+        window.location.href = `/movies/${slug}-${id}.html`;
+    }
+
+    async function playItem(id, type, title, overview) {
+        currentMovieID = id.toString();
+        const t = (type === 'tv') ? 'tv' : 'movie';
+        document.getElementById('infoName').innerText = title;
+        document.getElementById('playingTitle').innerText = title;
+        document.getElementById('playerOverlay').style.display = 'block';
+        
+        const encServers = [
+            { n: "⭐ SERVER 1", u: btoa(`https://vidsrc.me/embed/${t}/${id}`) },
+            { n: "🚀 SERVER 2", u: btoa(`https://vidsrc.to/embed/${t}/${id}`) },
+            { n: "💎 SERVER 3", u: btoa(`https://vidsrc.xyz/embed/${t}/${id}`) }
+        ];
+
+        document.getElementById('serverList').innerHTML = encServers.map((s, i) => `<button class="server-btn ${i===0?'active':''}" onclick="changeServer('${s.u}', this)">${s.n}</button>`).join('');
+        document.getElementById('mainIframe').src = atob(encServers[0].u);
+    }
+
+    function changeServer(u, b) { 
+        document.querySelectorAll('#serverList .server-btn').forEach(btn => btn.classList.remove('active')); 
+        b.classList.add('active'); 
+        document.getElementById('mainIframe').src = atob(u); 
+    }
+
+    function closePlayer() { 
+        if(window.location.pathname.includes('/movies/')) { window.location.href = '/'; }
+        else { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
+    }
+
+    async function loadMoreMovies() {
+        if(isLoading) return; isLoading = true;
+        const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : currentLang==='tv' ? `/tv/popular?page=${currentPage}` : `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
+        const data = await smartApiCall(end);
+        if(data.results) {
+            document.getElementById('popularGrid').innerHTML += data.results.map(m=>createCard(m)).join('');
+            currentPage++;
+        }
+        isLoading = false;
+    }
+
+    async function triggerSearch() {
+        const q = document.getElementById('search').value;
+        if(q === 'GURU1995') { isAdmin = true; alert("ADMIN MODE ACTIVE"); return; }
+        if(!q) return;
+        const data = await smartApiCall(`/search/multi?query=${encodeURIComponent(q)}`);
+        document.getElementById('popularGrid').innerHTML = data.results.filter(m => m.poster_path).map(m=>createCard(m)).join('');
+        document.getElementById('sectionTitle').innerText = `RESULT: ${q.toUpperCase()}`;
+    }
+
+    function handleSearch(e) { if(e.key==='Enter') triggerSearch(); }
+    async function filterBy(l,b) {
+        document.querySelectorAll('.filter-nav .server-btn').forEach(btn=>btn.classList.remove('active'));
+        b.classList.add('active'); currentLang = l; currentPage = 1;
+        document.getElementById('popularGrid').innerHTML = ''; loadMoreMovies();
+    }
+</script>
+</body>
+</html>
