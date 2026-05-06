@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+    <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    
+    <title>The Eagle - Watch Online Free - U-TV</title>
+    <meta name="description" content="Watch in HD quality.">
+    
+    <link rel="canonical" href="https://u-tv.pages.dev/movies/the-eagle-98477.html" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <meta property="og:title" content="The Eagle">
+    <meta property="og:description" content="Watch in HD quality.">
+    <meta property="og:url" content="https://u-tv.pages.dev/movies/the-eagle-98477.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://image.tmdb.org/t/p/w500/dwF5S5Vbk2gZC3MPNxn9O5eBJSa.jpg">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "U-TV",
+        "url": "https://u-tv.pages.dev",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://u-tv.pages.dev/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <style>
+        :root { --watcho-orange: #ff4f00; --bg-primary: #0a0d11; }
+        body { background: var(--bg-primary); color: white; font-family: system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; scroll-behavior: smooth; }
+        nav { position: fixed; top: 0; width: 100%; z-index: 50; padding: 10px 15px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; height: 65px; box-sizing: border-box; }
+        .logo-box { display: flex; align-items: center; cursor: pointer; }
+        .logo-box h1 { font-family: 'Arial Black', sans-serif; background: linear-gradient(to right, #fff, #ff4f00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; margin: 0; padding: 0; }
+        .search-container { display: flex; gap: 5px; }
+        #search { padding: 8px 12px; background: #111; border: 1px solid #333; color: white; font-size: 13px; width: 130px; border-radius: 8px; outline: none; }
+        .search-btn { background: var(--watcho-orange); padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; border: none; color: white; }
+        #hero-slider { height: 350px; margin-top: 125px; position: relative; width: 100%; overflow: hidden; background: #000; }
+        @media (min-width: 768px) { #hero-slider { height: 550px; margin-top: 110px; } }
+        .poster-3d { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease; cursor: pointer; }
+        .poster-active { opacity: 1; z-index: 10; }
+        .filter-nav { position: fixed; top: 65px; width: 100%; z-index: 40; background: rgba(10,13,17,0.98); padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; }
+        .server-btn { background: #1a1a1f; border: 1px solid #333; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #eee; cursor: pointer; }
+        .server-btn.active { background: var(--watcho-orange); border-color: var(--watcho-orange); }
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; justify-items: center; }
+        @media (min-width: 600px) { .movie-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
+        .movie-card { border-radius: 12px; overflow: hidden; position: relative; background: #141419; aspect-ratio: 2/3; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; width: 100%; max-width: 180px; text-decoration: none; color: white; }
+        .movie-card:hover { transform: scale(1.05); border-color: var(--watcho-orange); }
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; }
+        .card-title { position: absolute; bottom: 0; width: 100%; padding: 8px; background: linear-gradient(transparent, black); font-size: 10px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; }
+        iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
+        #captcha-overlay { position: fixed; inset: 0; background: #0a0d11; z-index: 1000000; display: flex; align-items: center; justify-content: center; }
+        .social-btn { padding: 12px 18px; border-radius: 12px; font-weight: 900; font-size: 11px; color: white; display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; justify-content: center; max-width: 150px; }
+        .btn-wa { background: #25D366; } .btn-tg { background: #0088cc; } .btn-cp { background: #6c757d; }
+        .f-btn { padding: 10px 18px; border-radius: 10px; font-size: 10px; font-weight: 800; color: white; text-transform: uppercase; text-decoration: none; }
+        #adminDeleteBtn { display: none; background: #ff0000; color: white; font-weight: 900; padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+
+<div id="captcha-overlay">
+    <div class="text-center p-6 bg-[#141419] border border-[#ff4f00] rounded-2xl mx-4">
+        <h2 class="text-xl font-black text-[#ff4f00] mb-4 uppercase">Verification</h2>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAACpYk-c9YeKTSuo1" data-callback="onCaptchaSuccess"></div>
+    </div>
+</div>
+
+<nav>
+    <div class="logo-box" onclick="window.location.href='/'">
+        <h1>U-TV</h1>
+    </div>
+    <div class="search-container">
+        <input type="text" id="search" onkeypress="handleSearch(event)" placeholder="Search Movie..." aria-label="Search">
+        <button onclick="triggerSearch()" class="search-btn">GO</button>
+    </div>
+</nav>
+
+<div class="filter-nav no-scrollbar">
+    <button onclick="filterBy('hi',this)" class="server-btn">🇮🇳 HINDI</button>
+    <button onclick="filterBy('en',this)" class="server-btn">🇺🇸 ENG</button>
+    <button onclick="filterBy('pa',this)" class="server-btn">🌾 PUN</button>
+    <button onclick="filterBy('te',this)" class="server-btn">🔥 SOUTH</button>
+    <button onclick="filterBy('movie',this)" class="server-btn active">🎬 MOVIES</button>
+    <button onclick="filterBy('tv',this)" class="server-btn">📺 SERIES</button>
+</div>
+
+<main id="mainContent">
+    <div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
+
+    <div class="flex flex-wrap justify-center gap-3 mt-8 px-4">
+        <button class="social-btn btn-wa" onclick="window.open('whatsapp://send?text=Watch Free Movies: https://u-tv.pages.dev')">🟢 WHATSAPP</button>
+        <button class="social-btn btn-tg" onclick="window.open('https://t.me/share/url?url=https://u-tv.pages.dev')">🔵 TELEGRAM</button>
+        <button class="social-btn btn-cp" onclick="copyLink()">🔘 COPY LINK</button>
+    </div>
+
+    <div class="relative z-10 pb-20 mt-10">
+        <section class="px-4">
+            <h2 class="text-lg font-black mb-4 text-[#ff4f00]">| TRENDING NOW</h2>
+            <div id="trendingSlider" class="flex gap-4 overflow-x-auto no-scrollbar pb-4"></div>
+        </section>
+        
+        <section class="px-4 mt-10">
+            <h2 class="text-lg font-black mb-4 text-[#ff4f00]" id="sectionTitle">| POPULAR RELEASES</h2>
+            <div id="popularGrid" class="movie-grid"></div>
+            <div class="flex justify-center mt-10">
+                <button onclick="loadMoreMovies()" class="bg-[#ff4f00] px-10 py-4 rounded-xl font-black text-sm uppercase tracking-wide" id="loadMoreBtn">Load More Content</button>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer class="bg-black p-10 border-t border-white/10 text-center space-y-8">
+    <div class="flex flex-wrap justify-center gap-4">
+        <a href="/disclaimer.html" class="f-btn bg-red-600">DMCA Policy</a>
+        <a href="/about.html" class="f-btn bg-blue-600">Search Engine</a>
+        <a href="/terms.html" class="f-btn bg-purple-600">Terms of Service</a>
+        <a href="/privacy.html" class="f-btn bg-gray-600">Security</a>
+    </div>
+    <div class="text-white font-bold bg-[#111] p-4 rounded-xl border border-white/5 inline-block text-xs">
+        📧 Support: HELP.WOWMOVIES@GMAIL.COM
+    </div>
+    <p class="text-gray-500 text-[10px] leading-relaxed">U-TV is a specialized search engine. We do not host any files on our server.</p>
+    <p class="text-[10px] text-gray-700 tracking-[5px] uppercase">© 2026 U-TV NETWORK GLOBAL</p>
+</footer>
+
+<div id="playerOverlay">
+    <div class="p-4 bg-black flex justify-between items-center border-b border-white/10">
+        <h3 class="text-[#ff4f00] font-black truncate text-sm uppercase" id="playingTitle">The Eagle</h3>
+        <button onclick="closePlayer()" class="text-white text-2xl">✕</button>
+    </div>
+    <div class="flex gap-2 p-3 overflow-x-auto no-scrollbar bg-[#0d0d0d]" id="serverList"></div>
+    <div class="w-full relative">
+        <div id="blockedMessage" class="hidden absolute inset-0 bg-[#0a0d11] z-50 flex flex-col items-center justify-center p-6 text-center">
+            <h2 class="text-red-600 font-black text-xl mb-4">NOTICE: CONTENT REMOVED</h2>
+            <p class="text-gray-400 text-sm">Removed following a DMCA copyright complaint.</p>
+        </div>
+        <iframe id="mainIframe" src="" allowfullscreen></iframe>
+    </div>
+    <div class="p-5">
+        <button id="adminDeleteBtn" onclick="deleteCurrentMovie()">🔴 REMOVE CONTENT (ADMIN)</button>
+        <h2 class="text-xl font-bold text-[#ff4f00]" id="infoName">The Eagle</h2>
+        <p class="text-gray-400 text-xs mt-3" id="infoDesc">Watch in HD quality.</p>
+    </div>
+</div>
+
+<script>
+    const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
+    const REDIRECT_URL = "https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0"; 
+    let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false, redirectShown = false;
+    let isAdmin = false, currentMovieID = "98477", blockedList = JSON.parse(localStorage.getItem('utv_blocked') || '[]');
+
+    function onCaptchaSuccess() { 
+        document.getElementById('captcha-overlay').style.display = 'none'; 
+        initSite();
+        checkAutoPlay(); 
+    }
+
+    // Daily Auto-Sync Engine: Yeh function alag alag pages par player auto-khulega
+    function checkAutoPlay() {
+        if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
+            playItem(currentMovieID, 'movie', "The Eagle", "Watch in HD quality.");
+        }
+    }
+
+    async function smartApiCall(endpoint) {
+        const res = await fetch(`https://api.themoviedb.org/3${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEYS[0]}`);
+        return await res.json();
+    }
+
+    async function initSite() {
+        const heroData = await smartApiCall('/trending/movie/day');
+        if(heroData.results) {
+            document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m,i)=>`
+                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="window.location.href='/movies/${m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${m.id}.html'">
+                    <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50" alt="${m.title}">
+                    <div class="absolute bottom-10 left-6"><h2 class="text-2xl font-black uppercase">${m.title}</h2></div>
+                </div>
+            `).join('');
+            setInterval(() => {
+                const active = document.querySelector('.poster-active');
+                if(active) active.classList.remove('poster-active');
+                currentSlide = (currentSlide+1)%5;
+                document.getElementById(`slide-${currentSlide}`)?.classList.add('poster-active');
+            }, 4000);
+        }
+        const trendData = await smartApiCall('/trending/all/week');
+        if(trendData.results) {
+            document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,12).map(m=>createCard(m,'w-36 h-52 shrink-0')).join('');
+        }
+        loadMoreMovies();
+    }
+
+    function createCard(m, extraClass='movie-card') {
+        const type = m.media_type || (currentLang === 'tv' ? 'tv' : 'movie');
+        const title = m.title || m.name;
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        // Daily Sync Fix: Individual pages ko crawl karwane ke liye slug links
+        return `<a href="/movies/${slug}-${m.id}.html" class="${extraClass}" onclick="handleGlobalClick()">
+            <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy" alt="Watch ${title}">
+            <div class="card-title">${title}</div>
+        </a>`;
+    }
+
+    async function playItem(id, type, title, overview) {
+        currentMovieID = id.toString();
+        const t = (type === 'tv') ? 'tv' : 'movie';
+        document.getElementById('infoName').innerText = title;
+        document.getElementById('playingTitle').innerText = title;
+        document.getElementById('playerOverlay').style.display = 'block';
+
+        if(isAdmin) document.getElementById('adminDeleteBtn').style.display = 'block';
+        
+        // Sabse best 2 unlimited players priority par
+        const encServers = [
+            { n: "⭐ SERVER 1", u: btoa(`https://vidsrc.me/embed/${t}/${id}`) },
+            { n: "🚀 SERVER 2", u: btoa(`https://vidsrc.to/embed/${t}/${id}`) },
+            { n: "💎 SERVER 3", u: btoa(`https://vidsrc.xyz/embed/${t}/${id}`) }
+        ];
+
+        document.getElementById('serverList').innerHTML = encServers.map((s, i) => `<button class="server-btn ${i===0?'active':''}" onclick="changeServer('${s.u}', this)">${s.n}</button>`).join('');
+        document.getElementById('mainIframe').src = atob(encServers[0].u);
+    }
+
+    function handleGlobalClick() { if (!redirectShown) { window.open(REDIRECT_URL, '_blank'); redirectShown = true; } }
+    function changeServer(u, b) { document.querySelectorAll('#serverList .server-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); document.getElementById('mainIframe').src = atob(u); }
+    function closePlayer() { 
+        if(window.location.pathname.includes('/movies/')) { window.location.href = '/'; }
+        else { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
+    }
+    function copyLink() { navigator.clipboard.writeText(window.location.href); alert('Link Copied!'); }
+
+    async function loadMoreMovies() {
+        if(isLoading) return; isLoading = true;
+        const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : currentLang==='tv' ? `/tv/popular?page=${currentPage}` : `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
+        const data = await smartApiCall(end);
+        if(data.results) {
+            document.getElementById('popularGrid').innerHTML += data.results.map(m=>createCard(m)).join('');
+            currentPage++;
+        }
+        isLoading = false;
+    }
+
+    async function triggerSearch() {
+        const q = document.getElementById('search').value;
+        if(q === 'GURU1995') { isAdmin = true; alert("ADMIN MODE ACTIVE"); return; }
+        if(!q) return;
+        const data = await smartApiCall(`/search/multi?query=${encodeURIComponent(q)}`);
+        document.getElementById('popularGrid').innerHTML = data.results.filter(m => m.poster_path).map(m=>createCard(m)).join('');
+        document.getElementById('sectionTitle').innerText = `RESULT: ${q.toUpperCase()}`;
+    }
+
+    function handleSearch(e) { if(e.key==='Enter') triggerSearch(); }
+    async function filterBy(l,b) {
+        document.querySelectorAll('.filter-nav .server-btn').forEach(btn=>btn.classList.remove('active'));
+        b.classList.add('active'); currentLang = l; currentPage = 1;
+        document.getElementById('popularGrid').innerHTML = ''; loadMoreMovies();
+    }
+    window.onload = () => { setTimeout(onCaptchaSuccess, 500); };
+</script>
+</body>
+</html>
