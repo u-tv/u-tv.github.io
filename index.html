@@ -24,7 +24,6 @@
         html { scroll-behavior: smooth; }
         body { background: var(--bg-primary); color: white; font-family: system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
         
-        /* Navigation */
         nav { position: fixed; top: 0; width: 100%; z-index: 50; padding: 10px 15px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; height: 65px; box-sizing: border-box; }
         .logo-box { display: flex; align-items: center; cursor: pointer; }
         .logo-box h1 { font-family: 'Arial Black', sans-serif; background: linear-gradient(to right, #fff, #ff4f00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; margin: 0; padding: 0; }
@@ -33,7 +32,6 @@
         #search:focus { border-color: var(--watcho-orange); }
         .search-btn { background: var(--watcho-orange); padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; border: none; color: white; }
 
-        /* Sections */
         #hero-slider { height: 350px; margin-top: 125px; position: relative; width: 100%; overflow: hidden; background: #000; }
         @media (min-width: 768px) { #hero-slider { height: 550px; margin-top: 110px; } }
         .poster-3d { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease; cursor: pointer; }
@@ -53,28 +51,25 @@
         .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .card-title { position: absolute; bottom: 0; width: 100%; padding: 8px; background: linear-gradient(transparent, black); font-size: 10px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .share-movie-btn { background: #1a1a1f; border: 1px solid #333; color: #25D366; font-size: 9px; font-weight: 900; padding: 6px; border-radius: 6px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .share-movie-btn:hover { background: #25D366; color: white; }
+        /* Fixed Embed Button Style */
+        .embed-btn-fix { background: #1a1a1f; border: 1px solid #00ff00; color: #00ff00; font-size: 9px; font-weight: 900; padding: 6px; border-radius: 6px; text-align: center; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .embed-btn-fix:hover { background: #00ff00; color: black; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Player Overlay */
         #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; overflow-y: auto; }
         iframe { width: 100%; aspect-ratio: 16/9; border: 0; background: #000; }
         
         .f-btn { padding: 10px 18px; border-radius: 10px; font-size: 10px; font-weight: 800; color: white; text-transform: uppercase; text-decoration: none; }
-        .state-msg { color: #aaa; font-size: 12px; padding: 12px 15px; }
     </style>
     <script src="https://cdn.tailwindcss.com" defer></script>
 </head>
 <body>
 
 <nav>
-    <div class="logo-box" onclick="window.location.href='/'">
-        <h1>U-TV</h1>
-    </div>
+    <div class="logo-box" onclick="window.location.href='/'"><h1>U-TV</h1></div>
     <div class="search-container">
-        <input type="text" id="search" onkeypress="handleSearch(event)" placeholder="Search Movie..." aria-label="Search">
+        <input type="text" id="search" onkeypress="handleSearch(event)" placeholder="Search Movie...">
         <button onclick="triggerSearch()" class="search-btn">GO</button>
     </div>
 </nav>
@@ -90,36 +85,20 @@
 
 <main id="mainContent">
     <div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
-
     <div class="relative z-10 pb-20 mt-10">
         <section class="px-4">
             <h2 class="text-lg font-black mb-4 text-[#ff4f00]">| TRENDING NOW</h2>
             <div id="trendingSlider" class="flex gap-4 overflow-x-auto no-scrollbar pb-4"></div>
         </section>
-        
         <section class="px-4 mt-10">
             <h2 class="text-lg font-black mb-4 text-[#ff4f00]" id="sectionTitle">| POPULAR RELEASES</h2>
             <div id="popularGrid" class="movie-grid"></div>
             <div class="flex justify-center mt-10">
-                <button onclick="loadMoreMovies()" class="bg-[#ff4f00] px-10 py-4 rounded-xl font-black text-sm uppercase tracking-wide" id="loadMoreBtn">Load More Content</button>
+                <button onclick="loadMoreMovies()" class="bg-[#ff4f00] px-10 py-4 rounded-xl font-black text-sm uppercase tracking-wide">Load More Content</button>
             </div>
         </section>
     </div>
 </main>
-
-<footer class="bg-black p-10 border-t border-white/10 text-center space-y-8">
-    <div class="flex flex-wrap justify-center gap-4">
-        <a href="/disclaimer.html" class="f-btn bg-red-600">DMCA Policy</a>
-        <a href="/about.html" class="f-btn bg-blue-600">Search Engine</a>
-        <a href="/terms.html" class="f-btn bg-purple-600">Terms of Service</a>
-        <a href="/privacy.html" class="f-btn bg-gray-600">Security</a>
-    </div>
-    <div class="text-white font-bold bg-[#111] p-4 rounded-xl border border-white/5 inline-block text-xs">
-        📧 Support: HELP.WOWMOVIES@GMAIL.COM
-    </div>
-    <p class="text-gray-500 text-[10px] leading-relaxed">U-TV is a specialized search engine. We do not host any files on our server.</p>
-    <p class="text-[10px] text-gray-700 tracking-[5px] uppercase">© 2026 U-TV NETWORK GLOBAL</p>
-</footer>
 
 <div id="playerOverlay">
     <div class="p-4 bg-black flex justify-between items-center border-b border-white/10">
@@ -127,9 +106,7 @@
         <button onclick="closePlayer()" class="text-white text-2xl">✕</button>
     </div>
     <div class="flex gap-2 p-3 overflow-x-auto no-scrollbar bg-[#0d0d0d]" id="serverList"></div>
-    <div class="w-full">
-        <iframe id="mainIframe" src="" allowfullscreen loading="lazy"></iframe>
-    </div>
+    <iframe id="mainIframe" src="" allowfullscreen loading="lazy"></iframe>
     <div class="p-5">
         <h2 class="text-xl font-bold text-[#ff4f00]" id="infoName">${MOVIE_TITLE}</h2>
         <p class="text-gray-400 text-xs mt-3" id="infoDesc">${MOVIE_DESC}</p>
@@ -138,18 +115,23 @@
 
 <script>
     const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
-    const REDIRECT_URL = "https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0";
-    let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false, redirectShown = false;
-    let currentMovieID = "${MOVIE_ID}", heroInterval = null;
+    let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
+    let currentMovieID = "${MOVIE_ID}";
 
-    // Direct Initialization (No Captcha)
     window.onload = () => {
         initSite();
         checkAutoPlay();
     };
 
-    function checkAutoPlay() {
-        if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
+    // Fix: URL se direct check karke movie play karna
+    async function checkAutoPlay() {
+        const path = window.location.pathname;
+        const match = path.match(/watch-(\d+)/);
+        if (match && match[1]) {
+            const mId = match[1];
+            const data = await smartApiCall(`/movie/${mId}`);
+            if(data.id) playItem(data.id, 'movie', data.title, data.overview);
+        } else if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
             playItem(currentMovieID, 'movie', "${MOVIE_TITLE}", "${MOVIE_DESC}");
         }
     }
@@ -158,32 +140,27 @@
         try {
             const res = await fetch(`https://api.themoviedb.org/3${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEYS[0]}`);
             return await res.json();
-        } catch (e) {
-            return { results: [] };
-        }
+        } catch (e) { return { results: [] }; }
     }
 
     async function initSite() {
         const heroData = await smartApiCall('/trending/movie/day');
-        if(heroData.results && heroData.results.length) {
+        if(heroData.results) {
             document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m,i)=>`
-                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="goToMovie('${m.title.replace(/'/g,"")}', ${m.id})">
-                    <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50" alt="${m.title}">
+                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="goToMovie('${m.title}', ${m.id})">
+                    <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50">
                     <div class="absolute bottom-10 left-6"><h2 class="text-2xl font-black uppercase">${m.title}</h2></div>
                 </div>
             `).join('');
-            heroInterval = setInterval(() => {
+            setInterval(() => {
                 const active = document.querySelector('.poster-active');
                 if(active) active.classList.remove('poster-active');
                 currentSlide = (currentSlide+1)%5;
                 document.getElementById(`slide-${currentSlide}`)?.classList.add('poster-active');
             }, 4000);
         }
-
         const trendData = await smartApiCall('/trending/all/week');
-        if(trendData.results) {
-            document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,12).map(m=>createCard(m,'w-36 h-52 shrink-0')).join('');
-        }
+        if(trendData.results) document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,12).map(m=>createCard(m,'w-36 h-52 shrink-0')).join('');
         loadMoreMovies();
     }
 
@@ -192,23 +169,23 @@
         return `
         <div class="card-container">
             <div class="${extraClass}" onclick="goToMovie('${title}', ${m.id})">
-                <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy" alt="${title}">
+                <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy">
                 <div class="card-title">${title}</div>
             </div>
-            <div class="share-movie-btn" onclick="shareMovie(event, '${title}', ${m.id})">SHARE MOVIE</div>
+            <div class="embed-btn-fix" onclick="getEmbedCode(event, ${m.id})">Get Embed URL</div>
         </div>`;
     }
 
-    function shareMovie(e, title, id) {
+    // Fix: Embed Iframe URL generate aur copy karne ka logic
+    function getEmbedCode(e, id) {
         e.stopPropagation();
-        const url = `https://u-tv.pages.dev/movies/watch-${id}.html`;
-        const text = `Watch ${title} on U-TV: ${url}`;
-        if (navigator.share) navigator.share({title, text, url});
-        else { navigator.clipboard.writeText(text); alert("Link Copied!"); }
+        const embedUrl = `https://u-tv.pages.dev/movies/watch-${id}.html`;
+        const iframeCode = `<iframe src="${embedUrl}" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>`;
+        navigator.clipboard.writeText(iframeCode);
+        alert("Embed Iframe Code Copied!");
     }
 
     function goToMovie(title, id) {
-        if (!redirectShown) { window.open(REDIRECT_URL, '_blank'); redirectShown = true; }
         const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
         window.location.href = `/movies/${slug}-${id}.html`;
     }
@@ -216,15 +193,12 @@
     async function playItem(id, type, title, overview) {
         document.getElementById('infoName').innerText = title;
         document.getElementById('playingTitle').innerText = title;
-        document.getElementById('infoDesc').innerText = overview;
+        document.getElementById('infoDesc').innerText = overview || "No description available.";
         document.getElementById('playerOverlay').style.display = 'block';
-        
         const servers = [
             { n: "⭐ SERVER 1", u: `https://vidsrc.me/embed/${type}/${id}` },
-            { n: "🚀 SERVER 2", u: `https://vidsrc.to/embed/${type}/${id}` },
-            { n: "💎 SERVER 3", u: `https://vidsrc.xyz/embed/${type}/${id}` }
+            { n: "🚀 SERVER 2", u: `https://vidsrc.to/embed/${type}/${id}` }
         ];
-
         document.getElementById('serverList').innerHTML = servers.map((s, i) => 
             `<button class="server-btn ${i===0?'active':''}" onclick="document.getElementById('mainIframe').src='${s.u}'; document.querySelectorAll('#serverList .server-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">${s.n}</button>`
         ).join('');
@@ -238,7 +212,7 @@
 
     async function loadMoreMovies() {
         if(isLoading) return; isLoading = true;
-        const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : currentLang==='tv' ? `/tv/popular?page=${currentPage}` : `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
+        const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
         const data = await smartApiCall(end);
         if(data.results) {
             document.getElementById('popularGrid').innerHTML += data.results.map(m=>createCard(m)).join('');
