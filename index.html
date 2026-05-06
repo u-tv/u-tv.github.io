@@ -129,7 +129,7 @@
         <a href="/privacy.html" class="f-btn bg-gray-600">Security</a>
     </div>
     <div class="text-white font-bold bg-[#111] p-4 rounded-xl border border-white/5 inline-block text-xs">
-        📧 Support: HELP.WOWMOVIES@GMAIL.COM
+        📧 Support: [HELP.WOWMOVIES@GMAIL.COM](mailto:HELP.WOWMOVIES@GMAIL.COM)
     </div>
     <p class="text-gray-500 text-[10px] leading-relaxed">U-TV is a specialized search engine. We do not host any files on our server.</p>
     <p class="text-[10px] text-gray-700 tracking-[5px] uppercase">© 2026 U-TV NETWORK GLOBAL</p>
@@ -167,7 +167,10 @@
         checkAutoPlay(); 
     }
 
-    // Daily Auto-Sync Engine: Yeh function alag alag pages par player auto-khulega
+    // Googlebot Auto-Bypass
+    const isGoogleBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
+    if (isGoogleBot) { window.onload = () => { onCaptchaSuccess(); }; }
+
     function checkAutoPlay() {
         if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
             playItem(currentMovieID, 'movie', "${MOVIE_TITLE}", "${MOVIE_DESC}");
@@ -183,7 +186,7 @@
         const heroData = await smartApiCall('/trending/movie/day');
         if(heroData.results) {
             document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m,i)=>`
-                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="window.location.href='/movies/${m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${m.id}.html'">
+                <div class="poster-3d ${i===0?'poster-active':''}" id="slide-${i}" onclick="window.location.href='/movies/${m.title ? m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'watch'}-${m.id}.html'">
                     <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50" alt="${m.title}">
                     <div class="absolute bottom-10 left-6"><h2 class="text-2xl font-black uppercase">${m.title}</h2></div>
                 </div>
@@ -202,72 +205,4 @@
         loadMoreMovies();
     }
 
-    function createCard(m, extraClass='movie-card') {
-        const type = m.media_type || (currentLang === 'tv' ? 'tv' : 'movie');
-        const title = m.title || m.name;
-        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-        // Daily Sync Fix: Individual pages ko crawl karwane ke liye slug links
-        return `<a href="/movies/${slug}-${m.id}.html" class="${extraClass}" onclick="handleGlobalClick()">
-            <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy" alt="Watch ${title}">
-            <div class="card-title">${title}</div>
-        </a>`;
-    }
-
-    async function playItem(id, type, title, overview) {
-        currentMovieID = id.toString();
-        const t = (type === 'tv') ? 'tv' : 'movie';
-        document.getElementById('infoName').innerText = title;
-        document.getElementById('playingTitle').innerText = title;
-        document.getElementById('playerOverlay').style.display = 'block';
-
-        if(isAdmin) document.getElementById('adminDeleteBtn').style.display = 'block';
-        
-        // Sabse best 2 unlimited players priority par
-        const encServers = [
-            { n: "⭐ SERVER 1", u: btoa(`https://vidsrc.me/embed/${t}/${id}`) },
-            { n: "🚀 SERVER 2", u: btoa(`https://vidsrc.to/embed/${t}/${id}`) },
-            { n: "💎 SERVER 3", u: btoa(`https://vidsrc.xyz/embed/${t}/${id}`) }
-        ];
-
-        document.getElementById('serverList').innerHTML = encServers.map((s, i) => `<button class="server-btn ${i===0?'active':''}" onclick="changeServer('${s.u}', this)">${s.n}</button>`).join('');
-        document.getElementById('mainIframe').src = atob(encServers[0].u);
-    }
-
-    function handleGlobalClick() { if (!redirectShown) { window.open(REDIRECT_URL, '_blank'); redirectShown = true; } }
-    function changeServer(u, b) { document.querySelectorAll('#serverList .server-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); document.getElementById('mainIframe').src = atob(u); }
-    function closePlayer() { 
-        if(window.location.pathname.includes('/movies/')) { window.location.href = '/'; }
-        else { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
-    }
-    function copyLink() { navigator.clipboard.writeText(window.location.href); alert('Link Copied!'); }
-
-    async function loadMoreMovies() {
-        if(isLoading) return; isLoading = true;
-        const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : currentLang==='tv' ? `/tv/popular?page=${currentPage}` : `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
-        const data = await smartApiCall(end);
-        if(data.results) {
-            document.getElementById('popularGrid').innerHTML += data.results.map(m=>createCard(m)).join('');
-            currentPage++;
-        }
-        isLoading = false;
-    }
-
-    async function triggerSearch() {
-        const q = document.getElementById('search').value;
-        if(q === 'GURU1995') { isAdmin = true; alert("ADMIN MODE ACTIVE"); return; }
-        if(!q) return;
-        const data = await smartApiCall(`/search/multi?query=${encodeURIComponent(q)}`);
-        document.getElementById('popularGrid').innerHTML = data.results.filter(m => m.poster_path).map(m=>createCard(m)).join('');
-        document.getElementById('sectionTitle').innerText = `RESULT: ${q.toUpperCase()}`;
-    }
-
-    function handleSearch(e) { if(e.key==='Enter') triggerSearch(); }
-    async function filterBy(l,b) {
-        document.querySelectorAll('.filter-nav .server-btn').forEach(btn=>btn.classList.remove('active'));
-        b.classList.add('active'); currentLang = l; currentPage = 1;
-        document.getElementById('popularGrid').innerHTML = ''; loadMoreMovies();
-    }
-    window.onload = () => { setTimeout(onCaptchaSuccess, 500); };
-</script>
-</body>
-</html>
+    function
