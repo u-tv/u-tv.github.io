@@ -1,0 +1,13 @@
+module.exports = function(eleventyConfig) {
+  // पुरानी फाइल्स (जैसे robots.txt, sitemap.xml) को कॉपी करने के लिए
+  eleventyConfig.addPassthroughCopy("robots.txt");
+  eleventyConfig.addPassthroughCopy("sitemap.xml");
+  eleventyConfig.addPassthroughCopy("logo.png");
+
+  return {
+    dir: {
+      input: ".",
+      output: "_site"
+    }
+  };
+};
