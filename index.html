@@ -42,7 +42,6 @@
         .movie-card img { width: 100%; height: 100%; object-fit: cover; }
         .card-title { position: absolute; bottom: 0; width: 100%; padding: 8px; background: linear-gradient(transparent, black); font-size: 10px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* Two Buttons Group */
         .btn-flex { display: flex; gap: 4px; }
         .btn-action { flex: 1; background: #1a1a1f; border: 1px solid #333; font-size: 8px; font-weight: 900; padding: 6px 2px; border-radius: 6px; text-align: center; cursor: pointer; text-transform: uppercase; }
         .btn-embed { color: #00ff00; border-color: #00ff00; }
@@ -186,10 +185,17 @@
         document.getElementById('playingTitle').innerText = title;
         document.getElementById('infoDesc').innerText = overview || "No description available.";
         document.getElementById('playerOverlay').style.display = 'block';
+        
+        // Final 6 Professional Servers
         const servers = [
             { n: "⭐ SERVER 1", u: `https://vidsrc.me/embed/${type}/${id}` },
-            { n: "🚀 SERVER 2", u: `https://vidsrc.to/embed/${type}/${id}` }
+            { n: "🚀 SERVER 2", u: `https://vidsrc.to/embed/${type}/${id}` },
+            { n: "💎 SERVER 3", u: `https://vidsrc.xyz/embed/${type}/${id}` },
+            { n: "🔥 SERVER 4", u: `https://embed.su/embed/${type}/${id}` },
+            { n: "⚡ SERVER 5", u: `https://vidlink.pro/embed/${type}/${id}` },
+            { n: "🛰️ SERVER 6", u: `https://moviesapi.club/movie/${id}` }
         ];
+
         document.getElementById('serverList').innerHTML = servers.map((s, i) => 
             `<button class="server-btn ${i===0?'active':''}" onclick="document.getElementById('mainIframe').src='${s.u}'; document.querySelectorAll('#serverList .server-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">${s.n}</button>`
         ).join('');
