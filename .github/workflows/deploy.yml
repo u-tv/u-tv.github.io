@@ -19,10 +19,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24' # Node 24 par update kar diya taaki warning na aaye
+          node-version-file: .nvmrc
+          cache: npm
 
       - name: Install Eleventy
-        run: npm install @11ty/eleventy # Direct install bina lock file ke jhanjhat ke
+        run: npm ci
 
       - name: Build Website
         run: npx @11ty/eleventy
