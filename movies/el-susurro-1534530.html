@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     
-    <title>टाइटैनिक - Watch Online Free - U-TV.PAGES.DEV</title>
+    <title>El Susurro - Watch Online Free - U-TV.PAGES.DEV</title>
     <meta name="description" content="Watch in HD quality.">
     
-    <link rel="canonical" href="https://u-tv.pages.dev/movies/-597.html" />
+    <link rel="canonical" href="https://u-tv.pages.dev/movies/el-susurro-1534530.html" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -137,7 +137,7 @@
     <div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-[#050505]" id="serverList"></div>
     <iframe id="mainIframe" src="" allowfullscreen loading="lazy" class="w-full"></iframe>
     <div class="p-6">
-        <h2 class="text-2xl font-black text-red-600" id="infoName">टाइटैनिक</h2>
+        <h2 class="text-2xl font-black text-red-600" id="infoName">El Susurro</h2>
         <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc">Watch in HD quality.</p>
     </div>
 </div>
@@ -146,7 +146,7 @@
     // --- Original Logic Starts ---
     const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
     let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
-    let currentMovieID = "597";
+    let currentMovieID = "1534530";
 
     window.onload = () => { initSite(); checkAutoPlay(); };
 
@@ -158,7 +158,7 @@
             const data = await smartApiCall(`/movie/${mId}`);
             if(data.id) playItem(data.id, 'movie', data.title, data.overview);
         } else if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
-            playItem(currentMovieID, 'movie', "टाइटैनिक", "Watch in HD quality.");
+            playItem(currentMovieID, 'movie', "El Susurro", "Watch in HD quality.");
         }
     }
 
