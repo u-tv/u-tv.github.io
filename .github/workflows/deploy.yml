@@ -1,27 +1,43 @@
-name: MovieSite-Deploy
+name: Build and Deploy to GitHub Pages
+
 on:
   push:
     branches:
-      - main
+      - main  # Jab aap main branch par push karenge tabhi chalega
+
 permissions:
   contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install Eleventy
-        run: npm install @11ty/eleventy
-      - name: Build Website
+          cache: 'npm' # Isse har baar download nahi karna padega, build fast hoga
+
+      - name: Install Dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Build Eleventy Site
         run: npx @11ty/eleventy
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+          publish_dir: ./_site  # Eleventy default yahi folder banata hai
           force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
