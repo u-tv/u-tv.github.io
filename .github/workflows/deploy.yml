@@ -3,7 +3,7 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Jab aap main branch par push karenge tabhi chalega
+      - main
 
 permissions:
   contents: write
@@ -19,25 +19,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm' # Isse har baar download nahi karna padega, build fast hoga
+          node-version: '24' # Node 24 par update kar diya taaki warning na aaye
 
-      - name: Install Dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+      - name: Install Eleventy
+        run: npm install @11ty/eleventy # Direct install bina lock file ke jhanjhat ke
 
-      - name: Build Eleventy Site
+      - name: Build Website
         run: npx @11ty/eleventy
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site  # Eleventy default yahi folder banata hai
+          publish_dir: ./_site
           force_orphan: true
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
