@@ -1,0 +1,102 @@
+import requests
+import json
+import os
+import time
+
+API_KEY = "5bf61a62fd4647aa7debed7d6f2db079"
+PAGES = 150  # 3000 movies
+SITE_URL = "https://u-tv.pages.dev"
+
+def main():
+    print("🎬 movie.json generating for u-tv.pages.dev...")
+    
+    all_movies = fetch_movies_from_tmdb()
+    save_movie_json(all_movies)  # movie.json (singular)
+    save_sitemap(all_movies)
+    generate_html_pages(all_movies)
+    
+    print("✅ movie.json ready! 3000 movies Google ke liye!")
+
+def fetch_movies_from_tmdb():
+    all_data = []
+    for i in range(1, PAGES + 1):
+        url = f"https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&sort_by=popularity.desc&page={i}&vote_count.gte=100&language=hi-IN"
+        try:
+            print(f"Page {i}/{PAGES}...")
+            r = requests.get(url, timeout=10).json()
+            movies = r.get('results', [])
+            
+            for m in movies:
+                all_data.append({
+                    "id": m['id'],
+                    "title": m['title'],
+                    "description": m.get('overview', ''),
+                    "poster": f"https://image.tmdb.org/t/p/w500{m.get('poster_path', '')}" if m.get('poster_path') else "",
+                    "rating": m['vote_average'],
+                    "year": m.get('release_date', '')[:4] if m.get('release_date') else "N/A",
+                    "url": f"/movies/{m['id']}"
+                })
+            time.sleep(0.1)
+        except:
+            continue
+    return all_data
+
+def save_movie_json(movies):  # ✅ movie.json (singular)
+    data = {"movies": movies}  # Key "movies" array ke liye
+    with open('movie.json', 'w', encoding='utf-8') as f:  # ✅ File name movie.json
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    print("✅ movie.json saved!")
+
+def save_sitemap(movies):
+    with open('sitemap.xml', 'w', encoding='utf-8') as s:
+        s.write('<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+')
+        for m in movies:
+            s.write(f'  <url><loc>{SITE_URL}{m["url"]}.html</loc><lastmod>2026-05-09</lastmod><priority>0.8</priority></url>
+')
+        s.write('</urlset>')
+    print("✅ sitemap.xml saved!")
+
+def generate_html_pages(movies):
+    os.makedirs('movies', exist_ok=True)
+    template = '''<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>{title} - u-tv.pages.dev</title>
+<meta name="description" content="{desc[:160]}...">
+<script type="application/ld+json">
+{{
+"@context": "https://schema.org",
+"@type": "Movie",
+"name": "{title}",
+"image": "{poster}",
+"description": "{desc}",
+"url": "{SITE_URL}{url}.html"
+}}
+</script>
+</head>
+<body style="font-family:Arial;max-width:800px;margin:0 auto;padding:20px">
+<h1>{title} ({year}) ⭐ {rating}</h1>
+<img src="{poster}" alt="{title}" style="max-width:300px">
+<p>{desc}</p>
+<div style="background:#000;height:400px;margin:20px 0;color:white;display:flex;align-items:center;justify-content:center">
+Video Player Embed
+</div>
+</body>
+</html>'''
+    
+    for movie in movies:
+        html = template.format(
+            title=movie['title'], desc=movie['description'], 
+            poster=movie['poster'], year=movie['year'], 
+            rating=movie['rating'], url=movie['url'], SITE_URL=SITE_URL
+        )
+        with open(f"movies/{movie['id']}.html", 'w', encoding='utf-8') as f:
+            f.write(html)
+    print("✅ 3000 HTML pages generated!")
+
+if __name__ == "__main__":
+    main()
