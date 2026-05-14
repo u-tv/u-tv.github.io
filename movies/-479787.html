@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     
-    <title>सिनर्स - Watch Online Free - U-TV.PAGES.DEV</title>
-    <meta name="description" content="जुड़वां भाई अपने गृहनगर में एक नई शुरुआत करने की कोशिश करते हैं, लेकिन उन्हें एक बड़ी बुराई का सामना करना पड़ता है.">
+    <title>버려진 청춘 - Watch Online Free - U-TV.PAGES.DEV</title>
+    <meta name="description" content="Watch in HD quality.">
     
-    <link rel="canonical" href="https://u-tv.pages.dev/movies/-1233413.html" />
+    <link rel="canonical" href="https://u-tv.pages.dev/movies/-479787.html" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -137,8 +137,8 @@
     <div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-[#050505]" id="serverList"></div>
     <iframe id="mainIframe" src="" allowfullscreen loading="lazy" class="w-full"></iframe>
     <div class="p-6">
-        <h2 class="text-2xl font-black text-red-600" id="infoName">सिनर्स</h2>
-        <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc">जुड़वां भाई अपने गृहनगर में एक नई शुरुआत करने की कोशिश करते हैं, लेकिन उन्हें एक बड़ी बुराई का सामना करना पड़ता है.</p>
+        <h2 class="text-2xl font-black text-red-600" id="infoName">버려진 청춘</h2>
+        <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc">Watch in HD quality.</p>
     </div>
 </div>
 
@@ -146,7 +146,7 @@
     // --- Original Logic Starts ---
     const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
     let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
-    let currentMovieID = "1233413";
+    let currentMovieID = "479787";
 
     window.onload = () => { initSite(); checkAutoPlay(); };
 
@@ -158,7 +158,7 @@
             const data = await smartApiCall(`/movie/${mId}`);
             if(data.id) playItem(data.id, 'movie', data.title, data.overview);
         } else if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
-            playItem(currentMovieID, 'movie', "सिनर्स", "जुड़वां भाई अपने गृहनगर में एक नई शुरुआत करने की कोशिश करते हैं, लेकिन उन्हें एक बड़ी बुराई का सामना करना पड़ता है.");
+            playItem(currentMovieID, 'movie', "버려진 청춘", "Watch in HD quality.");
         }
     }
 
