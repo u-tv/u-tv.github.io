@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-TV | Premium Movie Streaming</title>
+    <style>
+        :root { --main-red: #e50914; --dark-bg: #0a0a0a; }
+        body { background: var(--dark-bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        
+        /* Header / Navbar */
+        header { background: rgba(0,0,0,0.9); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--main-red); position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--main-red); font-size: 24px; font-weight: bold; text-transform: uppercase; }
+
+        /* Banner - Jo Site ko Movie Portal look dega */
+        .hero { height: 40vh; background: linear-gradient(to bottom, transparent, var(--dark-bg)), url('https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.jpg'); background-size: cover; display: flex; align-items: flex-end; padding: 20px 5%; }
+        .hero-content h2 { font-size: 36px; margin: 0; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
+
+        /* Grid System */
+        .container { padding: 30px 5%; }
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; }
+        
+        .movie-card { background: #181818; border-radius: 8px; overflow: hidden; text-decoration: none; color: #fff; transition: 0.4s; border: 1px solid #222; position: relative; }
+        .movie-card:hover { transform: translateY(-8px); border-color: var(--main-red); box-shadow: 0 10px 20px rgba(229, 9, 20, 0.4); }
+        
+        .movie-card img { width: 100%; height: 240px; object-fit: cover; }
+        
+        /* Player Icon Overlay */
+        .play-btn { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: 0.3s; font-size: 40px; }
+        .movie-card:hover .play-btn { opacity: 1; }
+
+        .movie-info { padding: 10px; text-align: center; font-weight: bold; font-size: 13px; }
+        
+        #loader { text-align: center; font-size: 20px; color: var(--main-red); padding: 50px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">U-TV STREAM</div>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h2>Unlimited Movies & Shows</h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="loader">Processing Movies...</div>
+        <div class="movie-grid" id="movie-grid"></div>
+    </div>
+
+    <script>
+        // --- AUTO SYNC LOGIC ---
+        const gitUser = "u-tv"; 
+        const gitRepo = "u-tv.github.io"; // Photo ke hisab se sahi naam
+
+        async function fetchMovies() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/movies/`);
+                const files = await res.json();
+                
+                document.getElementById('loader').style.display = 'none';
+                const grid = document.getElementById('movie-grid');
+
+                files.forEach(file => {
+                    if (file.name.endsWith('.html') && file.name !== 'index.html') {
+                        const id = file.name.replace('.html', '');
+                        const card = document.createElement('a');
+                        card.href = `./${file.name}`; // Same folder me link karega
+                        card.className = 'movie-card';
+                        card.innerHTML = `
+                            <div class="play-btn">▶️</div>
+                            <img src="https://image.tmdb.org/t/p/w342/${id}.jpg" loading="lazy" onerror="this.src='https://via.placeholder.com/342x500?text=Movie+Streaming'">
+                            <div class="movie-info">Watch Now (ID: ${id})</div>
+                        `;
+                        grid.appendChild(card);
+                    }
+                });
+            } catch (err) {
+                console.error("Error loading movies:", err);
+            }
+        }
+        fetchMovies();
+    </script>
+</body>
+</html>
