@@ -1,279 +1,209 @@
 <!DOCTYPE html>
-<html lang="hi-IN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
-    <title>U-TV.PAGES.DEV</title>
-    <meta name="description" content="Watch movies online on U-TV. Browse trending movies and open player with one click.">
-    <link rel="canonical" href="https://u-tv.github.io/">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <script>
-        if (location.hostname === 'u-tv.pages.dev') {
-            location.replace('https://u-tv.github.io' + location.pathname + location.search + location.hash);
-        }
-    </script>
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JioHotstar Clone - Premium OTT Experience</title>
+    <!-- Tailwind CSS for modern layout -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <!-- Swiper JS CSS for Carousels -->
+    <link rel="stylesheet" href="https://jsdelivr.net" />
+    <!-- Plyr Player CSS for Premium Player -->
+    <link rel="stylesheet" href="https://jsdelivr.net" />
+
     <style>
-        :root { --utv-red: #e50914; --bg-primary: #050505; --card-bg: #121212; }
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        /* Hotstar Signature Premium Background Color Gradient */
         body {
-            margin: 0; overflow-x: hidden;
-            background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-primary) 100%);
-            color: white; font-family: system-ui, -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
+            background: linear-gradient(to bottom, #0c111b, #030b1e);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
-        nav {
-            position: fixed; top: 0; width: 100%; z-index: 100;
-            padding: 10px 18px; background: rgba(0,0,0,0.92);
-            backdrop-filter: blur(20px); border-bottom: 2px solid var(--utv-red);
-            display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 70px;
+        /* Custom Smooth Scrollbar for Movies Row */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        .logo-box h1 {
-            margin: 0; cursor: pointer; font-weight: 900; font-size: 1.7rem;
-            background: linear-gradient(to right, #fff, var(--utv-red));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        .search-container { display: flex; align-items: center; }
-        #search {
-            padding: 10px 15px; background: #111; border: 1px solid #333;
-            color: white; font-size: 14px; width: 180px; border-radius: 25px; outline: none;
+        /* Glassmorphism effect for Hotstar Player Modal */
+        .player-modal {
+            background: rgba(3, 11, 30, 0.95);
+            backdrop-filter: blur(10px);
         }
-        .search-btn {
-            background: var(--utv-red); padding: 10px 18px; border-radius: 25px;
-            font-weight: 800; cursor: pointer; border: none; color: white; margin-left: -40px;
-        }
-        .filter-nav {
-            position: fixed; top: 70px; width: 100%; z-index: 90;
-            background: rgba(5,5,5,0.95); padding: 12px 14px;
-            display: flex; gap: 10px; overflow-x: auto; white-space: nowrap;
-        }
-        .server-btn {
-            background: #1a1a1f; border: 1px solid #333; padding: 10px 18px;
-            border-radius: 30px; font-size: 13px; font-weight: 800; color: #ccc;
-            cursor: pointer; flex: 0 0 auto;
-        }
-        .server-btn.active { background: var(--utv-red); border-color: var(--utv-red); color: white; }
-        #hero-slider {
-            height: 360px; margin-top: 128px; border-radius: 20px; margin-inline: 15px;
-            overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); position: relative;
-        }
-        @media (min-width: 768px) { #hero-slider { height: 520px; } }
-        .movie-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 20px;
-        }
-        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
-        .movie-card {
-            border-radius: 15px; overflow: hidden; background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.25s; cursor: pointer;
-            position: relative;
-        }
-        .movie-card:hover { transform: scale(1.04); border-color: var(--utv-red); }
-        .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .btn-action {
-            background: #1a1a1f; border: 1px solid #333; font-size: 10px; font-weight: 900;
-            padding: 8px; border-radius: 8px; text-transform: uppercase; color: #888; cursor: pointer;
-        }
-        .btn-embed { color: #00ff00 !important; border-color: #00ff00 !important; }
-        .btn-direct { color: #00ccff !important; border-color: #00ccff !important; }
-        #playerOverlay {
-            display: none; position: fixed; inset: 0; background: #000; z-index: 10000; overflow-y: auto;
-        }
-        #mainIframe {
-            width: 100%; height: 70vh; border: 0; display: block; background: #000;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-<nav>
-    <div class="logo-box" onclick="window.location.href='/'">
-        <h1>U-TV<span>.PAGES.DEV</span></h1>
-    </div>
-    <div class="search-container">
-        <input type="text" id="search" onkeypress="handleSearch(event)" placeholder="Search Movie...">
-        <button onclick="triggerSearch()" class="search-btn">GO</button>
-    </div>
-</nav>
-
-<div class="filter-nav no-scrollbar">
-    <button onclick="filterBy('hi',this)" class="server-btn">🇮🇳 HINDI</button>
-    <button onclick="filterBy('en',this)" class="server-btn">🇺🇸 ENG</button>
-    <button onclick="filterBy('movie',this)" class="server-btn active">🎬 MOVIES</button>
-    <button onclick="filterBy('tv',this)" class="server-btn">📺 SERIES</button>
-    <button onclick="window.location.reload()" class="server-btn">🔄 REFRESH</button>
-</div>
-
-<main id="mainContent">
-    <div id="hero-slider">
-        <div id="slider-content" class="w-full h-full relative"></div>
-    </div>
-
-    <div class="relative z-10 pb-20 mt-10 px-6">
-        <section>
-            <h2 class="text-xl font-black mb-6 text-red-600 tracking-tighter">| TRENDING NOW</h2>
-            <div id="trendingSlider" class="flex gap-5 overflow-x-auto no-scrollbar pb-6"></div>
-        </section>
-
-        <section class="mt-12">
-            <h2 class="text-xl font-black mb-6 text-red-600 tracking-tighter" id="sectionTitle">| POPULAR RELEASES</h2>
-            <div id="popularGrid" class="movie-grid"></div>
-            <div class="flex justify-center mt-12">
-                <button onclick="loadMoreMovies()" class="bg-red-600 hover:bg-red-700 px-12 py-4 rounded-full font-black text-sm uppercase transition">
-                    Load More Content
-                </button>
+    <!-- NAVBAR SECTION -->
+    <nav class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 bg-gradient-to-b from-[#0c111b] to-transparent">
+        <div class="flex items-center space-x-8">
+            <!-- Brand Logo text (Change with image if needed) -->
+            <div class="text-2xl font-black tracking-wider text-blue-500 cursor-pointer">Jio<span class="text-white">Hotstar</span></div>
+            <!-- Links -->
+            <div class="hidden md:flex space-x-6 text-gray-300 font-medium">
+                <a href="#" class="hover:text-white transition duration-200">Home</a>
+                <a href="#" class="hover:text-white transition duration-200">Movies</a>
+                <a href="#" class="hover:text-white transition duration-200">TV Shows</a>
+                <a href="#" class="hover:text-white transition duration-200">Sports</a>
             </div>
-        </section>
-    </div>
-</main>
+        </div>
+        <!-- Search and Profile Box -->
+        <div class="flex items-center space-x-4">
+            <div class="relative hidden sm:block">
+                <input type="text" placeholder="Search movies, shows..." class="bg-[#141b29] border border-gray-700 rounded-md px-4 py-1.5 text-sm focus:outline-none focus:border-blue-500 w-64 text-gray-200 transition duration-300">
+                <i class="fa-solid fa-magnifying-glass absolute right-3 top-2.5 text-gray-400 text-sm"></i>
+            </div>
+            <button class="bg-blue-600 text-white font-semibold text-xs uppercase px-4 py-2 rounded shadow hover:bg-blue-500 transition duration-200">Subscribe</button>
+            <div class="w-8 h-8 rounded-full bg-gray-600 border border-gray-500 flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-user text-sm text-white"></i>
+            </div>
+        </div>
+    </nav>
 
-<div id="playerOverlay">
-    <div class="p-4 bg-zinc-900 flex justify-between items-center border-b border-white/10">
-        <h3 class="text-red-600 font-black truncate text-sm uppercase" id="playingTitle">U-TV PLAYER</h3>
-        <button onclick="closePlayer()" class="text-white text-3xl">✕</button>
-    </div>
-    <div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-[#050505]" id="serverList"></div>
-    <iframe id="mainIframe" src="" allowfullscreen loading="lazy"></iframe>
-    <div class="p-6">
-        <h2 class="text-2xl font-black text-red-600" id="infoName"></h2>
-        <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc"></p>
-    </div>
-</div>
+    <!-- MAIN APP WRAPPER (PADDING TOP FOR FIXED NAV) -->
+    <div class="pt-20 pb-12 px-6 max-w-7xl mx-auto space-y-10">
 
-<script>
-const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
-let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
-
-window.addEventListener('load', () => { initSite(); });
-
-async function smartApiCall(endpoint) {
-    try {
-        const res = await fetch(`https://api.themoviedb.org/3${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEYS[0]}`);
-        return await res.json();
-    } catch (e) {
-        return { results: [] };
-    }
-}
-
-async function initSite() {
-    const heroData = await smartApiCall('/trending/movie/day');
-    if (heroData.results?.length) {
-        document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m, i) => `
-            <div class="absolute inset-0 ${i===0 ? 'z-10 opacity-100' : 'opacity-0'} transition-opacity duration-700" onclick="goToMovie('${(m.title || '').replace(/'/g,'')}', ${m.id})">
-                <img src="https://image.tmdb.org/t/p/original${m.backdrop_path || ''}" class="w-full h-full object-cover brightness-50">
-                <div class="absolute bottom-12 left-10 right-10">
-                    <h2 class="text-3xl md:text-5xl font-black uppercase text-white drop-shadow-lg">${m.title || 'Untitled'}</h2>
+        <!-- 1. HERO SLIDER SECTION (SWIPER) -->
+        <div class="swiper mainSlider rounded-xl overflow-hidden shadow-2xl">
+            <div class="swiper-wrapper">
+                <!-- Slide 1 -->
+                <div class="swiper-slide relative h-[250px] sm:h-[450px] bg-cover bg-center flex items-end" style="background-image: linear-gradient(to right, rgba(12,17,27,1) 30%, rgba(12,17,27,0) 80%), url('https://unsplash.com');">
+                    <div class="p-6 sm:p-12 space-y-3 max-w-lg">
+                        <h1 class="text-2xl sm:text-4xl font-extrabold text-white">True Detective: S1</h1>
+                        <p class="text-xs sm:text-sm text-gray-400 line-clamp-3">A masterpiece psychological thriller featuring detectives Rust Cohle and Marty Hart on a 17-year hunt for a ritualistic ritual killer.</p>
+                        <button onclick="openPlayer('https://w3schools.com')" class="bg-white text-black px-6 py-2 rounded font-bold hover:bg-gray-200 text-sm shadow transition flex items-center space-x-2"><i class="fa-solid fa-play"></i> <span>Watch Free</span></button>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="swiper-slide relative h-[250px] sm:h-[450px] bg-cover bg-center flex items-end" style="background-image: linear-gradient(to right, rgba(12,17,27,1) 30%, rgba(12,17,27,0) 80%), url('https://unsplash.com');">
+                    <div class="p-6 sm:p-12 space-y-3 max-w-lg">
+                        <h1 class="text-2xl sm:text-4xl font-extrabold text-white">Crash Landing on You</h1>
+                        <p class="text-xs sm:text-sm text-gray-400 line-clamp-3">A blockbuster Korean drama where a South Korean heiress accidentally crashes into North Korea and finds forbidden love.</p>
+                        <button onclick="openPlayer('https://w3schools.com')" class="bg-white text-black px-6 py-2 rounded font-bold hover:bg-gray-200 text-sm shadow transition flex items-center space-x-2"><i class="fa-solid fa-play"></i> <span>Watch Free</span></button>
+                    </div>
                 </div>
             </div>
-        `).join('');
-    }
-
-    const trendData = await smartApiCall('/trending/all/week');
-    if (trendData.results?.length) {
-        document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0, 12).map(m => createCard(m, 'movie-card w-44 shrink-0')).join('');
-    }
-
-    await loadMoreMovies();
-}
-
-function createCard(m, extraClass='movie-card') {
-    const title = (m.title || m.name || 'Untitled').replace(/'/g, '');
-    return `
-    <div class="card-container flex flex-col gap-2 w-full">
-        <div class="${extraClass} aspect-[2/3]" onclick="goToMovie('${title}', ${m.id})">
-            <img src="https://image.tmdb.org/t/p/w500${m.poster_path || ''}" loading="lazy" alt="${title}">
-            <div class="absolute bottom-0 w-full p-2 bg-black/80 text-[10px] font-bold truncate">${title}</div>
+            <!-- Slider Indicators -->
+            <div class="swiper-pagination"></div>
         </div>
-        <div class="flex gap-2">
-            <div class="btn-action btn-embed flex-1 text-center" onclick="copyAction(event, ${m.id}, 'embed')">Embed</div>
-            <div class="btn-action btn-direct flex-1 text-center" onclick="copyAction(event, ${m.id}, 'direct')">Link</div>
+
+        <!-- 2. MOVIES CAROUSEL ROW (TRENDING NOW) -->
+        <div class="space-y-3">
+            <h2 class="text-xl font-bold tracking-wide text-gray-200 flex items-center space-x-2">
+                <span>Trending Now</span>
+                <i class="fa-solid fa-angle-right text-sm text-gray-400"></i>
+            </h2>
+            <div class="flex overflow-x-auto space-x-4 pb-4 no-scrollbar scroll-smooth snap-x">
+                <!-- Movie Card 1 -->
+                <div onclick="openPlayer('https://w3schools.com')" class="min-w-[140px] sm:min-w-[180px] group cursor-pointer snap-start">
+                    <div class="relative overflow-hidden rounded-lg aspect-[2/3] shadow-lg border border-transparent group-hover:border-blue-500 group-hover:scale-105 transition-all duration-300">
+                        <img src="https://unsplash.com" alt="True Detective" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 flex items-end p-3 transition duration-300">
+                            <span class="text-xs font-bold bg-blue-600 px-2 py-0.5 rounded">Action</span>
+                        </div>
+                    </div>
+                    <p class="mt-2 text-sm font-semibold truncate text-gray-300 group-hover:text-white">True Detective</p>
+                </div>
+                <!-- Movie Card 2 -->
+                <div onclick="openPlayer('https://w3schools.com')" class="min-w-[140px] sm:min-w-[180px] group cursor-pointer snap-start">
+                    <div class="relative overflow-hidden rounded-lg aspect-[2/3] shadow-lg border border-transparent group-hover:border-blue-500 group-hover:scale-105 transition-all duration-300">
+                        <img src="https://unsplash.com" alt="The Fall" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 flex items-end p-3 transition duration-300">
+                            <span class="text-xs font-bold bg-blue-600 px-2 py-0.5 rounded">Psychological</span>
+                        </div>
+                    </div>
+                    <p class="mt-2 text-sm font-semibold truncate text-gray-300 group-hover:text-white">The Fall</p>
+                </div>
+                <!-- Movie Card 3 -->
+                <div onclick="openPlayer('https://w3schools.com')" class="min-w-[140px] sm:min-w-[180px] group cursor-pointer snap-start">
+                    <div class="relative overflow-hidden rounded-lg aspect-[2/3] shadow-lg border border-transparent group-hover:border-blue-500 group-hover:scale-105 transition-all duration-300">
+                        <img src="https://unsplash.com" alt="Hidden Love" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 flex items-end p-3 transition duration-300">
+                            <span class="text-xs font-bold bg-blue-600 px-2 py-0.5 rounded">C-Drama</span>
+                        </div>
+                    </div>
+                    <p class="mt-2 text-sm font-semibold truncate text-gray-300 group-hover:text-white">Hidden Love</p>
+                </div>
+                <!-- Movie Card 4 -->
+                <div onclick="openPlayer('https://w3schools.com')" class="min-w-[140px] sm:min-w-[180px] group cursor-pointer snap-start">
+                    <div class="relative overflow-hidden rounded-lg aspect-[2/3] shadow-lg border border-transparent group-hover:border-blue-500 group-hover:scale-105 transition-all duration-300">
+                        <img src="https://unsplash.com" alt="Mare of Easttown" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 flex items-end p-3 transition duration-300">
+                            <span class="text-xs font-bold bg-blue-600 px-2 py-0.5 rounded">Crime</span>
+                        </div>
+                    </div>
+                    <p class="mt-2 text-sm font-semibold truncate text-gray-300 group-hover:text-white">Mare of Easttown</p>
+                </div>
+            </div>
         </div>
-    </div>`;
-}
 
-function copyAction(e, id, type) {
-    e.stopPropagation();
-    const url = `https://u-tv.github.io/movies/watch-${id}.html`;
-    const text = type === 'embed'
-        ? `<iframe src="${url}" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>`
-        : url;
-    navigator.clipboard.writeText(text);
-    alert("Copied!");
-}
+    </div>
 
-function goToMovie(title, id) {
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    playItem(id, 'movie', title, 'Streaming now on U-TV.');
-}
+    <!-- 3. HOTSTAR MODAL VIDEO PLAYER (DYNAMIC COUPLING WITH PLYR) -->
+    <div id="videoModal" class="player-modal fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <!-- Close Overlay Button -->
+        <button onclick="closePlayer()" class="absolute top-4 right-4 z-[110] bg-white/10 hover:bg-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <!-- Actual Video Box Container -->
+        <div class="w-full max-w-4xl bg-black rounded-lg overflow-hidden shadow-2xl">
+            <video id="player" playsinline controls>
+                <source id="videoSource" src="" type="video/mp4" />
+            </video>
+        </div>
+    </div>
 
-async function playItem(id, type, title, overview) {
-    document.getElementById('infoName').innerText = title || '';
-    document.getElementById('playingTitle').innerText = title || 'U-TV PLAYER';
-    document.getElementById('infoDesc').innerText = overview || 'Streaming now on U-TV.';
-    document.getElementById('playerOverlay').style.display = 'block';
-    document.getElementById('playerOverlay').scrollTop = 0;
+    <!-- SCRIPTS LOAD (SWIPER & PLYR) -->
+    <script src="https://jsdelivr.net"></script>
+    <script src="https://jsdelivr.net"></script>
 
-    const servers = [
-        { n: '🚀 SERVER 1', u: `https://vidsrc.me/embed/${type}/${id}` },
-        { n: '💎 SERVER 2', u: `https://vidsrc.to/embed/${type}/${id}` },
-        { n: '🔥 SERVER 3', u: `https://embed.su/embed/${type}/${id}` }
-    ];
+    <script>
+        // Initialize Premium Auto-sliding Hotstar Carousels
+        const swiper = new Swiper('.mainSlider', {
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
 
-    const serverList = document.getElementById('serverList');
-    serverList.innerHTML = servers.map((s, i) =>
-        `<button class="server-btn ${i===0 ? 'active' : ''}" onclick="switchServer('${s.u}', this)">${s.n}</button>`
-    ).join('');
+        // Initialize Premium Custom Plyr Video Player Controller
+        const player = new Plyr('#player', {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'fullscreen'],
+            seekTime: 10
+        });
 
-    document.getElementById('mainIframe').src = servers[0].u;
-}
+        // JavaScript Logic to Trigger Modals Dynamic Source Loading
+        function openPlayer(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const source = document.getElementById('videoSource');
+            
+            // Set dynamic movie link
+            source.src = videoUrl;
+            player.source = {
+                type: 'video',
+                sources: [{ src: videoUrl, type: 'video/mp4' }]
+            };
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            player.play(); // Auto trigger play on click
+        }
 
-function switchServer(url, btn) {
-    document.getElementById('mainIframe').src = url;
-    document.querySelectorAll('#serverList .server-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
-
-function closePlayer() {
-    document.getElementById('playerOverlay').style.display = 'none';
-    document.getElementById('mainIframe').src = '';
-}
-
-async function loadMoreMovies() {
-    if (isLoading) return;
-    isLoading = true;
-    const end = currentLang === 'movie'
-        ? `/movie/popular?page=${currentPage}`
-        : `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
-    const data = await smartApiCall(end);
-    if (data.results?.length) {
-        document.getElementById('popularGrid').innerHTML += data.results.map(m => createCard(m)).join('');
-        currentPage++;
-    }
-    isLoading = false;
-}
-
-async function triggerSearch() {
-    const q = document.getElementById('search').value.trim();
-    if (!q) return;
-    const data = await smartApiCall(`/search/multi?query=${encodeURIComponent(q)}`);
-    document.getElementById('popularGrid').innerHTML = (data.results || []).filter(m => m.poster_path).map(m => createCard(m)).join('');
-    document.getElementById('sectionTitle').innerText = `RESULT: ${q.toUpperCase()}`;
-}
-
-function handleSearch(e) {
-    if (e.key === 'Enter') triggerSearch();
-}
-
-function filterBy(l, b) {
-    document.querySelectorAll('.filter-nav .server-btn').forEach(btn => btn.classList.remove('active'));
-    b.classList.add('active');
-    currentLang = l;
-    currentPage = 1;
-    document.getElementById('popularGrid').innerHTML = '';
-    loadMoreMovies();
-}
-</script>
+        function closePlayer() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            player.pause(); // Pause video instantly upon modal collapse
+        }
+    </script>
 </body>
 </html>
