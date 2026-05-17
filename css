@@ -1,0 +1,50 @@
+/* पूरे पेज को जेट ब्लैक और अट्रैक्टिव बनाने का कोड */
+body {
+    background-color: #000000; /* एकदम प्योर जेट ब्लैक */
+    color: #ffffff; /* अट्रैक्टिव वाइट टेक्स्ट */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.2px; /* टेक्स्ट को प्रीमियम और साफ दिखाने के लिए */
+    overflow-x: hidden;
+    padding-left: 90px;
+}
+
+/* स्क्रीनशॉट जैसे हल्के ग्रे और फेड टेक्स्ट (जैसे Terms, Privacy, Meta text) के लिए */
+.secondary-text {
+    color: #f3f3f3; /* पूरी तरह सफेद नहीं, प्रीमियम हल्का सफेद */
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.85; /* थोड़ा सा ट्रांसपेरेंट ताकि आँखों को चुभे नहीं */
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+/* होवर करने पर टेक्स्ट चमकने (Attractive) का इफ़ेक्ट */
+.secondary-text:hover {
+    color: #ffffff;
+    opacity: 1;
+}
+
+/* स्क्रीनशॉट वाले 'STAY CONNECTED' जैसे हेडर के लिए */
+.section-subheading {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px; /* अक्षरों के बीच प्रीमियम गैप */
+    color: #ffffff;
+    opacity: 0.5; /* हल्का डिम लुक */
+    font-weight: 600;
+}
+
+/* स्क्रीनशॉट जैसा इनपुट बॉक्स (Enter your email) */
+.custom-input-box {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* पतली अट्रैक्टिव लाइन */
+    padding: 15px 0;
+    color: #ffffff;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+}
+
+.custom-input-box::placeholder {
+    color: rgba(255, 255, 255, 0.3); /* धुंधला प्लेसहोल्डर टेक्स्ट */
+}
