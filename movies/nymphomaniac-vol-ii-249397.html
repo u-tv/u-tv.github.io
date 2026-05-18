@@ -1,4 +1,4 @@
-CTYPE html>
+<!DOCTYPE html>
 <html lang="hi-IN">
 <head>
     <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
@@ -30,7 +30,6 @@ CTYPE html>
             -webkit-font-smoothing: antialiased; 
         }
         
-        /* Navigation Redesign */
         nav { 
             position: fixed; top: 0; width: 100%; z-index: 100; padding: 10px 25px; 
             background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); 
@@ -44,7 +43,6 @@ CTYPE html>
             font-size: 2.2rem; margin: 0; cursor: pointer; 
         }
         
-        /* Search Box Redesign */
         #search { 
             padding: 10px 15px; background: #111; border: 1px solid #333; 
             color: white; font-size: 14px; width: 180px; border-radius: 25px; outline: none; 
@@ -55,7 +53,6 @@ CTYPE html>
             font-weight: 900; cursor: pointer; border: none; color: white; margin-left: -40px;
         }
 
-        /* Hero Slider & Filters */
         #hero-slider { height: 400px; margin-top: 130px; border-radius: 20px; margin-inline: 15px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
         @media (min-width: 768px) { #hero-slider { height: 550px; } }
         
@@ -70,7 +67,6 @@ CTYPE html>
         }
         .server-btn.active { background: var(--utv-red); border-color: var(--utv-red); color: white; box-shadow: 0 0 15px rgba(229, 9, 20, 0.4); }
 
-        /* Movie Grid & Cards */
         .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px; }
         @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
         
@@ -88,7 +84,6 @@ CTYPE html>
         .btn-embed { color: #00ff00 !important; border-color: #00ff00 !important; }
         .btn-direct { color: #00ccff !important; border-color: #00ccff !important; }
 
-        /* Player Overlay */
         #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
@@ -143,7 +138,6 @@ CTYPE html>
 </div>
 
 <script>
-    // --- Original Logic Starts ---
     const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
     let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
     let currentMovieID = "249397";
@@ -152,7 +146,7 @@ CTYPE html>
 
     async function checkAutoPlay() {
         const path = window.location.pathname;
-        const match = path.match(/watch-(\d+)/);
+        const match = path.match(/watch-(d+)/);
         if (match && match[1]) {
             const mId = match[1];
             const data = await smartApiCall(`/movie/${mId}`);
@@ -227,9 +221,14 @@ CTYPE html>
         document.getElementById('playerOverlay').style.display = 'block';
         
         const servers = [
-            { n: "🚀 SERVER 1", u: `https://vidsrc.me/embed/${type}/${id}` },
-            { n: "💎 SERVER 2", u: `https://vidsrc.to/embed/${type}/${id}` },
-            { n: "🔥 SERVER 3", u: `https://embed.su/embed/${type}/${id}` }
+            { n: "⚡ Server 1", u: `https://vidsrc.to/embed/${type}/${id}` },
+            { n: "🚀 Server 2", u: `https://embed.su/embed/${type}/${id}` },
+            { n: "💎 Server 3", u: `https://vidsrc.me/embed/${type}?tmdb=${id}` },
+            { n: "🔥 Server 4", u: `https://moviesapi.club/movie/${id}` },
+            { n: "✨ Server 5", u: `https://autoembed.to/${type}/tmdb/${id}` },
+            { n: "🌟 Server 6", u: `https://2embed.cc/embed/${type}?tmdb=${id}` },
+            { n: "⚡ Server 7", u: `https://vidsrc.pro/embed/${type}/${id}` },
+            { n: "🛰️ Server 8", u: `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1` }
         ];
 
         document.getElementById('serverList').innerHTML = servers.map((s, i) => 
