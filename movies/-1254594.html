@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     
-    <title>劇場版 呪術廻戦「渋谷事変 特別編集版」×「死滅回游 先行上映」 - Watch Online Free - U-TV.PAGES.DEV</title>
+    <title>โอมุคาเดะ - Watch Online Free - U-TV.PAGES.DEV</title>
     <meta name="description" content="Watch in HD quality.">
     
-    <link rel="canonical" href="https://u-tv.pages.dev/movies/-1539104.html" />
+    <link rel="canonical" href="https://u-tv.pages.dev/movies/-1254594.html" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -132,7 +132,7 @@
     <div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-[#050505]" id="serverList"></div>
     <iframe id="mainIframe" src="" allowfullscreen loading="lazy" class="w-full"></iframe>
     <div class="p-6">
-        <h2 class="text-2xl font-black text-red-600" id="infoName">劇場版 呪術廻戦「渋谷事変 特別編集版」×「死滅回游 先行上映」</h2>
+        <h2 class="text-2xl font-black text-red-600" id="infoName">โอมุคาเดะ</h2>
         <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc">Watch in HD quality.</p>
     </div>
 </div>
@@ -140,7 +140,7 @@
 <script>
     const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
     let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
-    let currentMovieID = "1539104";
+    let currentMovieID = "1254594";
 
     window.onload = () => { initSite(); checkAutoPlay(); };
 
@@ -152,7 +152,7 @@
             const data = await smartApiCall(`/movie/${mId}`);
             if(data.id) playItem(data.id, 'movie', data.title, data.overview);
         } else if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
-            playItem(currentMovieID, 'movie', "劇場版 呪術廻戦「渋谷事変 特別編集版」×「死滅回游 先行上映」", "Watch in HD quality.");
+            playItem(currentMovieID, 'movie', "โอมุคาเดะ", "Watch in HD quality.");
         }
     }
 
