@@ -96,10 +96,13 @@
 
         /* FIX: प्लेयर ओवरले को मोबाइल ऐप जैसा 100% फुल स्क्रीन रिस्पॉन्सिव बनाना */
         #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; overflow-y: auto; width: 100vw; height: 100vh; }
-        #mainIframe { width: 100%; aspectRatio: 16/9; min-height: 250px; }
+        #mainIframe { width: 100%; aspect-ratio: 16/9; min-height: 250px; }
         @media (min-width: 768px) { #mainIframe { height: 500px; } }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* FIX: 404 एरर से यूजर को गाइड करने के लिए स्पेशल अलर्ट बॉक्स स्टाइल */
+        .server-notice { background: rgba(229, 9, 20, 0.1); border: 1px dashed var(--utv-red); padding: 10px; border-radius: 8px; text-align: center; font-size: 12px; margin-top: 10px; color: #ff9999; }
     </style>
     <script src="https://cdn.tailwindcss.com" defer></script>
 </head>
@@ -145,6 +148,9 @@
     </div>
     <div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-[#050505]" id="serverList"></div>
     <iframe id="mainIframe" src="" allowfullscreen loading="lazy" class="w-full"></iframe>
+    
+    <div class="px-6"><div class="server-notice">⚠️ यदि इस सर्वर पर 404 Error या वीडियो न दिखे, तो कृपया ऊपर दिए गए अन्य <b>Servers (1-8)</b> को बदल-बदल कर ट्राई करें!</div></div>
+    
     <div class="p-6">
         <h2 class="text-2xl font-black text-red-600" id="infoName">${MOVIE_TITLE}</h2>
         <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc">${MOVIE_DESC}</p>
