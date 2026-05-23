@@ -3,7 +3,7 @@
 <head>
     <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>The Punisher: One Last Kill - Watch Online Free - U-TV.PAGES.DEV</title>
     <meta name="description" content="Watch in HD quality.">
@@ -20,14 +20,18 @@
             --card-bg: #121212;
         }
         * { box-sizing: border-box; transition: all 0.2s ease-in-out; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; width: 100%; overflow-x: hidden; }
         body { 
             background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-primary) 100%); 
             color: white; 
             font-family: 'Inter', system-ui, -apple-system, sans-serif; 
             margin: 0; 
+            /* FIX: साइड का फालतू स्पेस और ब्लैक स्क्रीन गैप हटाने के लिए */
+            width: 100%;
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased; 
+            -webkit-user-select: none;
+            user-select: none;
         }
         
         nav { 
@@ -53,8 +57,9 @@
             font-weight: 900; cursor: pointer; border: none; color: white; margin-left: -40px;
         }
 
-        #hero-slider { height: 400px; margin-top: 130px; border-radius: 20px; margin-inline: 15px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-        @media (min-width: 768px) { #hero-slider { height: 550px; } }
+        /* FIX: मोबाइल स्क्रीन पर ओवरलैपिंग और गैप फिक्स करने के लिए मार्जिन एडजस्टमेंट */
+        #hero-slider { height: 320px; margin-top: 140px; border-radius: 20px; margin-inline: 15px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        @media (min-width: 768px) { #hero-slider { height: 550px; margin-top: 130px; } }
         
         .filter-nav { 
             position: fixed; top: 70px; width: 100%; z-index: 90; 
@@ -64,28 +69,40 @@
         .server-btn { 
             background: #1a1a1f; border: 1px solid #333; padding: 10px 22px; 
             border-radius: 30px; font-size: 13px; font-weight: 800; color: #ccc; cursor: pointer; 
+            white-space: nowrap;
         }
         .server-btn.active { background: var(--utv-red); border-color: var(--utv-red); color: white; box-shadow: 0 0 15px rgba(229, 9, 20, 0.4); }
 
-        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px; }
-        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
+        /* FIX: मोबाइल पर 2 कॉलम परफेक्ट फिट और बड़ी स्क्रीन पर ऑटो-एडजस्ट बिना खाली स्पेस के */
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px 0; width: 100%; }
+        @media (min-width: 600px) { .movie-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 768px) { .movie-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; padding: 20px; } }
         
         .movie-card { 
             border-radius: 15px; overflow: hidden; background: var(--card-bg); 
             border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; cursor: pointer; 
+            position: relative; width: 100%;
         }
         .movie-card:hover { transform: scale(1.05); border-color: var(--utv-red); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .movie-card img { width: 100%; height: 100%; object-fit: cover; }
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 2/3; display: block; }
         
         .btn-action { 
-            background: #1a1a1f; border: 1px solid #333; font-size: 10px; font-weight: 900; 
+            background: #1a1a1f; border: 1px solid #333; font-size: 11px; font-weight: 900; 
             padding: 8px; border-radius: 8px; text-transform: uppercase; color: #888;
         }
         .btn-embed { color: #00ff00 !important; border-color: #00ff00 !important; }
         .btn-direct { color: #00ccff !important; border-color: #00ccff !important; }
 
-        #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; }
+        /* FIX: प्लेयर ओवरले को मोबाइल ऐप जैसा 100% फुल स्क्रीन रिस्पॉन्सिव बनाना */
+        #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; overflow-y: auto; width: 100vw; height: 100vh; }
+        #mainIframe { width: 100%; aspect-ratio: 16/9; min-height: 250px; }
+        @media (min-width: 768px) { #mainIframe { height: 500px; } }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* FIX: 404 एरर से यूजर को गाइड करने के लिए स्पेशल अलर्ट बॉक्स स्टाइल */
+        .server-notice { background: rgba(229, 9, 20, 0.1); border: 1px dashed var(--utv-red); padding: 10px; border-radius: 8px; text-align: center; font-size: 12px; margin-top: 10px; color: #ff9999; }
     </style>
     <script src="https://cdn.tailwindcss.com" defer></script>
 </head>
@@ -107,9 +124,9 @@
     <button onclick="window.location.reload()" class="server-btn">🔄 REFRESH</button>
 </div>
 
-<main id="mainContent">
+<main id="mainContent" class="w-full max-w-full overflow-hidden">
     <div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
-    <div class="relative z-10 pb-20 mt-10 px-6">
+    <div class="relative z-10 pb-20 mt-10 px-4 md:px-6">
         <section>
             <h2 class="text-xl font-black mb-6 text-red-600 tracking-tighter">| TRENDING NOW</h2>
             <div id="trendingSlider" class="flex gap-5 overflow-x-auto no-scrollbar pb-6"></div>
@@ -131,6 +148,9 @@
     </div>
     <div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-[#050505]" id="serverList"></div>
     <iframe id="mainIframe" src="" allowfullscreen loading="lazy" class="w-full"></iframe>
+    
+    <div class="px-6"><div class="server-notice">⚠️ यदि इस सर्वर पर 404 Error या वीडियो न दिखे, तो कृपया ऊपर दिए गए अन्य <b>Servers (1-8)</b> को बदल-बदल कर ट्राई करें!</div></div>
+    
     <div class="p-6">
         <h2 class="text-2xl font-black text-red-600" id="infoName">The Punisher: One Last Kill</h2>
         <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc">Watch in HD quality.</p>
