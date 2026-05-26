@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+    <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>ദൃശ്യം 3 - Watch Online Free - U-TV.PAGES.DEV</title>
+    <meta name="description" content="Watch in HD quality.">
+    
+    <link rel="canonical" href="https://u-tv.pages.dev/movies/3-847742.html" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <style>
+        :root { 
+            --watcho-orange: #ff4f00; 
+            --utv-red: #e50914; 
+            --bg-primary: #050505; 
+            --card-bg: #121212;
+        }
+        * { box-sizing: border-box; transition: all 0.2s ease-in-out; }
+        html { scroll-behavior: smooth; width: 100%; overflow-x: hidden; }
+        body { 
+            background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-primary) 100%); 
+            color: white; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            /* FIX: साइड का फालतू स्पेस और ब्लैक स्क्रीन गैप हटाने के लिए */
+            width: 100%;
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased; 
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        nav { 
+            position: fixed; top: 0; width: 100%; z-index: 100; padding: 10px 25px; 
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); 
+            border-bottom: 2px solid var(--utv-red); 
+            display: flex; align-items: center; justify-content: space-between; height: 70px; 
+        }
+        .logo-box h1 { 
+            font-family: 'Arial Black', sans-serif; 
+            background: linear-gradient(to right, #fff, var(--utv-red)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            font-size: 2.2rem; margin: 0; cursor: pointer; 
+        }
+        
+        #search { 
+            padding: 10px 15px; background: #111; border: 1px solid #333; 
+            color: white; font-size: 14px; width: 180px; border-radius: 25px; outline: none; 
+        }
+        #search:focus { border-color: var(--utv-red); box-shadow: 0 0 10px rgba(229, 9, 20, 0.5); }
+        .search-btn { 
+            background: var(--utv-red); padding: 10px 20px; border-radius: 25px; 
+            font-weight: 900; cursor: pointer; border: none; color: white; margin-left: -40px;
+        }
+
+        /* FIX: मोबाइल स्क्रीन पर ओवरलैपिंग और गैप फिक्स करने के लिए मार्जिन एडजस्टमेंट */
+        #hero-slider { height: 320px; margin-top: 140px; border-radius: 20px; margin-inline: 15px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        @media (min-width: 768px) { #hero-slider { height: 550px; margin-top: 130px; } }
+        
+        .filter-nav { 
+            position: fixed; top: 70px; width: 100%; z-index: 90; 
+            background: rgba(5,5,5,0.95); padding: 15px; 
+            display: flex; gap: 12px; overflow-x: auto; 
+        }
+        .server-btn { 
+            background: #1a1a1f; border: 1px solid #333; padding: 10px 22px; 
+            border-radius: 30px; font-size: 13px; font-weight: 800; color: #ccc; cursor: pointer; 
+            white-space: nowrap;
+        }
+        .server-btn.active { background: var(--utv-red); border-color: var(--utv-red); color: white; box-shadow: 0 0 15px rgba(229, 9, 20, 0.4); }
+
+        /* FIX: मोबाइल पर 2 कॉलम परफेक्ट फिट और बड़ी स्क्रीन पर ऑटो-एडजस्ट बिना खाली स्पेस के */
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px 0; width: 100%; }
+        @media (min-width: 600px) { .movie-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 768px) { .movie-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; padding: 20px; } }
+        
+        .movie-card { 
+            border-radius: 15px; overflow: hidden; background: var(--card-bg); 
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; cursor: pointer; 
+            position: relative; width: 100%;
+        }
+        .movie-card:hover { transform: scale(1.05); border-color: var(--utv-red); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 2/3; display: block; }
+        
+        .btn-action { 
+            background: #1a1a1f; border: 1px solid #333; font-size: 11px; font-weight: 900; 
+            padding: 8px; border-radius: 8px; text-transform: uppercase; color: #888;
+        }
+        .btn-embed { color: #00ff00 !important; border-color: #00ff00 !important; }
+        .btn-direct { color: #00ccff !important; border-color: #00ccff !important; }
+
+        /* FIX: प्लेयर ओवरले को मोबाइल ऐप जैसा 100% फुल स्क्रीन रिस्पॉन्सिव बनाना */
+        #playerOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; overflow-y: auto; width: 100vw; height: 100vh; }
+        #mainIframe { width: 100%; aspect-ratio: 16/9; min-height: 250px; }
+        @media (min-width: 768px) { #mainIframe { height: 500px; } }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* FIX: 404 एरर से यूजर को गाइड करने के लिए स्पेशल अलर्ट बॉक्स स्टाइल */
+        .server-notice { background: rgba(229, 9, 20, 0.1); border: 1px dashed var(--utv-red); padding: 10px; border-radius: 8px; text-align: center; font-size: 12px; margin-top: 10px; color: #ff9999; }
+    </style>
+    <script src="https://cdn.tailwindcss.com" defer></script>
+</head>
+<body>
+
+<nav>
+    <div class="logo-box" onclick="window.location.href='/'"><h1>U-TV<span>.PAGES.DEV</span></h1></div>
+    <div class="search-container">
+        <input type="text" id="search" onkeypress="handleSearch(event)" placeholder="Search Movie...">
+        <button onclick="triggerSearch()" class="search-btn">GO</button>
+    </div>
+</nav>
+
+<div class="filter-nav no-scrollbar">
+    <button onclick="filterBy('hi',this)" class="server-btn">🇮🇳 HINDI</button>
+    <button onclick="filterBy('en',this)" class="server-btn">🇺🇸 ENG</button>
+    <button onclick="filterBy('movie',this)" class="server-btn active">🎬 MOVIES</button>
+    <button onclick="filterBy('tv',this)" class="server-btn">📺 SERIES</button>
+    <button onclick="window.location.reload()" class="server-btn">🔄 REFRESH</button>
+</div>
+
+<main id="mainContent" class="w-full max-w-full overflow-hidden">
+    <div id="hero-slider"><div id="slider-content" class="w-full h-full relative"></div></div>
+    <div class="relative z-10 pb-20 mt-10 px-4 md:px-6">
+        <section>
+            <h2 class="text-xl font-black mb-6 text-red-600 tracking-tighter">| TRENDING NOW</h2>
+            <div id="trendingSlider" class="flex gap-5 overflow-x-auto no-scrollbar pb-6"></div>
+        </section>
+        <section class="mt-12">
+            <h2 class="text-xl font-black mb-6 text-red-600 tracking-tighter" id="sectionTitle">| POPULAR RELEASES</h2>
+            <div id="popularGrid" class="movie-grid"></div>
+            <div class="flex justify-center mt-12">
+                <button onclick="loadMoreMovies()" class="bg-red-600 hover:bg-red-700 px-12 py-4 rounded-full font-black text-sm uppercase transition shadow-lg shadow-red-900/20">Load More Content</button>
+            </div>
+        </section>
+    </div>
+</main>
+
+<div id="playerOverlay">
+    <div class="p-4 bg-zinc-900 flex justify-between items-center border-b border-white/10">
+        <h3 class="text-red-600 font-black truncate text-sm uppercase" id="playingTitle">U-TV PLAYER</h3>
+        <button onclick="closePlayer()" class="text-white text-3xl">✕</button>
+    </div>
+    <div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-[#050505]" id="serverList"></div>
+    <iframe id="mainIframe" src="" allowfullscreen loading="lazy" class="w-full"></iframe>
+    
+    <div class="px-6"><div class="server-notice">⚠️ यदि इस सर्वर पर 404 Error या वीडियो न दिखे, तो कृपया ऊपर दिए गए अन्य <b>Servers (1-8)</b> को बदल-बदल कर ट्राई करें!</div></div>
+    
+    <div class="p-6">
+        <h2 class="text-2xl font-black text-red-600" id="infoName">ദൃശ്യം 3</h2>
+        <p class="text-gray-400 text-sm mt-4 leading-relaxed" id="infoDesc">Watch in HD quality.</p>
+    </div>
+</div>
+
+<script>
+    const API_KEYS = ['5bf61a62fd4647aa7debed7d6f2db079'];
+    let currentPage = 1, currentLang = 'movie', currentSlide = 0, isLoading = false;
+    let currentMovieID = "847742";
+
+    window.onload = () => { initSite(); checkAutoPlay(); };
+
+    async function checkAutoPlay() {
+        const path = window.location.pathname;
+        const match = path.match(/watch-(d+)/);
+        if (match && match[1]) {
+            const mId = match[1];
+            const data = await smartApiCall(`/movie/${mId}`);
+            if(data.id) playItem(data.id, 'movie', data.title, data.overview);
+        } else if (currentMovieID && !currentMovieID.includes("MOVIE_ID")) {
+            playItem(currentMovieID, 'movie', "ദൃശ്യം 3", "Watch in HD quality.");
+        }
+    }
+
+    async function smartApiCall(endpoint) {
+        try {
+            const res = await fetch(`https://api.themoviedb.org/3${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEYS[0]}`);
+            return await res.json();
+        } catch (e) { return { results: [] }; }
+    }
+
+    async function initSite() {
+        const heroData = await smartApiCall('/trending/movie/day');
+        if(heroData.results) {
+            document.getElementById('slider-content').innerHTML = heroData.results.slice(0, 5).map((m,i)=>`
+                <div class="poster-3d absolute inset-0 opacity-0 transition-opacity duration-1000 ${i===0?'poster-active opacity-100 z-10':''}" id="slide-${i}" onclick="goToMovie('${m.title}', ${m.id})">
+                    <img src="https://image.tmdb.org/t/p/original${m.backdrop_path}" class="w-full h-full object-cover brightness-50">
+                    <div class="absolute bottom-12 left-10"><h2 class="text-4xl font-black uppercase text-white shadow-black">${m.title}</h2></div>
+                </div>
+            `).join('');
+            setInterval(() => {
+                const slides = document.querySelectorAll('.poster-3d');
+                slides[currentSlide].classList.remove('poster-active', 'opacity-100', 'z-10');
+                slides[currentSlide].classList.add('opacity-0');
+                currentSlide = (currentSlide+1)%5;
+                slides[currentSlide].classList.add('poster-active', 'opacity-100', 'z-10');
+                slides[currentSlide].classList.remove('opacity-0');
+            }, 5000);
+        }
+        const trendData = await smartApiCall('/trending/all/week');
+        if(trendData.results) document.getElementById('trendingSlider').innerHTML = trendData.results.slice(0,12).map(m=>createCard(m,'movie-card w-44 shrink-0')).join('');
+        loadMoreMovies();
+    }
+
+    function createCard(m, extraClass='movie-card') {
+        const title = (m.title || m.name || 'Untitled').replace(/'/g,"");
+        return `
+        <div class="card-container flex flex-col gap-2 w-full">
+            <div class="${extraClass} aspect-[2/3]" onclick="goToMovie('${title}', ${m.id})">
+                <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 w-full p-2 bg-black/80 text-[10px] font-bold truncate">${title}</div>
+            </div>
+            <div class="flex gap-2">
+                <div class="btn-action btn-embed flex-1 text-center cursor-pointer" onclick="copyAction(event, ${m.id}, 'embed')">Embed</div>
+                <div class="btn-action btn-direct flex-1 text-center cursor-pointer" onclick="copyAction(event, ${m.id}, 'direct')">Link</div>
+            </div>
+        </div>`;
+    }
+
+    function copyAction(e, id, type) {
+        e.stopPropagation();
+        const url = `https://u-tv.pages.dev/movies/watch-${id}.html`;
+        const text = (type === 'embed') ? `<iframe src="${url}" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>` : url;
+        navigator.clipboard.writeText(text);
+        alert("Copied!");
+    }
+
+    function goToMovie(title, id) {
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        window.location.href = `/movies/${slug}-${id}.html`;
+    }
+
+    async function playItem(id, type, title, overview) {
+        document.getElementById('infoName').innerText = title;
+        document.getElementById('playingTitle').innerText = title;
+        document.getElementById('infoDesc').innerText = overview || "Streaming now on U-TV.";
+        document.getElementById('playerOverlay').style.display = 'block';
+        
+        const servers = [
+            { n: "⚡ Server 1", u: `https://vidsrc.to/embed/${type}/${id}` },
+            { n: "🚀 Server 2", u: `https://embed.su/embed/${type}/${id}` },
+            { n: "💎 Server 3", u: `https://vidsrc.me/embed/${type}?tmdb=${id}` },
+            { n: "🔥 Server 4", u: `https://moviesapi.club/movie/${id}` },
+            { n: "✨ Server 5", u: `https://autoembed.to/${type}/tmdb/${id}` },
+            { n: "🌟 Server 6", u: `https://2embed.cc/embed/${type}?tmdb=${id}` },
+            { n: "⚡ Server 7", u: `https://vidsrc.pro/embed/${type}/${id}` },
+            { n: "🛰️ Server 8", u: `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1` }
+        ];
+
+        document.getElementById('serverList').innerHTML = servers.map((s, i) => 
+            `<button class="server-btn ${i===0?'active':''}" onclick="document.getElementById('mainIframe').src='${s.u}'; document.querySelectorAll('#serverList .server-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">${s.n}</button>`
+        ).join('');
+        document.getElementById('mainIframe').src = servers[0].u;
+    }
+
+    function closePlayer() {
+        if(window.location.pathname.includes('/movies/')) window.location.href = '/';
+        else { document.getElementById('playerOverlay').style.display = 'none'; document.getElementById('mainIframe').src = ''; }
+    }
+
+    async function loadMoreMovies() {
+        if(isLoading) return; isLoading = true;
+        const end = currentLang==='movie' ? `/movie/popular?page=${currentPage}` : `/discover/movie?with_original_language=${currentLang}&page=${currentPage}`;
+        const data = await smartApiCall(end);
+        if(data.results) {
+            document.getElementById('popularGrid').innerHTML += data.results.map(m=>createCard(m)).join('');
+            currentPage++;
+        }
+        isLoading = false;
+    }
+
+    async function triggerSearch() {
+        const q = document.getElementById('search').value;
+        if(!q) return;
+        const data = await smartApiCall(`/search/multi?query=${encodeURIComponent(q)}`);
+        document.getElementById('popularGrid').innerHTML = data.results.filter(m=>m.poster_path).map(m=>createCard(m)).join('');
+        document.getElementById('sectionTitle').innerText = `RESULT: ${q.toUpperCase()}`;
+    }
+
+    function handleSearch(e) { if(e.key==='Enter') triggerSearch(); }
+
+    function filterBy(l,b) {
+        document.querySelectorAll('.filter-nav .server-btn').forEach(btn=>btn.classList.remove('active'));
+        b.classList.add('active'); 
+        currentLang = l; currentPage = 1;
+        document.getElementById('popularGrid').innerHTML = '';
+        loadMoreMovies();
+    }
+</script>
+</body>
+</html>
