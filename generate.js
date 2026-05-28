@@ -1,27 +1,53 @@
 const fs = require('fs');
 const https = require('https');
 
-// तुम्हारी TMDB API key (जो तुमने दी थी)
+// अपनी TMDB API key (आपकी दी हुई)
 const API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
 const BASE_URL = 'https://api.themoviedb.org/3/movie';
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
-// movie-details.json फाइल पढ़ो
-const movies = require('./movie-details.json');
+// एक सरल fetch function (Node.js में)
+function fetchJson(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); } catch(e) { reject(e); }
+      });
+    }).on('error', reject);
+  });
+}
 
-// movie फोल्डर बनाओ (अगर नहीं है तो)
-if (!fs.existsSync('./movie')) fs.mkdirSync('./movie');
-
-// हर मूवी के लिए फोल्डर और HTML बनाओ
 async function generateAll() {
-  for (const m of movies) {
-    const id = m.id;
-    const title = m.title;
+  // movie-details.json पढ़ो
+  const movies = require('./movie-details.json');
+  if (!movies.length) {
+    console.log('❌ movie-details.json खाली है या फॉर्मेट सही नहीं');
+    return;
+  }
 
-    // TMDB API से डेटा लाओ
-    const url = `${BASE_URL}/${id}?api_key=${API_KEY}&language=hi-IN`;
-    const movieData = await fetch(url).then(res => res.json()).catch(() => null);
-    
+  // movie फोल्डर बनाओ
+  if (!fs.existsSync('./movie')) fs.mkdirSync('./movie');
+
+  for (const item of movies) {
+    const id = item.id;
+    let title = item.title;
+
+    // अगर title नहीं है तो TMDB से ले लो
+    if (!title) {
+      try {
+        const data = await fetchJson(`${BASE_URL}/${id}?api_key=${API_KEY}`);
+        title = data.title || 'Unknown Movie';
+      } catch(e) { title = 'Unknown Movie'; }
+    }
+
+    // TMDB से पूरी जानकारी लाओ
+    let movieData = null;
+    try {
+      movieData = await fetchJson(`${BASE_URL}/${id}?api_key=${API_KEY}&language=hi-IN`);
+    } catch(e) { console.warn(`⚠️ TMDB error for ${id}`); }
+
     const poster = movieData?.poster_path ? IMG_URL + movieData.poster_path : '';
     const overview = movieData?.overview || 'Full movie details available.';
     const rating = movieData?.vote_average || 'N/A';
@@ -34,9 +60,9 @@ async function generateAll() {
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <title>${title} (${year}) - Watch Full Movie Online</title>
+  <title>${title} ${year ? '('+year+')' : ''} - Watch Full Movie Online</title>
   <meta name="description" content="${overview.substring(0, 160)}">
-  <meta name="keywords" content="${title}, movie, watch online, ${year}, ${movieData?.genres?.map(g=>g.name).join(',') || ''}">
+  <meta name="keywords" content="${title}, movie, watch online, ${year}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${overview.substring(0, 160)}">
   <meta property="og:image" content="${poster}">
@@ -67,7 +93,7 @@ async function generateAll() {
 </body>
 </html>`;
     fs.writeFileSync(dir + '/index.html', html);
-    console.log(`✅ Generated: /movie/${id}/`);
+    console.log(`✅ Generated: /movie/${id}/ (${title})`);
   }
   console.log(`🎉 Total ${movies.length} movie pages created!`);
 }
