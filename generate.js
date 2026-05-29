@@ -73,7 +73,14 @@ function generateMoviePage(movie) {
     { name: "Server 5 (MultiEmbed)", url: `https://multiembed.mov/directstream.php?video_id=${movie.id}` },
     { name: "Server 6 (Embed.su)", url: `https://embed.su/embed/movie/${movie.id}` }
   ];
-
+const servers = [
+  { name: "Server 1 (Vidsrc.xyz)", url: `https://vidsrc.xyz/embed/movie/${movie.id}` },
+  { name: "Server 2 (Vidsrc.net)", url: `https://vidsrc.net/embed/movie/${movie.id}` },
+  { name: "Server 3 (2Embed.cc)", url: `https://2embed.cc/embed/movie?tmdb=${movie.id}` },
+  { name: "Server 4 (Autoembed.to)", url: `https://autoembed.to/movie/tmdb/${movie.id}` },
+  { name: "Server 5 (MultiEmbed)", url: `https://multiembed.mov/directstream.php?video_id=${movie.id}` },
+  { name: "Server 6 (Embed.su)", url: `https://embed.su/embed/movie/${movie.id}` }
+];
   let castHtml = '<div class="cast-scroll">';
   for (const actor of movie.cast) {
     const img = actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : 'https://placehold.co/70x70';
