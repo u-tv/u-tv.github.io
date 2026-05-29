@@ -1,7 +1,11 @@
 {
-  "name": "movie-website",
+  "name": "u-tv",
   "version": "1.0.0",
+  "description": "SEO-optimized movie site",
+  "main": "generate.js",
   "scripts": {
     "build": "node generate.js"
-  }
+  },
+  "author": "U-TV",
+  "license": "MIT"
 }
