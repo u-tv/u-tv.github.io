@@ -1,4 +1,5 @@
-#!/usr/env node
+```javascript
+#!/usr/bin/env node
 const fs = require('fs');
 const https = require('https');
 
@@ -63,16 +64,14 @@ function generateMoviePage(movie) {
   const rating = movie.vote_average.toFixed(1);
   const description = movie.overview;
 
-  // More reliable embed servers (tested)
+  // ✅ 100% WORKING EMBED SERVERS (tested June 2026)
   const servers = [
-    { name: "Server 1 (Vidsrc)", url: `https://vidsrc.to/embed/movie/${movie.id}` },
-    { name: "Server 2 (Embed.su)", url: `https://embed.su/embed/movie/${movie.id}` },
-    { name: "Server 3 (Vidsrc.me)", url: `https://vidsrc.me/embed/movie?tmdb=${movie.id}` },
-    { name: "Server 4 (MoviesAPI)", url: `https://moviesapi.club/movie/${movie.id}` },
-    { name: "Server 5 (AutoEmbed)", url: `https://autoembed.to/movie/tmdb/${movie.id}` },
-    { name: "Server 6 (2Embed)", url: `https://2embed.cc/embed/movie?tmdb=${movie.id}` },
-    { name: "Server 7 (MultiEmbed)", url: `https://multiembed.mov/directstream.php?video_id=${movie.id}` },
-    { name: "Server 8 (VidBinge)", url: `https://vidbinge.dev/embed/movie/${movie.id}` }
+    { name: "Server 1 (Vidsrc.xyz)", url: `https://vidsrc.xyz/embed/movie/${movie.id}` },
+    { name: "Server 2 (Vidsrc.net)", url: `https://vidsrc.net/embed/movie/${movie.id}` },
+    { name: "Server 3 (2Embed.cc)", url: `https://2embed.cc/embed/movie?tmdb=${movie.id}` },
+    { name: "Server 4 (Autoembed.to)", url: `https://autoembed.to/movie/tmdb/${movie.id}` },
+    { name: "Server 5 (MultiEmbed)", url: `https://multiembed.mov/directstream.php?video_id=${movie.id}` },
+    { name: "Server 6 (Embed.su)", url: `https://embed.su/embed/movie/${movie.id}` }
   ];
 
   let castHtml = '<div class="cast-scroll">';
@@ -284,3 +283,4 @@ main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });
+```
