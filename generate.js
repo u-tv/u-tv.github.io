@@ -90,7 +90,6 @@ function generateMoviePage(movie) {
 
   const serversJson = JSON.stringify(servers).replace(/\\/g, '\\\\');
 
-  // Build HTML step by step – no nested backticks
   let html = '<!DOCTYPE html>\n';
   html += '<html lang="hi-IN">\n<head>\n';
   html += '<meta charset="UTF-8">\n';
