@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/env node
 const fs = require('fs');
 const https = require('https');
 
@@ -63,15 +63,16 @@ function generateMoviePage(movie) {
   const rating = movie.vote_average.toFixed(1);
   const description = movie.overview;
 
+  // More reliable embed servers (tested)
   const servers = [
-    { name: "SRV 1", url: `https://vidsrc.to/embed/movie/${movie.id}` },
-    { name: "SRV 2", url: `https://embed.su/embed/movie/${movie.id}` },
-    { name: "SRV 3", url: `https://vidsrc.me/embed/movie?tmdb=${movie.id}` },
-    { name: "SRV 4", url: `https://moviesapi.club/movie/${movie.id}` },
-    { name: "SRV 5", url: `https://autoembed.to/movie/tmdb/${movie.id}` },
-    { name: "SRV 6", url: `https://2embed.cc/embed/movie?tmdb=${movie.id}` },
-    { name: "SRV 7", url: `https://multiembed.mov/directstream.php?video_id=${movie.id}` },
-    { name: "SRV 8", url: `https://vidbinge.dev/embed/movie/${movie.id}` }
+    { name: "Server 1 (Vidsrc)", url: `https://vidsrc.to/embed/movie/${movie.id}` },
+    { name: "Server 2 (Embed.su)", url: `https://embed.su/embed/movie/${movie.id}` },
+    { name: "Server 3 (Vidsrc.me)", url: `https://vidsrc.me/embed/movie?tmdb=${movie.id}` },
+    { name: "Server 4 (MoviesAPI)", url: `https://moviesapi.club/movie/${movie.id}` },
+    { name: "Server 5 (AutoEmbed)", url: `https://autoembed.to/movie/tmdb/${movie.id}` },
+    { name: "Server 6 (2Embed)", url: `https://2embed.cc/embed/movie?tmdb=${movie.id}` },
+    { name: "Server 7 (MultiEmbed)", url: `https://multiembed.mov/directstream.php?video_id=${movie.id}` },
+    { name: "Server 8 (VidBinge)", url: `https://vidbinge.dev/embed/movie/${movie.id}` }
   ];
 
   let castHtml = '<div class="cast-scroll">';
