@@ -176,7 +176,8 @@ function generateMoviePage(movie) {
   html += `  iframe.onload = () => { errorDiv.style.display = 'none'; };\n`;
   html += `}\n`;
   html += `const tabsDiv = document.getElementById('serverTabs');\n`;
-  html += `tabsDiv.innerHTML = servers.map((s,i) => '<button class=\"server-tab' + (i===0 ? ' active' : '') + '\" data-idx=\"' + i + '\">' + s.name + '</button>').join('');\n`;
+  // CRITICAL FIX: Use string concatenation, no nested backticks
+  html += `tabsDiv.innerHTML = servers.map(function(s,i) { return '<button class=\"server-tab' + (i===0 ? ' active' : '') + '\" data-idx=\"' + i + '\">' + s.name + '</button>'; }).join('');\n`;
   html += `document.querySelectorAll('.server-tab').forEach(btn => { btn.addEventListener('click', function() { loadServer(parseInt(this.dataset.idx)); }); });\n`;
   html += `loadServer(0);\n`;
   html += `let watchlist = JSON.parse(localStorage.getItem('watchlist')||'[]');\n`;
