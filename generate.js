@@ -2,6 +2,7 @@
 const fs = require('fs');
 const https = require('https');
 
+// ========== CONFIG ==========
 const CONFIG = {
   TMDB_API_KEY: '5bf61a62fd4647aa7debed7d6f2db079',
   TMDB_IMAGE_URL: 'https://image.tmdb.org/t/p/w500',
@@ -63,7 +64,6 @@ function generateMoviePage(movie) {
   const rating = movie.vote_average.toFixed(1);
   const description = movie.overview;
 
-  // Servers list (8 working embed sources)
   const servers = [
     { name: "SRV 1", url: `https://vidsrc.to/embed/movie/${movie.id}` },
     { name: "SRV 2", url: `https://embed.su/embed/movie/${movie.id}` },
@@ -90,6 +90,8 @@ function generateMoviePage(movie) {
     similarHtml += `<div class="similar-card" onclick="window.location.href='/movie/${sim.id}/'"><img src="${simPoster}" alt="${sim.title}"><div class="similar-title">${sim.title}</div></div>`;
   });
   similarHtml += '</div>';
+
+  const serversJson = JSON.stringify(servers).replace(/\\/g, '\\\\');
 
   const html = `<!DOCTYPE html>
 <html lang="hi-IN">
@@ -175,7 +177,7 @@ function generateMoviePage(movie) {
 <footer>© ${CONFIG.SITE_NAME} | <a href="/">Home</a> | <a href="#" id="dmcaLink">DMCA</a></footer>
 <script>
   const movieId = ${movie.id};
-  const servers = ${JSON.stringify(servers)};
+  const servers = ${serversJson};
   let currentServer = 0;
   const iframe = document.getElementById('playerIframe');
   const errorDiv = document.getElementById('errorMsg');
@@ -183,44 +185,40 @@ function generateMoviePage(movie) {
     iframe.src = servers[index].url;
     errorDiv.style.display = 'none';
     document.querySelectorAll('.server-tab').forEach((tab,i)=>tab.classList.toggle('active',i===index));
-    // iframe load error fallback
     iframe.onerror = () => { errorDiv.style.display = 'block'; };
     iframe.onload = () => { errorDiv.style.display = 'none'; };
   }
   const tabsDiv = document.getElementById('serverTabs');
-  tabsDiv.innerHTML = servers.map((s,i)=>`<button class="server-tab ${i===0?'active':''}" data-idx="${i}">${s.name}</button>`).join('');
-  document.querySelectorAll('.server-tab').forEach(btn=>btn.addEventListener('click',()=>loadServer(parseInt(btn.dataset.idx))));
+  tabsDiv.innerHTML = servers.map((s,i) => '<button class="server-tab' + (i===0 ? ' active' : '') + '" data-idx="' + i + '">' + s.name + '</button>').join('');
+  document.querySelectorAll('.server-tab').forEach(btn => { btn.addEventListener('click', function() { loadServer(parseInt(this.dataset.idx)); }); });
   loadServer(0);
   
-  // Watchlist
   let watchlist = JSON.parse(localStorage.getItem('watchlist')||'[]');
   function updateWatchlistBtn(){ document.getElementById('watchlistBtn').innerText = watchlist.some(w=>w.id===movieId) ? '❤️ In Watchlist' : '➕ Add to Watchlist'; }
   updateWatchlistBtn();
-  document.getElementById('watchlistBtn').onclick = ()=>{
+  document.getElementById('watchlistBtn').onclick = function(){
     const idx = watchlist.findIndex(w=>w.id===movieId);
     if(idx===-1){ watchlist.push({id:movieId, title:"${movie.title}", poster:"${posterUrl}"}); alert('Added to watchlist'); }
     else{ watchlist.splice(idx,1); alert('Removed from watchlist'); }
     localStorage.setItem('watchlist',JSON.stringify(watchlist));
     updateWatchlistBtn();
   };
-  document.getElementById('shareBtn').onclick = ()=>{
+  document.getElementById('shareBtn').onclick = function(){
     if(navigator.share) navigator.share({title:"${movie.title}", url:window.location.href});
     else navigator.clipboard.writeText(window.location.href).then(()=>alert('Link copied!'));
   };
-  document.getElementById('trailerBtn').onclick = ()=>{
+  document.getElementById('trailerBtn').onclick = function(){
     const key = "${movie.trailer_key || ''}";
-    if(key) window.open(`https://www.youtube.com/watch?v=${key}`,'_blank');
+    if(key) window.open('https://www.youtube.com/watch?v=' + key, '_blank');
     else alert('Trailer not available');
   };
-  // Dark mode
   const theme = localStorage.getItem('theme')||'dark';
   document.body.classList.toggle('light', theme==='light');
-  document.getElementById('themeToggle').onclick = ()=>{
+  document.getElementById('themeToggle').onclick = function(){
     const isLight = document.body.classList.toggle('light');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
   };
-  // DMCA modal simple
-  document.getElementById('dmcaLink').onclick = (e)=>{ e.preventDefault(); alert('DMCA: Contact dmca@u-tv.pages.dev for takedown requests.'); };
+  document.getElementById('dmcaLink').onclick = function(e){ e.preventDefault(); alert('DMCA: Contact dmca@u-tv.pages.dev'); };
 </script>
 </body>
 </html>`;
