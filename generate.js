@@ -1,4 +1,3 @@
-```javascript
 #!/usr/bin/env node
 const fs = require('fs');
 const https = require('https');
@@ -59,20 +58,41 @@ function escapeHtml(str) {
   return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
 }
 
-// Build embed URLs through the worker proxy
+// Build embed URLs through the worker proxy – combined list (old + new, total 20 unique servers)
 function getServers(movieId) {
-  return [
-    { name: "Server 1 (Vidsrc.net)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://vidsrc.net/embed/movie/${movieId}`)}` },
-    { name: "Server 2 (Vidsrc.xyz)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://vidsrc.xyz/embed/movie/${movieId}`)}` },
-    { name: "Server 3 (2Embed.cc)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://2embed.cc/embed/movie?tmdb=${movieId}`)}` },
-    { name: "Server 4 (Autoembed.to)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://autoembed.to/movie/tmdb/${movieId}`)}` },
-    { name: "Server 5 (MultiEmbed)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://multiembed.mov/directstream.php?video_id=${movieId}`)}` },
-    { name: "Server 6 (Embed.su)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://embed.su/embed/movie/${movieId}`)}` },
-    { name: "Server 7 (Vidsrc.me)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://vidsrc.me/embed/movie?tmdb=${movieId}`)}` },
-    { name: "Server 8 (VidBinge)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://vidbinge.dev/embed/movie/${movieId}`)}` },
-    { name: "Server 9 (MoviesAPI)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://moviesapi.club/movie/${movieId}`)}` },
-    { name: "Server 10 (PrimeSrc)", url: `${WORKER_URL}?url=${encodeURIComponent(`https://primesrc.me/embed/movie?tmdb=${movieId}`)}` }
+  // First list (original)
+  const originalServers = [
+    { name: "Server 1 (Vidsrc.net)", url: `https://vidsrc.net/embed/movie/${movieId}` },
+    { name: "Server 2 (Vidsrc.xyz)", url: `https://vidsrc.xyz/embed/movie/${movieId}` },
+    { name: "Server 3 (2Embed.cc)", url: `https://2embed.cc/embed/movie?tmdb=${movieId}` },
+    { name: "Server 4 (Autoembed.to)", url: `https://autoembed.to/movie/tmdb/${movieId}` },
+    { name: "Server 5 (MultiEmbed)", url: `https://multiembed.mov/directstream.php?video_id=${movieId}` },
+    { name: "Server 6 (Embed.su)", url: `https://embed.su/embed/movie/${movieId}` },
+    { name: "Server 7 (Vidsrc.me)", url: `https://vidsrc.me/embed/movie?tmdb=${movieId}` },
+    { name: "Server 8 (VidBinge)", url: `https://vidbinge.dev/embed/movie/${movieId}` },
+    { name: "Server 9 (MoviesAPI)", url: `https://moviesapi.club/movie/${movieId}` },
+    { name: "Server 10 (PrimeSrc)", url: `https://primesrc.me/embed/movie?tmdb=${movieId}` }
   ];
+  // Second list (new/backup)
+  const backupServers = [
+    { name: "Server 11 (vidsrc.xyz) [B]", url: `https://vidsrc.xyz/embed/movie/${movieId}` },
+    { name: "Server 12 (2embed.cc) [B]", url: `https://2embed.cc/embed/movie?tmdb=${movieId}` },
+    { name: "Server 13 (autoembed.to) [B]", url: `https://autoembed.to/movie/tmdb/${movieId}` },
+    { name: "Server 14 (multiembed.mov) [B]", url: `https://multiembed.mov/directstream.php?video_id=${movieId}` },
+    { name: "Server 15 (embed.su) [B]", url: `https://embed.su/embed/movie/${movieId}` },
+    { name: "Server 16 (vidbinge.dev) [B]", url: `https://vidbinge.dev/embed/movie/${movieId}` },
+    { name: "Server 17 (moviesapi.club) [B]", url: `https://moviesapi.club/movie/${movieId}` },
+    { name: "Server 18 (primesrc.me) [B]", url: `https://primesrc.me/embed/movie?tmdb=${movieId}` },
+    { name: "Server 19 (vidsrc.net) [B]", url: `https://vidsrc.net/embed/movie/${movieId}` },
+    { name: "Server 20 (vidsrc.me) [B]", url: `https://vidsrc.me/embed/movie?tmdb=${movieId}` }
+  ];
+  // Combine both lists (avoid exact duplicates? fine)
+  const allServers = [...originalServers, ...backupServers];
+  // Wrap each URL with worker proxy
+  return allServers.map(s => ({
+    name: s.name,
+    url: `${WORKER_URL}?url=${encodeURIComponent(s.url)}`
+  }));
 }
 
 function generateMoviePage(movie) {
@@ -305,4 +325,3 @@ main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });
-```
