@@ -1,3 +1,8 @@
-git add .
-git commit -m "Fix: Add package.json and verify generate.js path"
-git push origin main
+{
+  "name": "u-tv",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node generate.js"
+  }
+}
