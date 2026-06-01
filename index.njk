@@ -1,26 +1,144 @@
----
-layout: null
----
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Watch Online Movies - Free Streaming</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Watch Free on U-TV</title>
+    <meta name="description" content="Watch {{ title }} ({{ release_date }}) in Full HD. {{ overview }}">
     <style>
-        body { background: #111; color: #fff; font-family: sans-serif; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 40px; }
-        .card { background: #222; padding: 10px; border-radius: 10px; text-decoration: none; color: #fff; text-align: center; }
-        .card img { width: 100%; border-radius: 8px; }
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #e50914;
+            border-bottom: 1px solid #1f2937;
+        }
+        .movie-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .poster {
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+        }
+        .poster img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .details {
+            flex: 2;
+            min-width: 300px;
+        }
+        .title {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+        }
+        .meta {
+            color: #9ca3af;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .meta span {
+            margin-right: 15px;
+            background: #1f2937;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+        .overview {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #d1d5db;
+            margin-bottom: 30px;
+        }
+        .player-section {
+            margin-top: 40px;
+            background: #111827;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #1f2937;
+        }
+        .player-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #000;
+        }
+        .player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .ad-container {
+            margin: 20px 0;
+            text-align: center;
+            min-height: 90px;
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
-    <h1 style="text-align:center;">Latest Movies</h1>
-    <div class="grid">
-        {% for movie in movies %}
-        <a href="/movies/{{ movie.slug }}/" class="card">
-            <img src="{{ movie.poster }}">
-            <h3>{{ movie.title }}</h3>
-        </a>
-        {% endfor %}
+
+    <div class="container">
+        <div class="header">U-TV / PRI-MOVIES</div>
+
+        <!-- TOP BANNER ADSTERRA AD PLACEHOLDER -->
+        <div class="ad-container">
+            <!-- यहाँ अपना Adsterra Banner Script/Smartlink पेस्ट करें -->
+            <span style="color: #4b5563;">Advertisement</span>
+        </div>
+
+        <div class="movie-layout">
+            <div class="poster">
+                <img src="https://image.tmdb.org/t/p/w500{{ poster_path }}" alt="{{ title }} Poster">
+            </div>
+            <div class="details">
+                <h1 class="title">{{ title }}</h1>
+                <div class="meta">
+                    <span>📅 {{ release_date }}</span>
+                    <span>⭐ {{ vote_average | round(1) }}/10</span>
+                </div>
+                <p class="overview">{{ overview }}</p>
+                
+                <!-- MOVIE STREAMING PLAYER -->
+                <div class="player-section">
+                    <h3 style="margin-top:0; color:#e50914;">Stream in Ultra HD</h3>
+                    <div class="player-container">
+                        <!-- ऑटोमैटिक TMDB ID के साथ Player Embed -->
+                        <iframe src="https://vidsrc.to/embed/movie/{{ id }}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- POPUNDER ADSTERRA SCRIPT PLACEHOLDER -->
+    <!-- यहाँ अपना Adsterra Popunder कोड नीचे पेस्ट कर सकते हैं -->
+
 </body>
 </html>
