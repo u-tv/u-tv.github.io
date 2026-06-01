@@ -2,7 +2,11 @@
   "name": "u-tv",
   "version": "1.0.0",
   "private": true,
+  "type": "commonjs",
   "scripts": {
     "build": "node generate.js"
+  },
+  "dependencies": {
+    "nunjucks": "^3.2.4"
   }
 }
