@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - master # दोनों में से जो भी ब्रांच होगी, यह उसे अपने आप पकड़ लेगा
+      - master
 
 permissions:
   contents: read
@@ -22,18 +22,13 @@ jobs:
         with:
           node-version: 18
 
-      - name: Force Clean Old Eleventy Files
-        run: |
-          rm -rf .eleventy.js eleventy.config.js _site .cache
-          echo "Old Eleventy files removed successfully!"
-
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build Next-on-Pages
+      - name: Build Next.js with next-on-pages
         run: npx @cloudflare/next-on-pages
         env:
-          NEXT_PUBLIC_TMDB_API_KEY: '174d0214bf933dd59b3d5ec68a0c967f'
+          NEXT_PUBLIC_TMDB_API_KEY: ${{ secrets.NEXT_PUBLIC_TMDB_API_KEY || '174d0214bf933dd59b3d5ec68a0c967f' }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
