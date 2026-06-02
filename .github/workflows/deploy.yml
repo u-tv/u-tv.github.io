@@ -1,27 +1,37 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy Next.js to Cloudflare Pages
+
 on:
   push:
-    branches: [ main ]
-permissions:
-  contents: write
+    branches:
+      - main  # अगर तुम्हारी मुख्य ब्रांच का नाम master है, तो गिटहब इसे अपने आप संभाल लेगा
+
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
-          cache: 'npm'
+          node-version: 18
+
       - name: Install Dependencies
         run: npm ci
-      - name: Build with Eleventy
-        run: npm run build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+
+      - name: Build Next-on-Pages
+        run: npx @cloudflare/next-on-pages
+        env:
+          NEXT_PUBLIC_TMDB_API_KEY: '174d0214bf933dd59b3d5ec68a0c967f' # तुम्हारी TMDB API Key
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
-          publish_branch: gh-pages
-          force_orphan: true
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'u-tv' # तुम्हारी साइट u-tv.pages.dev का नाम
+          directory: '.cloudflare'
