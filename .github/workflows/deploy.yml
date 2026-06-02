@@ -20,20 +20,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm ci --legacy-peer-deps
 
       - name: Build Next.js with next-on-pages
-        run: npx @cloudflare/next-on-pages
+        run: npx @cloudflare/next-on-pages@1
         env:
           NEXT_PUBLIC_TMDB_API_KEY: ${{ secrets.TMDB_API_KEY || '174d0214bf933dd59b3d5ec68a0c967f' }}
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: 'u-tv'
-          directory: '.cloudflare'
+          command: pages deploy .vercel/output/static --project-name=u-tv --compatibility-flag=nodejs_compat --compatibility-date=2024-09-23
