@@ -23,12 +23,12 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
 
       - name: Build Next.js with next-on-pages
         run: npx @cloudflare/next-on-pages
         env:
-          NEXT_PUBLIC_TMDB_API_KEY: ${{ secrets.NEXT_PUBLIC_TMDB_API_KEY || '174d0214bf933dd59b3d5ec68a0c967f' }}
+          NEXT_PUBLIC_TMDB_API_KEY: ${{ secrets.TMDB_API_KEY || '174d0214bf933dd59b3d5ec68a0c967f' }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
