@@ -20,8 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 18
 
       - name: Install Dependencies
         run: npm ci --legacy-peer-deps
@@ -32,8 +31,10 @@ jobs:
           NEXT_PUBLIC_TMDB_API_KEY: ${{ secrets.TMDB_API_KEY || '174d0214bf933dd59b3d5ec68a0c967f' }}
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vercel/output/static --project-name=u-tv --compatibility-flag=nodejs_compat --compatibility-date=2024-09-23
+          projectName: 'u-tv'
+          directory: '.vercel/output/static'
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
