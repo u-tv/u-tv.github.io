@@ -1,317 +1,333 @@
-<!DOCTYPE html>
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// =================== CONFIGURATION ===================
+const TMDB_API_KEY = '174d0214bf933dd59b3d5ec68a0c967f';
+const BASE_URL = 'https://api.themoviedb.org/3';
+const IMG_BASE = 'https://image.tmdb.org/t/p';
+const SITE_URL = 'https://u-tv.pages.dev'; // change to your actual domain
+const OUTPUT_DIR = './public';
+const MAX_MOVIE_PAGES = 20; // 20 pages * 20 movies = 400 movies (increase if needed)
+const EMBED_SERVERS = [
+  { name: 'Server 1 (VidSrc)', url: 'https://vidsrc.to/embed/movie/%ID%' },
+  { name: 'Server 2 (VidSrc 2)', url: 'https://vidsrc.xyz/embed/movie/%ID%' },
+  { name: 'Server 3 (EmbedSU)', url: 'https://embed.su/embed/movie/%ID%' },
+  { name: 'Server 4 (AutoEmbed)', url: 'https://autoembed.to/movie/tmdb/%ID%' },
+  { name: 'Server 5 (VidLink)', url: 'https://vidlink.pro/movie/%ID%' },
+  { name: 'Server 6 (MoviesAPI)', url: 'https://moviesapi.club/movie/%ID%' },
+  { name: 'Server 7 (2Embed)', url: 'https://2embed.org/embed/movie/%ID%' },
+  { name: 'Server 8 (SmashyStream)', url: 'https://embed.smashystream.com/movie/%ID%' },
+  { name: 'Server 9 (MultiEmbed)', url: 'https://multiembed.cx/?video_id=%ID%&tmdb=1' },
+  { name: 'Server 10 (VidSrc CC)', url: 'https://vidsrc.cc/v2/embed/movie/%ID%' }
+];
+
+// Ensure output folders exist
+if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+if (!fs.existsSync(path.join(OUTPUT_DIR, 'movie'))) fs.mkdirSync(path.join(OUTPUT_DIR, 'movie'), { recursive: true });
+
+// Helper: fetch JSON from TMDB
+async function fetchTMDB(endpoint, params = {}) {
+  const url = new URL(`${BASE_URL}${endpoint}`);
+  url.searchParams.append('api_key', TMDB_API_KEY);
+  url.searchParams.append('language', 'hi-IN'); // Hindi first
+  for (const [k, v] of Object.entries(params)) if (v) url.searchParams.append(k, v);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
+  const data = await res.json();
+  // fallback to English if Hindi data missing for certain fields
+  if (data.title === undefined && endpoint.includes('/movie/')) {
+    const enUrl = new URL(`${BASE_URL}${endpoint}`);
+    enUrl.searchParams.append('api_key', TMDB_API_KEY);
+    enUrl.searchParams.append('language', 'en-US');
+    const enRes = await fetch(enUrl);
+    if (enRes.ok) return await enRes.json();
+  }
+  return data;
+}
+
+// Get list of popular movies (multiple pages)
+async function getAllMovies() {
+  let allMovies = [];
+  for (let page = 1; page <= MAX_MOVIE_PAGES; page++) {
+    console.log(`Fetching popular movies page ${page}...`);
+    const data = await fetchTMDB('/movie/popular', { page });
+    if (data.results && data.results.length) {
+      allMovies.push(...data.results);
+    } else break;
+    await new Promise(r => setTimeout(r, 200)); // rate limit delay
+  }
+  return allMovies;
+}
+
+// Get detailed movie info (cast, runtime, genres)
+async function getMovieDetails(id) {
+  const [details, credits] = await Promise.all([
+    fetchTMDB(`/movie/${id}`),
+    fetchTMDB(`/movie/${id}/credits`)
+  ]);
+  return { ...details, credits };
+}
+
+// Escape HTML
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+}
+
+// Generate slug from title
+function getSlug(title, id) {
+  let slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return `${slug}-${id}`;
+}
+
+// ------------------- GENERATE MOVIE PAGE -------------------
+async function generateMoviePage(movie, details) {
+  const slug = getSlug(movie.title, movie.id);
+  const movieDir = path.join(OUTPUT_DIR, 'movie', movie.id.toString());
+  if (!fs.existsSync(movieDir)) fs.mkdirSync(movieDir, { recursive: true });
+  
+  const poster = movie.poster_path ? `${IMG_BASE}/w500${movie.poster_path}` : '';
+  const backdrop = movie.backdrop_path ? `${IMG_BASE}/original${movie.backdrop_path}` : poster;
+  const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : '';
+  const genres = (details.genres || []).map(g => g.name).join(', ');
+  const cast = (details.credits?.cast || []).slice(0, 10).map(c => c.name).join(', ');
+  const runtime = details.runtime ? `${details.runtime} min` : 'N/A';
+  
+  // Build embed server buttons and iframes
+  const serverButtons = EMBED_SERVERS.map((s, i) => `
+    <button class="server-btn ${i === 0 ? 'active' : ''}" data-url="${s.url.replace('%ID%', movie.id)}">${s.name}</button>
+  `).join('');
+  
+  const html = `<!DOCTYPE html>
 <html lang="hi-IN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  <title>U-TV – Watch Free Movies Online in HD</title>
-  <meta name="description" content="Watch free movies online in HD. Latest Hindi Dubbed, Hollywood, Bollywood, Web Series. Fast streaming with 8+ servers.">
-  <meta name="keywords" content="free movies, watch online, hindi dubbed, hollywood, bollywood, web series, tv shows, movie embed">
-  <meta name="author" content="U-TV">
-  <meta name="google-site-verification" content="I2_-HqcwqN0fkHWcaccrOaNyuwoHLLioI6HHVlUaQiA" />
-  <link rel="canonical" href="https://u-tv.pages.dev/" />
-  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
-  <meta property="og:title" content="U-TV - Watch Free Movies Online">
-  <meta property="og:description" content="Stream latest movies in HD. Fast servers, multiple languages.">
-  <meta property="og:image" content="https://u-tv.pages.dev/og-image.jpg">
-  <meta property="og:type" content="website">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>${escapeHtml(movie.title)} (${releaseYear}) - Watch Free HD | U-TV</title>
+  <meta name="description" content="Watch ${escapeHtml(movie.title)} full movie free online. ${escapeHtml(movie.overview?.slice(0, 150))}...">
+  <meta name="keywords" content="${escapeHtml(movie.title)}, watch free, movie streaming, ${genres}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${SITE_URL}/movie/${movie.id}/">
+  <meta property="og:title" content="${escapeHtml(movie.title)} (${releaseYear})">
+  <meta property="og:description" content="${escapeHtml(movie.overview?.slice(0, 150))}">
+  <meta property="og:image" content="https://image.tmdb.org/t/p/w780${movie.poster_path}">
+  <meta property="og:url" content="${SITE_URL}/movie/${movie.id}/">
+  <meta property="og:type" content="video.movie">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="U-TV - Free Movies">
-  <meta name="twitter:description" content="Watch free movies online with Hindi/English options.">
-  <link rel="alternate" hreflang="hi" href="https://u-tv.pages.dev/" />
-  <link rel="alternate" hreflang="en" href="https://u-tv.pages.dev/en/" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "U-TV",
-    "url": "https://u-tv.pages.dev/",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://u-tv.pages.dev/search?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
+    "@type": "Movie",
+    "name": "${escapeHtml(movie.title)}",
+    "description": "${escapeHtml(movie.overview || '')}",
+    "image": "https://image.tmdb.org/t/p/original${movie.poster_path}",
+    "datePublished": "${movie.release_date}",
+    "genre": ${JSON.stringify(details.genres?.map(g => g.name) || [])},
+    "duration": "PT${details.runtime || 0}M",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": ${movie.vote_average || 0},
+      "ratingCount": ${movie.vote_count || 0}
+    },
+    "actors": ${JSON.stringify((details.credits?.cast || []).slice(0, 5).map(c => c.name))}
   }
   </script>
-  <!-- Adsterra & Monetag Ad Codes -->
-  <script async src="//pl28831972.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
-  <script src="//pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V43E3PG5RD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-V43E3PG5RD');
-  </script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    :root { --utv-red: #e50914; --bg-primary: #050505; --card-bg: #121212; }
-    body { background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-primary) 100%); color: #e5e5e5; font-family: 'Segoe UI', system-ui, sans-serif; transition: background 0.2s; }
-    body.light { background: #f0f2f5; color: #111; --card-bg: #ffffff; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #1e1e2f; }
-    ::-webkit-scrollbar-thumb { background: var(--utv-red); border-radius: 10px; }
-    .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(0,0,0,0.88); backdrop-filter: blur(12px); border-bottom: 2px solid var(--utv-red); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .logo { font-family: 'Arial Black', sans-serif; font-size: 1.8rem; background: linear-gradient(135deg, #fff, var(--utv-red)); background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; }
-    .search-wrapper { display: flex; gap: 8px; align-items: center; }
-    .search-input { padding: 10px 16px; background: #111; border: 1px solid #333; border-radius: 30px; color: white; font-size: 14px; width: 200px; outline: none; transition: 0.2s; }
-    .search-input:focus { border-color: var(--utv-red); width: 240px; }
-    .search-btn, .theme-toggle { background: var(--utv-red); border: none; padding: 8px 20px; border-radius: 30px; font-weight: bold; color: white; cursor: pointer; }
-    .theme-toggle { background: #333; margin-left: 8px; }
-    .filter-bar { position: fixed; top: 80px; width: 100%; z-index: 99; background: rgba(5,5,5,0.95); backdrop-filter: blur(12px); padding: 10px 20px; display: flex; gap: 12px; overflow-x: auto; scrollbar-width: thin; }
-    .filter-btn { background: #1a1a1f; border: 1px solid #333; padding: 6px 18px; border-radius: 30px; font-size: 13px; font-weight: 700; color: #ccc; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-    .filter-btn.active { background: var(--utv-red); border-color: var(--utv-red); color: white; }
-    .hero-slider { margin-top: 140px; height: 320px; border-radius: 20px; overflow: hidden; margin-inline: 16px; position: relative; }
-    @media (min-width: 768px) { .hero-slider { height: 480px; margin-top: 130px; } }
-    .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s; cursor: pointer; }
-    .slide.active { opacity: 1; z-index: 1; }
-    .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65); }
-    .slide-content { position: absolute; bottom: 30px; left: 30px; z-index: 2; }
-    .slide-title { font-size: 1.8rem; font-weight: 800; text-shadow: 0 2px 6px black; }
-    @media (min-width: 768px) { .slide-title { font-size: 3rem; } }
-    .section { padding: 0 20px; margin-top: 40px; }
-    .section-title { font-size: 1.4rem; font-weight: 800; color: var(--utv-red); margin-bottom: 20px; }
-    .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-    .movie-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; transition: 0.2s; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-    .movie-card:hover { transform: translateY(-6px); border-color: var(--utv-red); box-shadow: 0 15px 25px -10px black; }
-    .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-    .movie-title { padding: 8px; font-size: 0.85rem; font-weight: 600; text-align: center; }
-    .load-more-btn { background: var(--utv-red); border: none; padding: 12px 28px; border-radius: 40px; font-weight: bold; color: white; cursor: pointer; display: block; margin: 40px auto; width: fit-content; }
-    footer { background: #0a0a0a; padding: 30px 20px; text-align: center; border-top: 1px solid #222; margin-top: 40px; font-size: 0.8rem; }
-    footer a { color: var(--utv-red); text-decoration: none; margin: 0 8px; cursor: pointer; }
-    .ad-container { margin: 20px 16px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 20px; text-align: center; }
-    .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: #111; padding: 24px; border-radius: 20px; z-index: 10001; max-width: 90%; box-shadow: 0 0 30px black; text-align: center; }
-    @media (max-width: 768px) { .search-input { width: 120px; } .hero-slider { margin-top: 150px; } .filter-bar { top: 70px; } .movie-grid { gap: 12px; } }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #050508; color: #e2e8f0; font-family: system-ui, 'Segoe UI', sans-serif; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .movie-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('${backdrop}') no-repeat center center/cover; filter: blur(20px) brightness(0.3); z-index: -1; }
+    .movie-card { background: rgba(14, 15, 22, 0.9); border-radius: 24px; overflow: hidden; backdrop-filter: blur(10px); margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 30px; padding: 25px; }
+    .poster { width: 300px; border-radius: 16px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+    .info { flex: 1; }
+    h1 { font-size: 2.5rem; margin-bottom: 10px; }
+    .meta { color: #cbd5e1; margin-bottom: 20px; font-size: 0.9rem; }
+    .overview { line-height: 1.6; margin-bottom: 20px; }
+    .cast { margin-top: 20px; }
+    .cast h3 { margin-bottom: 10px; color: #e50914; }
+    .cast-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .cast-item { background: #1e1f2a; padding: 5px 12px; border-radius: 30px; font-size: 0.8rem; }
+    .player-section { background: #0e0f16; border-radius: 24px; padding: 20px; margin-top: 20px; }
+    .server-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+    .server-btn { background: #222; border: none; padding: 10px 20px; border-radius: 40px; color: white; cursor: pointer; transition: 0.2s; }
+    .server-btn.active { background: #e50914; }
+    .embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 16px; background: black; }
+    .embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .ad-slot { background: #1a1a22; text-align: center; padding: 20px; margin: 20px 0; border-radius: 12px; }
+    .footer { text-align: center; padding: 30px; border-top: 1px solid #1e1f2a; margin-top: 40px; font-size: 0.8rem; }
+    @media (max-width: 768px) { .movie-card { flex-direction: column; align-items: center; } .poster { width: 200px; } h1 { font-size: 1.8rem; } }
   </style>
 </head>
 <body>
-
-<nav class="navbar">
-  <div class="logo" onclick="window.location.href='/'">U-TV</div>
-  <div class="search-wrapper">
-    <input type="text" id="searchInput" class="search-input" placeholder="Search movie..." onkeypress="handleSearchKey(event)">
-    <button onclick="performSearch()" class="search-btn">GO</button>
-    <button id="themeToggle" class="theme-toggle">🌙 Dark</button>
+<div class="movie-backdrop"></div>
+<div class="container">
+  <div class="movie-card">
+    <img class="poster" src="${poster}" alt="${escapeHtml(movie.title)}">
+    <div class="info">
+      <h1>${escapeHtml(movie.title)} (${releaseYear})</h1>
+      <div class="meta">⭐ ${movie.vote_average?.toFixed(1)}/10 | ${runtime} | ${releaseYear} | ${genres}</div>
+      <p class="overview">${escapeHtml(movie.overview || 'Synopsis not available.')}</p>
+      <div class="cast"><h3>Top Cast</h3><div class="cast-list">${cast.split(',').map(name => `<div class="cast-item">${escapeHtml(name.trim())}</div>`).join('')}</div></div>
+    </div>
   </div>
-</nav>
-
-<div class="filter-bar">
-  <button class="filter-btn active" data-filter="movie" id="filterMovie">MOVIES</button>
-  <button class="filter-btn" data-filter="tv" id="filterTv">TV SERIES</button>
-  <button class="filter-btn" data-filter="hi" id="filterHi">हिंदी</button>
-  <button class="filter-btn" data-filter="en" id="filterEn">ENGLISH</button>
-  <button class="filter-btn" id="filterRefresh">REFRESH</button>
+  <div class="player-section">
+    <div class="server-buttons" id="serverButtons">${serverButtons}</div>
+    <div class="embed-container" id="embedContainer">
+      <iframe id="playerFrame" src="${EMBED_SERVERS[0].url.replace('%ID%', movie.id)}" allowfullscreen></iframe>
+    </div>
+    <div class="ad-slot">[Advertisement]</div>
+  </div>
 </div>
-
-<div class="hero-slider" id="heroSlider"></div>
-
-<div class="ad-container">
-  <div class="ad-label">Sponsored</div>
-  <div id="adsterra-top"></div>
-</div>
-
-<div class="section">
-  <h2 class="section-title">| TRENDING NOW</h2>
-  <div id="trendingGrid" class="movie-grid"></div>
-</div>
-
-<div class="section">
-  <h2 class="section-title" id="sectionTitle">| POPULAR MOVIES</h2>
-  <div id="movieGrid" class="movie-grid"></div>
-  <button id="loadMoreBtn" class="load-more-btn">LOAD MORE</button>
-</div>
-
-<div class="ad-container">
-  <div class="ad-label">Best Offer</div>
-  <a id="monetagLink" href="#" target="_blank" rel="noopener">🔥 Limited Time Offer</a>
-</div>
-
-<footer>
-  <p>© 2025 U-TV | <a id="aboutLink">About</a> | <a id="dmcaLink">DMCA</a> | <a id="securityLink">Security</a> | <a id="disclaimerLink">Disclaimer</a> | <button id="backToTop" style="background:none;border:none;color:var(--utv-red);cursor:pointer;">⬆ Back to Top</button></p>
+<footer class="footer">
+  <p>© U-TV | All rights reserved. This site does not host any videos – all content is embedded from third-party sources.</p>
+  <p><a href="${SITE_URL}/" style="color:#e50914;">Home</a> | <a href="${SITE_URL}/sitemap.xml">Sitemap</a></p>
 </footer>
-
-<div id="modal" class="modal"><h3 id="modalTitle"></h3><p id="modalText"></p><button id="closeModal" style="margin-top:12px;background:#e50914;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;">Close</button></div>
-
 <script>
-  const API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
-  const IMG = 'https://image.tmdb.org/t/p/w500';
-  const BACKDROP = 'https://image.tmdb.org/t/p/original';
-  
-  let currentPage = 1, isLoading = false, totalPages = 500;
-  let currentFilter = 'movie';   // 'movie', 'tv', 'hi', 'en'
-  let isSearchMode = false;
-  let theme = localStorage.getItem('theme') || 'dark';
-  
-  // Apply theme
-  function applyTheme() { 
-    document.body.classList.toggle('light', theme === 'light'); 
-    document.getElementById('themeToggle').innerHTML = theme === 'light' ? '🌞 Light' : '🌙 Dark'; 
-  }
-  theme = (theme === 'light') ? 'light' : 'dark'; 
-  applyTheme();
-  document.getElementById('themeToggle').onclick = () => { 
-    theme = theme === 'dark' ? 'light' : 'dark'; 
-    localStorage.setItem('theme', theme); 
-    applyTheme(); 
-  };
-
-  // Helper fetch
-  async function fetchAPI(endpoint) {
-    try {
-      const res = await fetch(`https://api.themoviedb.org/3${endpoint}${endpoint.includes('?')?'&':'?'}api_key=${API_KEY}&language=hi`);
-      if (!res.ok) return null;
-      return await res.json();
-    } catch(e) { return null; }
-  }
-
-  function escapeHtml(s) { 
-    return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); 
-  }
-
-  function createCard(m) {
-    const title = m.title || m.name || 'Untitled';
-    const id = m.id;
-    const poster = m.poster_path ? IMG + m.poster_path : 'https://placehold.co/500x750?text=No+Poster';
-    return `<div class="movie-card" onclick="window.location.href='/movie/${id}/'"><img src="${poster}" alt="${title}" loading="lazy"><div class="movie-title">${escapeHtml(title)}</div></div>`;
-  }
-
-  // Load trending movies (static, not filtered)
-  async function loadTrending() {
-    const data = await fetchAPI('/trending/all/week');
-    if (data?.results) {
-      document.getElementById('trendingGrid').innerHTML = data.results.filter(i => i.poster_path).slice(0,12).map(m => createCard(m)).join('');
-    }
-  }
-
-  // Load movies based on currentFilter and page
-  async function loadMovies(reset = true) {
-    if (isLoading) return;
-    isLoading = true;
-    if (reset) {
-      currentPage = 1;
-      document.getElementById('movieGrid').innerHTML = '';
-      document.getElementById('loadMoreBtn').style.display = 'block';
-      isSearchMode = false;
-    }
-    let endpoint = '';
-    if (currentFilter === 'movie') endpoint = `/movie/popular?page=${currentPage}`;
-    else if (currentFilter === 'tv') endpoint = `/tv/popular?page=${currentPage}`;
-    else if (currentFilter === 'hi') endpoint = `/discover/movie?with_original_language=hi&page=${currentPage}`;
-    else if (currentFilter === 'en') endpoint = `/discover/movie?with_original_language=en&page=${currentPage}`;
-    
-    const data = await fetchAPI(endpoint);
-    if (data?.results) {
-      const cards = data.results.map(m => createCard(m)).join('');
-      if (reset) document.getElementById('movieGrid').innerHTML = cards;
-      else document.getElementById('movieGrid').innerHTML += cards;
-      totalPages = data.total_pages || 500;
-      currentPage++;
-    }
-    isLoading = false;
-  }
-
-  // Load more handler
-  function loadMore() {
-    if (!isLoading && currentPage <= totalPages && !isSearchMode) {
-      loadMovies(false);
-    }
-  }
-
-  // Hero slider
-  async function loadHero() {
-    const data = await fetchAPI('/trending/movie/day');
-    if (data?.results) {
-      let html = '';
-      data.results.slice(0,5).forEach((s,i) => {
-        html += `<div class="slide ${i===0?'active':''}" onclick="window.location.href='/movie/${s.id}/'"><img src="${BACKDROP + s.backdrop_path}" alt="${s.title}"><div class="slide-content"><div class="slide-title">${s.title}</div></div></div>`;
-      });
-      document.getElementById('heroSlider').innerHTML = html;
-      let cur = 0;
-      setInterval(() => {
-        const slides = document.querySelectorAll('.slide');
-        if (slides.length) {
-          slides[cur].classList.remove('active');
-          cur = (cur + 1) % slides.length;
-          slides[cur].classList.add('active');
-        }
-      }, 5000);
-    }
-  }
-
-  // Search
-  async function performSearch() {
-    const q = document.getElementById('searchInput').value.trim();
-    if (!q) return;
-    const data = await fetchAPI(`/search/multi?query=${encodeURIComponent(q)}`);
-    if (data?.results) {
-      const filtered = data.results.filter(i => i.poster_path);
-      if (filtered.length === 0) {
-        document.getElementById('movieGrid').innerHTML = '<div style="text-align:center;padding:40px;">No results found. Try different spelling.</div>';
-      } else {
-        document.getElementById('movieGrid').innerHTML = filtered.map(m => createCard(m)).join('');
-      }
-      document.getElementById('sectionTitle').innerHTML = `| SEARCH: ${q.toUpperCase()}`;
-      document.getElementById('loadMoreBtn').style.display = 'none';
-      isSearchMode = true;
-    } else {
-      document.getElementById('movieGrid').innerHTML = '<div style="text-align:center;padding:40px;">No results found.</div>';
-    }
-  }
-  function handleSearchKey(e) { if (e.key === 'Enter') performSearch(); }
-
-  // Filter functions
-  async function setFilter(type, btnElement) {
-    if (isSearchMode) {
-      isSearchMode = false;
-      document.getElementById('loadMoreBtn').style.display = 'block';
-    }
-    currentFilter = type;
-    currentPage = 1;
-    await loadMovies(true);
-    let titleText = '';
-    if (type === 'movie') titleText = 'POPULAR MOVIES';
-    else if (type === 'tv') titleText = 'POPULAR TV SERIES';
-    else if (type === 'hi') titleText = 'HINDI MOVIES';
-    else if (type === 'en') titleText = 'ENGLISH MOVIES';
-    document.getElementById('sectionTitle').innerHTML = `| ${titleText}`;
-    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    btnElement.classList.add('active');
-  }
-
-  // Refresh / reset page
-  function resetPage() {
-    window.location.reload();
-  }
-
-  // Footer modals (filled content)
-  const modal = document.getElementById('modal');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalText = document.getElementById('modalText');
-  function showModal(title, text) { modalTitle.innerText = title; modalText.innerText = text; modal.style.display = 'block'; }
-  document.getElementById('closeModal').onclick = () => modal.style.display = 'none';
-  window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-  
-  document.getElementById('aboutLink').onclick = (e) => { e.preventDefault(); showModal('About U-TV', 'U-TV is a free movie streaming platform. We provide high-quality embed links from multiple sources. Content is sourced from TMDB and third‑party hosts. We do not host any files on our servers. Our mission is to give you the best streaming experience without any cost.'); };
-  document.getElementById('dmcaLink').onclick = (e) => { e.preventDefault(); showModal('DMCA Notice', 'U-TV respects intellectual property rights. If you believe that any content on our site infringes your copyright, please contact us immediately. We will remove the infringing link within 48 hours. Email: dmca@u-tv.pages.dev'); };
-  document.getElementById('securityLink').onclick = (e) => { e.preventDefault(); showModal('Security', 'We use HTTPS encryption (SSL) to secure your connection. No personal data is collected or stored except for your watchlist which is saved locally in your browser. Your privacy is our priority.'); };
-  document.getElementById('disclaimerLink').onclick = (e) => { e.preventDefault(); showModal('Disclaimer', 'All video streams are embedded from third‑party servers. U-TV does not host or upload any videos. We are not responsible for the content, copyright, or availability of external sources. For any issues regarding the video, please contact the respective hosting service.'); };
-  document.getElementById('backToTop').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Event listeners for filter buttons
-  document.getElementById('filterMovie').addEventListener('click', () => setFilter('movie', document.getElementById('filterMovie')));
-  document.getElementById('filterTv').addEventListener('click', () => setFilter('tv', document.getElementById('filterTv')));
-  document.getElementById('filterHi').addEventListener('click', () => setFilter('hi', document.getElementById('filterHi')));
-  document.getElementById('filterEn').addEventListener('click', () => setFilter('en', document.getElementById('filterEn')));
-  document.getElementById('filterRefresh').addEventListener('click', resetPage);
-  document.getElementById('loadMoreBtn').addEventListener('click', loadMore);
-  
-  // Initial load
-  window.addEventListener('load', () => {
-    loadHero();
-    loadTrending();
-    loadMovies(true);
+  document.querySelectorAll('.server-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const url = btn.dataset.url;
+      document.getElementById('playerFrame').src = url;
+    });
   });
 </script>
 </body>
-</html>
+</html>`;
+  
+  fs.writeFileSync(path.join(movieDir, 'index.html'), html);
+  console.log(`Generated: /movie/${movie.id}/`);
+}
+
+// ------------------- GENERATE HOMEPAGE -------------------
+async function generateHomepage(trending, popular, topRated, nowPlaying) {
+  function renderMovieRow(title, movies) {
+    if (!movies.length) return '';
+    return `
+      <div class="movie-row">
+        <h2>${title}</h2>
+        <div class="movie-grid">
+          ${movies.map(m => `
+            <div class="movie-card" onclick="location.href='/movie/${m.id}/'">
+              <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" alt="${escapeHtml(m.title)}">
+              <div class="movie-title">${escapeHtml(m.title)}</div>
+              <div class="rating">⭐ ${m.vote_average?.toFixed(1)}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  const html = `<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>U-TV - Watch Free Movies Online HD</title>
+  <meta name="description" content="Stream thousands of free movies in HD. Latest releases, trending, popular movies. No signup required.">
+  <meta name="keywords" content="free movies, watch online, movie streaming, U-TV">
+  <link rel="canonical" href="${SITE_URL}/">
+  <link rel="sitemap" href="/sitemap.xml">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #050508; color: #e2e8f0; font-family: system-ui, 'Segoe UI', sans-serif; }
+    .header { background: rgba(5,5,8,0.95); backdrop-filter: blur(10px); position: sticky; top:0; z-index:100; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e1f2a; }
+    .logo { font-size: 1.8rem; font-weight: bold; color: #e50914; text-decoration: none; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    .hero { height: 60vh; background: linear-gradient(135deg, #0a0a12, #010101); display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 24px; margin-bottom: 40px; }
+    .hero h1 { font-size: 3rem; margin-bottom: 10px; }
+    .hero p { font-size: 1.2rem; margin-bottom: 20px; }
+    .btn { background: #e50914; padding: 12px 30px; border-radius: 40px; text-decoration: none; color: white; display: inline-block; }
+    .movie-row { margin-bottom: 50px; }
+    .movie-row h2 { font-size: 1.8rem; margin-bottom: 20px; border-left: 4px solid #e50914; padding-left: 15px; }
+    .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+    .movie-card { background: #0e0f16; border-radius: 16px; overflow: hidden; transition: 0.2s; cursor: pointer; }
+    .movie-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(229,9,20,0.2); }
+    .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+    .movie-title { padding: 8px; font-weight: 600; text-align: center; }
+    .rating { padding: 0 8px 8px; text-align: center; color: #d4af37; font-size: 0.8rem; }
+    .footer { background: #0a0a0f; text-align: center; padding: 30px; margin-top: 50px; border-top: 1px solid #1e1f2a; }
+    @media (max-width: 768px) { .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } .hero h1 { font-size: 2rem; } }
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">U-TV</div>
+  <div><input type="text" id="search" placeholder="Search movies..." style="padding: 8px 15px; border-radius: 30px; border: none; background: #1e1f2a; color: white;"></div>
+</header>
+<div class="container">
+  <div class="hero">
+    <div><h1>Unlimited Cinema</h1><p>Stream thousands of movies free – no signup, no ads.</p><a href="#movies" class="btn">Explore Now</a></div>
+  </div>
+  ${renderMovieRow('🔥 Trending Now', trending)}
+  ${renderMovieRow('⭐ Popular', popular)}
+  ${renderMovieRow('🏆 Top Rated', topRated)}
+  ${renderMovieRow('🎬 Now Playing', nowPlaying)}
+</div>
+<footer class="footer">
+  <p>© U-TV | All movies data from TMDB. We do not host any videos.</p>
+</footer>
+<script>
+  document.getElementById('search').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      window.location.href = '/search?q=' + encodeURIComponent(e.target.value);
+    }
+  });
+</script>
+</body>
+</html>`;
+  
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), html);
+  console.log('✅ Generated homepage');
+}
+
+// ------------------- GENERATE SITEMAP & ROBOTS -------------------
+function generateSitemap(movies) {
+  let urls = `<url><loc>${SITE_URL}/</loc><priority>1.0</priority></url>`;
+  for (const movie of movies) {
+    urls += `<url><loc>${SITE_URL}/movie/${movie.id}/</loc><priority>0.8</priority></url>`;
+  }
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`;
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'sitemap.xml'), sitemap);
+  console.log('✅ Generated sitemap.xml');
+}
+
+function generateRobots() {
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml`);
+}
+
+// ------------------- MAIN -------------------
+(async () => {
+  console.log('🚀 Starting static site generation...');
+  
+  // Fetch data for homepage
+  console.log('Fetching trending movies...');
+  const trending = (await fetchTMDB('/trending/movie/day')).results || [];
+  console.log('Fetching popular movies...');
+  const popular = (await fetchTMDB('/movie/popular')).results || [];
+  console.log('Fetching top rated...');
+  const topRated = (await fetchTMDB('/movie/top_rated')).results || [];
+  console.log('Fetching now playing...');
+  const nowPlaying = (await fetchTMDB('/movie/now_playing')).results || [];
+  
+  await generateHomepage(trending.slice(0, 20), popular.slice(0, 20), topRated.slice(0, 20), nowPlaying.slice(0, 20));
+  
+  // Fetch all movies for detailed pages (popular, multiple pages)
+  const allMovies = await getAllMovies();
+  console.log(`Total movies fetched: ${allMovies.length}`);
+  
+  for (const movie of allMovies) {
+    const details = await getMovieDetails(movie.id);
+    await generateMoviePage(movie, details);
+    await new Promise(r => setTimeout(r, 150)); // delay to avoid rate limits
+  }
+  
+  generateSitemap(allMovies);
+  generateRobots();
+  console.log('✅ Static site generation completed! Public folder ready for deployment.');
+})();
