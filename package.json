@@ -1,12 +1,19 @@
 {
   "name": "u-tv",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
-  "type": "commonjs",
   "scripts": {
-    "build": "node generate.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "nunjucks": "^3.2.4"
+    "next": "^15.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
