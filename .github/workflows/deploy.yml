@@ -1,4 +1,4 @@
-name: Deploy Next.js to Cloudflare Pages
+name: Deploy node.js to Cloudflare Pages
 
 on:
   push:
