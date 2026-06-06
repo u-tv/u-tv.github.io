@@ -49,31 +49,19 @@
     .badge-quality { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; background: #e50914; color: white; }
     .load-more { background: #e50914; border: none; color: white; padding: 12px 30px; border-radius: 40px; font-weight: bold; cursor: pointer; display: block; margin: 40px auto; transition: 0.2s; }
     .load-more:hover { background: #b00710; transform: scale(1.02); }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-    .modal-content { width: 90%; max-width: 1000px; background: #0e0f16; border-radius: 24px; overflow: hidden; animation: fadeIn 0.3s; }
-    body.light .modal-content { background: #1e1f2a; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #1e1f2a; border-bottom: 1px solid #e50914; }
-    .modal-header h3 { font-size: 1.2rem; }
-    .close-modal { background: none; border: none; color: white; font-size: 28px; cursor: pointer; }
-    .server-buttons { display: flex; flex-wrap: wrap; gap: 8px; padding: 15px; background: #0a0a0f; overflow-x: auto; }
-    .server-btn { background: #222; border: none; padding: 8px 16px; border-radius: 40px; color: white; cursor: pointer; font-size: 0.8rem; transition: 0.1s; }
-    .server-btn.active { background: #e50914; }
-    .video-container { position: relative; padding-bottom: 56.25%; height: 0; background: black; }
-    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
     .ad-container { background: #0e0f16; margin: 20px 0; padding: 12px; border-radius: 12px; text-align: center; }
     .smart-link { display: inline-block; background: #e50914; color: white; padding: 10px 20px; border-radius: 40px; text-decoration: none; font-weight: bold; }
     .footer { background: #0a0a0f; text-align: center; padding: 30px; margin-top: 50px; border-top: 1px solid #1e1f2a; font-size: 0.8rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
     .footer a { color: #e50914; text-decoration: none; margin: 0 5px; cursor: pointer; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     @media (max-width: 768px) { .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } .search-input { width: 140px; } }
   </style>
 </head>
 <body class="dark">
-<!-- Adsterra Popunder (first thing in body) -->
+<!-- Adsterra Popunder -->
 <script src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
 
 <div class="navbar">
-  <div class="logo" onclick="location.reload()">U‑TV</div>
+  <div class="logo" onclick="location.href='/'">U‑TV</div>
   <div class="nav-right">
     <input type="text" id="globalSearch" class="search-input" placeholder="Search movies, TV shows..." onkeypress="if(event.key==='Enter') globalSearch()">
     <button class="search-btn" onclick="globalSearch()">GO</button>
@@ -101,29 +89,15 @@
   <button id="loadMoreBtn" class="load-more">LOAD MORE</button>
 </main>
 
-<!-- Adsterra Native Banner (mid page) -->
+<!-- Adsterra Native Banner -->
 <div class="ad-container">
-  <script async="async" data-cfasync="false" src="https://pl28831972.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
+  <script async="async" data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
   <div id="container-e1fcb13904d27c4fe4e794fb5b4db78d"></div>
 </div>
 
-<!-- Adsterra Smart Link as attractive banner -->
+<!-- Adsterra Smart Link -->
 <div class="ad-container">
   <a class="smart-link" href="https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0" target="_blank" rel="noopener">⚡ High‑Speed Stream Mirror / Download</a>
-</div>
-
-<!-- Modal for video player -->
-<div id="playerModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3 id="modalTitle">Now Playing</h3>
-      <button class="close-modal" id="closeModalBtn">&times;</button>
-    </div>
-    <div class="server-buttons" id="serverButtons"></div>
-    <div class="video-container">
-      <iframe id="playerFrame" src="" allowfullscreen></iframe>
-    </div>
-  </div>
 </div>
 
 <footer class="footer">
@@ -133,7 +107,7 @@
 </footer>
 
 <script>
-  // Two TMDB API keys with fallback
+  // ==================== TMDB API KEYS ====================
   const TMDB_API_KEYS = [
     '174d0214bf933dd59b3d5ec68a0c967f',
     '5bf61a62fd4647aa7debed7d6f2db079'
@@ -142,28 +116,15 @@
   const BASE_URL = 'https://api.themoviedb.org/3';
   const IMG_BASE = 'https://image.tmdb.org/t/p/w342';
 
-  const EMBED_SERVERS = [
-    { name: 'Server 1 (VidSrc)', url: 'https://vidsrc.to/embed/movie/%ID%' },
-    { name: 'Server 2 (VidSrc 2)', url: 'https://vidsrc.xyz/embed/movie/%ID%' },
-    { name: 'Server 3 (EmbedSU)', url: 'https://embed.su/embed/movie/%ID%' },
-    { name: 'Server 4 (AutoEmbed)', url: 'https://autoembed.to/movie/tmdb/%ID%' },
-    { name: 'Server 5 (VidLink)', url: 'https://vidlink.pro/movie/%ID%' },
-    { name: 'Server 6 (MoviesAPI)', url: 'https://moviesapi.club/movie/%ID%' },
-    { name: 'Server 7 (2Embed)', url: 'https://2embed.org/embed/movie/%ID%' },
-    { name: 'Server 8 (SmashyStream)', url: 'https://embed.smashystream.com/movie/%ID%' },
-    { name: 'Server 9 (MultiEmbed)', url: 'https://multiembed.cx/?video_id=%ID%&tmdb=1' },
-    { name: 'Server 10 (VidSrc CC)', url: 'https://vidsrc.cc/v2/embed/movie/%ID%' }
-  ];
-
   let currentCategory = 'movie';
   let currentPage = 1;
   let isLoading = false;
   let hasMore = true;
   let currentSearchQuery = null;
 
+  // ==================== TMDB FETCH ====================
   async function fetchTMDB(endpoint, params = {}) {
-    const maxRetries = TMDB_API_KEYS.length;
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
+    for (let attempt = 0; attempt < TMDB_API_KEYS.length; attempt++) {
       const key = TMDB_API_KEYS[currentKeyIndex];
       try {
         const url = new URL(`${BASE_URL}${endpoint}`);
@@ -181,7 +142,6 @@
           const enRes = await fetch(enUrl);
           if (enRes.ok) data = await enRes.json();
         }
-        // success – reset key index
         currentKeyIndex = 0;
         return data;
       } catch (err) {
@@ -205,16 +165,8 @@
     }
   }
 
-  function escapeHtml(s) {
-    if (!s) return '';
-    return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m]));
-  }
-
-  function getQuality(rating) {
-    if (rating >= 7) return 'FULL HD';
-    if (rating >= 5) return 'HD';
-    return 'SD';
-  }
+  function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
+  function getQuality(rating) { return rating >= 7 ? 'FULL HD' : rating >= 5 ? 'HD' : 'SD'; }
 
   function createCard(item) {
     const title = item.title || item.name || 'Untitled';
@@ -233,6 +185,7 @@
     `;
   }
 
+  // ==================== LOAD MOVIES ====================
   async function loadMovies(reset = true) {
     if (isLoading) return;
     isLoading = true;
@@ -261,61 +214,19 @@
     isLoading = false;
   }
 
+  // ==================== TRENDING (redirect to static page) ====================
   async function loadTrending() {
     const data = await fetchTMDB('/trending/movie/day', { page: 1 });
     if (data.results) {
       const trendingDiv = document.getElementById('trendingList');
       trendingDiv.innerHTML = data.results.slice(0,12).map(m => `<span class="trending-item" data-id="${m.id}" data-type="movie">${escapeHtml(m.title)}</span>`).join(' • ');
       document.querySelectorAll('.trending-item').forEach(el => {
-        el.onclick = () => openPlayerModal(el.dataset.id, 'movie', el.innerText);
+        el.onclick = () => { window.location.href = '/' + el.dataset.type + '/' + el.dataset.id + '/'; };
       });
-      setInterval(() => {
-        document.querySelectorAll('.trending-item').forEach(el => {
-          if (Math.random() > 0.7) el.style.textShadow = '0 0 5px #e50914';
-          else el.style.textShadow = 'none';
-        });
-      }, 800);
     }
   }
 
-  function openPlayerModal(id, type, title) {
-    document.getElementById('modalTitle').innerText = title;
-    const serverDiv = document.getElementById('serverButtons');
-    serverDiv.innerHTML = '';
-    EMBED_SERVERS.forEach((s, idx) => {
-      const url = s.url.replace('%ID%', id);
-      const btn = document.createElement('button');
-      btn.className = 'server-btn' + (idx === 0 ? ' active' : '');
-      btn.innerText = s.name;
-      btn.dataset.url = url;
-      btn.onclick = () => {
-        document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('playerFrame').src = url;
-      };
-      serverDiv.appendChild(btn);
-    });
-    document.getElementById('playerFrame').src = EMBED_SERVERS[0].url.replace('%ID%', id);
-    document.getElementById('playerModal').style.display = 'flex';
-  }
-
-  document.getElementById('closeModalBtn').onclick = () => {
-    document.getElementById('playerModal').style.display = 'none';
-    document.getElementById('playerFrame').src = '';
-  };
-  window.onclick = (e) => {
-    if (e.target === document.getElementById('playerModal')) {
-      document.getElementById('playerModal').style.display = 'none';
-      document.getElementById('playerFrame').src = '';
-    }
-  };
-  document.getElementById('moviesGrid').addEventListener('click', (e) => {
-    const card = e.target.closest('.movie-card');
-    if (card) {
-      openPlayerModal(card.dataset.id, card.dataset.type, card.dataset.title);
-    }
-  });
-
+  // ==================== CATEGORY, SEARCH, LOAD MORE ====================
   async function switchCategory(cat) {
     currentCategory = cat;
     currentSearchQuery = null;
@@ -345,7 +256,18 @@
     if (!isLoading && hasMore) loadMovies(false);
   };
 
-  // Theme toggle
+  // ==================== REDIRECT ON CARD CLICK (Dynamic Routing) ====================
+  document.getElementById('moviesGrid').addEventListener('click', (e) => {
+    const card = e.target.closest('.movie-card');
+    if (card) {
+      const type = card.dataset.type;
+      const id = card.dataset.id;
+      // Redirect to static page: /movie/123/ or /tv/456/
+      window.location.href = '/' + type + '/' + id + '/';
+    }
+  });
+
+  // ==================== THEME TOGGLE ====================
   const themeBtn = document.getElementById('themeToggleBtn');
   themeBtn.onclick = () => {
     const isDark = document.body.classList.contains('dark');
@@ -367,20 +289,20 @@
     themeBtn.innerHTML = '🌞 Light';
   }
 
-  // Legal modals with your email
+  // ==================== LEGAL MODALS ====================
   function showLegalModal(title, content) {
     const modalDiv = document.createElement('div');
-    modalDiv.style.position = 'fixed'; modalDiv.style.top='0'; modalDiv.style.left='0'; modalDiv.style.width='100%'; modalDiv.style.height='100%';
-    modalDiv.style.background='rgba(0,0,0,0.8)'; modalDiv.style.display='flex'; modalDiv.style.alignItems='center'; modalDiv.style.justifyContent='center'; modalDiv.style.zIndex='3000';
+    modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:3000;';
     modalDiv.innerHTML = `<div style="background:#0e0f16;max-width:500px;width:90%;border-radius:24px;padding:24px;"><h2 style="color:#e50914;">${title}</h2><p style="margin:15px 0;">${content}</p><button id="legalClose" style="background:#e50914;border:none;padding:8px 20px;border-radius:40px;color:white;cursor:pointer;">Close</button></div>`;
     document.body.appendChild(modalDiv);
     document.getElementById('legalClose').onclick = () => modalDiv.remove();
   }
 
   document.getElementById('dmcaLink').onclick = () => showLegalModal('DMCA Notice', 'U-TV respects intellectual property. All video streams are embedded from third‑party sources. If you believe your copyright is infringed, please contact us at HELP.WOWMOVIES@GMAIL.COM. We will respond within 48 hours.');
-  document.getElementById('securityLink').onclick = () => showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected. Your privacy is our priority.');
+  document.getElementById('securityLink').onclick = () => showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected.');
   document.getElementById('termsLink').onclick = () => showLegalModal('Terms & Conditions', 'By using U-TV, you agree that we are not responsible for third‑party embedded content. You must be 18+ years old.');
 
+  // ==================== INIT ====================
   document.querySelectorAll('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => switchCategory(btn.dataset.cat));
   });
