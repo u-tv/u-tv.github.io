@@ -37,8 +37,9 @@ async function fetchWithFallback(endpoint, params = {}) {
       const url = new URL(`${BASE_URL}${endpoint}`);
       url.searchParams.append('api_key', apiKey);
       url.searchParams.append('language', 'hi-IN');
-      for (const [k, v] of Object.entries(params)) if (v) url.searchParams.append(k, v);
-      const res = await fetch(url);
+      for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== null) url.searchParams.append(k, v);
+      const res = await fetch(url.toString());
+      if (res.status === 401) continue;
       if (!res.ok) continue;
       let data = await res.json();
       if (data.results?.length === 0 && !endpoint.includes('/movie/')) {
@@ -193,42 +194,26 @@ function getAllFilesRecursively(dir, baseDir = '') {
   return results;
 }
 
-function getIconForFile(fileName) {
-  const ext = path.extname(fileName).toLowerCase();
-  if (['.html', '.htm'].includes(ext)) return '🌐';
-  if (['.css'].includes(ext)) return '🎨';
-  if (['.js', '.mjs'].includes(ext)) return '⚙️';
-  if (['.json'].includes(ext)) return '📦';
-  if (['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'].includes(ext)) return '🖼️';
-  if (['.pdf'].includes(ext)) return '📑';
-  if (['.txt', '.md'].includes(ext)) return '📝';
-  if (['.xml'].includes(ext)) return '📰';
-  if (['.yml', '.yaml'].includes(ext)) return '⚙️';
-  return '📄';
-}
-
-function injectAllFilesIntoHomepage(allFiles) {
+// यहाँ बदलाव किया गया है - कचरा सेक्शन को हटाकर केवल क्लीन होमपेज कॉपी होगी
+function injectAllFilesIntoHomepage() {
   const sourceIndex = path.join(process.cwd(), 'index.html');
   if (!fs.existsSync(sourceIndex)) { console.error('index.html not found'); return; }
   let html = fs.readFileSync(sourceIndex, 'utf8');
-  if (allFiles.length === 0) { fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), html); return; }
-  let extraCards = '';
-  for (const file of allFiles) {
-    const icon = getIconForFile(file.name);
-    const url = '/' + file.path.replace(/\\/g, '/');
-    extraCards += `<div class="movie-card" onclick="location.href='${url}'"><div class="badge-quality">${icon}</div><div class="movie-title">${escapeHtml(file.path)}</div><div class="rating">📁 Repo File</div></div>`;
-  }
-  const extraSection = `<h2 class="section-title">📁 All Repository Files (Auto‑Linked)</h2><div class="movie-grid" id="repoFilesGrid">${extraCards}</div>`;
-  if (html.includes('id="loadMoreBtn"')) html = html.replace('id="loadMoreBtn"', `id="loadMoreBtn"\n\n${extraSection}`);
-  else html = html.replace('</main>', `${extraSection}</main>`);
+  
+  // बिना किसी फ़ाइल लिस्ट इंजेक्शन के सीधे क्लीन होमपेज सेव करें
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), html);
-  console.log(`✅ Homepage updated with ${allFiles.length} files.`);
+  console.log(`✅ Homepage successfully copied to public.`);
 }
 
 function generateSitemap(movies, allFiles) {
   let urls = `<url><loc>${SITE_URL}/</loc><priority>1.0</priority></url>`;
   for (const movie of movies) urls += `<url><loc>${SITE_URL}/movie/${movie.id}/</loc><priority>0.8</priority></url>`;
-  for (const file of allFiles) urls += `<url><loc>${SITE_URL}/${file.path.replace(/\\/g, '/')}</loc><priority>0.5</priority></url>`;
+  for (const file of allFiles) {
+    // साइटमैप में फालतू जेनरेटेड मूवी फोल्डर्स को डबल-इंडेक्स होने से बचाने के लिए फ़िल्टर
+    if (!file.path.startsWith('movie/')) {
+      urls += `<url><loc>${SITE_URL}/${file.path.replace(/\\/g, '/')}</loc><priority>0.5</priority></url>`;
+    }
+  }
   fs.writeFileSync(path.join(OUTPUT_DIR, 'sitemap.xml'), `<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
 }
 
@@ -247,11 +232,13 @@ function generateRobots() {
   const allMovies = await getAllMovies();
   console.log(`🎬 ${allMovies.length} movies fetched.`);
   for (let i = 0; i < allMovies.length; i++) {
-    const details = await getMovieDetails(allMovies[i].id);
-    await generateMoviePage(allMovies[i], details);
+    const details = await getMovieDetails(allMovies[i].id).catch(() => null);
+    if (details) {
+      await generateMoviePage(allMovies[i], details);
+    }
     console.log(`   ${i+1}/${allMovies.length}`);
   }
-  injectAllFilesIntoHomepage(allFiles);
+  injectAllFilesIntoHomepage();
   generateSitemap(allMovies, allFiles);
   generateRobots();
   console.log('🎉 Build complete!');
