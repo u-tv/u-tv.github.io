@@ -1,19 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 
-// ==================== CONFIGURATION ====================
+// ==================== CONFIG ====================
 const TMDB_API_KEYS = [
   '174d0214bf933dd59b3d5ec68a0c967f',
   '5bf61a62fd4647aa7debed7d6f2db079'
 ];
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_BASE = 'https://image.tmdb.org/t/p';
-const SITE_URL = 'https://u-tv.pages.dev';   // ← अपना Cloudflare Pages डोमेन बदलें
+const SITE_URL = 'https://u-tv.pages.dev';
 const OUTPUT_DIR = './public';
 const MAX_PAGES = 100;
 const DELAY_MS = 200;
 
-// 10 embed servers
 const EMBED_SERVERS = [
   { name: 'Server 1 (VidSrc)', url: 'https://vidsrc.to/embed/movie/%ID%' },
   { name: 'Server 2 (VidSrc 2)', url: 'https://vidsrc.xyz/embed/movie/%ID%' },
@@ -27,13 +26,11 @@ const EMBED_SERVERS = [
   { name: 'Server 10 (VidSrc CC)', url: 'https://vidsrc.cc/v2/embed/movie/%ID%' }
 ];
 
-// ==================== UTILITY FUNCTIONS ====================
 function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
 }
 
-// ==================== TMDB API HELPERS ====================
 async function fetchWithFallback(endpoint, params = {}) {
   for (const apiKey of TMDB_API_KEYS) {
     try {
@@ -44,7 +41,7 @@ async function fetchWithFallback(endpoint, params = {}) {
       const res = await fetch(url);
       if (!res.ok) continue;
       let data = await res.json();
-      if (data.results && data.results.length === 0 && !endpoint.includes('/movie/')) {
+      if (data.results?.length === 0 && !endpoint.includes('/movie/')) {
         const enUrl = new URL(`${BASE_URL}${endpoint}`);
         enUrl.searchParams.append('api_key', apiKey);
         enUrl.searchParams.append('language', 'en-US');
@@ -52,11 +49,9 @@ async function fetchWithFallback(endpoint, params = {}) {
         const enRes = await fetch(enUrl);
         if (enRes.ok) data = await enRes.json();
       }
-      if (data.results && data.results.length) return data;
+      if (data.results?.length) return data;
       if (!data.results && data.id) return data;
-    } catch (e) {
-      console.warn(`API key ${apiKey.slice(0,8)}... failed, trying next`);
-    }
+    } catch (e) { console.warn(`Key failed: ${apiKey.slice(0,8)}...`); }
   }
   throw new Error('All TMDB API keys exhausted');
 }
@@ -66,9 +61,8 @@ async function getAllMovies() {
   for (let page = 1; page <= MAX_PAGES; page++) {
     console.log(`Fetching page ${page}...`);
     const data = await fetchWithFallback('/movie/popular', { page });
-    if (data.results && data.results.length) {
-      allMovies.push(...data.results);
-    } else break;
+    if (data.results?.length) allMovies.push(...data.results);
+    else break;
     await new Promise(r => setTimeout(r, DELAY_MS));
   }
   return allMovies;
@@ -82,7 +76,6 @@ async function getMovieDetails(id) {
   return { ...details, credits };
 }
 
-// ==================== GENERATE MOVIE PAGE ====================
 async function generateMoviePage(movie, details) {
   const movieDir = path.join(OUTPUT_DIR, 'movie', movie.id.toString());
   if (!fs.existsSync(movieDir)) fs.mkdirSync(movieDir, { recursive: true });
@@ -94,9 +87,7 @@ async function generateMoviePage(movie, details) {
   const genres = (details.genres || []).map(g => g.name).join(', ');
   const cast = (details.credits?.cast || []).slice(0, 10).map(c => c.name).join(', ');
 
-  const serverButtons = EMBED_SERVERS.map((s, i) => `
-    <button class="server-btn ${i === 0 ? 'active' : ''}" data-url="${s.url.replace('%ID%', movie.id)}">${s.name}</button>
-  `).join('');
+  const serverButtons = EMBED_SERVERS.map((s, i) => `<button class="server-btn ${i === 0 ? 'active' : ''}" data-url="${s.url.replace('%ID%', movie.id)}">${s.name}</button>`).join('');
 
   const html = `<!DOCTYPE html>
 <html lang="hi-IN">
@@ -105,24 +96,10 @@ async function generateMoviePage(movie, details) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(movie.title)} (${releaseYear}) - Watch Free HD | U-TV</title>
   <meta name="description" content="Watch ${escapeHtml(movie.title)} full movie free online. ${escapeHtml((movie.overview || '').slice(0, 150))}...">
-  <meta name="robots" content="index, follow">
   <link rel="canonical" href="${SITE_URL}/movie/${movie.id}/">
   <meta property="og:title" content="${escapeHtml(movie.title)} (${releaseYear})">
-  <meta property="og:image" content="https://image.tmdb.org/t/p/w780${movie.poster_path}">
+  <meta property="og:image" content="${IMG_BASE}/w780${movie.poster_path}">
   <meta property="og:type" content="video.movie">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Movie",
-    "name": "${escapeHtml(movie.title)}",
-    "description": "${escapeHtml((movie.overview || '').replace(/"/g, '\\"'))}",
-    "image": "https://image.tmdb.org/t/p/original${movie.poster_path}",
-    "datePublished": "${movie.release_date}",
-    "genre": ${JSON.stringify(details.genres?.map(g => g.name) || [])},
-    "duration": "PT${details.runtime || 0}M",
-    "aggregateRating": { "@type": "AggregateRating", "ratingValue": ${movie.vote_average || 0}, "ratingCount": ${movie.vote_count || 0} }
-  }
-  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #050508; color: #e2e8f0; font-family: system-ui, sans-serif; }
@@ -134,8 +111,7 @@ async function generateMoviePage(movie, details) {
     h1 { font-size: 2rem; margin-bottom: 10px; }
     .meta { color: #cbd5e1; margin-bottom: 15px; }
     .overview { line-height: 1.6; margin-bottom: 20px; }
-    .cast h3 { color: #e50914; margin-bottom: 8px; }
-    .cast-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cast-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .cast-item { background: #1e1f2a; padding: 4px 12px; border-radius: 30px; font-size: 0.8rem; }
     .player-section { background: #0e0f16; border-radius: 24px; padding: 20px; margin-top: 30px; }
     .server-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
@@ -158,11 +134,11 @@ async function generateMoviePage(movie, details) {
       <h1>${escapeHtml(movie.title)} (${releaseYear})</h1>
       <div class="meta">⭐ ${movie.vote_average?.toFixed(1)} | ${runtime} | ${genres}</div>
       <p class="overview">${escapeHtml(movie.overview || 'Synopsis not available.')}</p>
-      <div class="cast"><h3>Cast</h3><div class="cast-list">${cast.split(',').map(name => `<div class="cast-item">${escapeHtml(name.trim())}</div>`).join('')}</div></div>
+      <div><strong>Cast:</strong><div class="cast-list">${cast.split(',').map(name => `<div class="cast-item">${escapeHtml(name.trim())}</div>`).join('')}</div></div>
     </div>
   </div>
   <div class="ad-container">
-    <script async="async" data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
+    <script async data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
     <div id="container-e1fcb13904d27c4fe4e794fb5b4db78d"></div>
   </div>
   <div class="player-section">
@@ -172,10 +148,10 @@ async function generateMoviePage(movie, details) {
     </div>
   </div>
   <div class="ad-container">
-    <a class="smart-link" href="https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0" target="_blank" rel="noopener">⚡ High‑Speed Stream Mirror / Download</a>
+    <a class="smart-link" href="https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0" target="_blank">⚡ High‑Speed Stream Mirror / Download</a>
   </div>
 </div>
-<footer><p>© U-TV | All data from TMDB | We do not host videos | DMCA: <a href="mailto:HELP.WOWMOVIES@GMAIL.COM">HELP.WOWMOVIES@GMAIL.COM</a></p></footer>
+<footer><p>© U-TV | All data from TMDB | DMCA: <a href="mailto:HELP.WOWMOVIES@GMAIL.COM">HELP.WOWMOVIES@GMAIL.COM</a></p></footer>
 <script src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
 <script>
   document.querySelectorAll('.server-btn').forEach(btn => {
@@ -189,26 +165,21 @@ async function generateMoviePage(movie, details) {
 </body>
 </html>`;
   fs.writeFileSync(path.join(movieDir, 'index.html'), html);
-  console.log(`✅ Generated: /movie/${movie.id}/`);
+  console.log(`✅ Movie: /movie/${movie.id}/`);
 }
 
-// ==================== COPY ALL FILES FROM ROOT TO PUBLIC (including subdirectories) ====================
 function copyAllFilesRecursively(src, dest) {
   if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
   const entries = fs.readdirSync(src, { withFileTypes: true });
   for (const entry of entries) {
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === path.basename(OUTPUT_DIR)) continue;
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
-    if (entry.isDirectory()) {
-      if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === path.basename(OUTPUT_DIR)) continue;
-      copyAllFilesRecursively(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-    }
+    if (entry.isDirectory()) copyAllFilesRecursively(srcPath, destPath);
+    else fs.copyFileSync(srcPath, destPath);
   }
 }
 
-// ==================== GET LIST OF ALL FILES (for homepage links & sitemap) ====================
 function getAllFilesRecursively(dir, baseDir = '') {
   let results = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -216,11 +187,8 @@ function getAllFilesRecursively(dir, baseDir = '') {
     if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === path.basename(OUTPUT_DIR)) continue;
     const fullPath = path.join(dir, entry.name);
     const relPath = baseDir ? path.join(baseDir, entry.name) : entry.name;
-    if (entry.isDirectory()) {
-      results = results.concat(getAllFilesRecursively(fullPath, relPath));
-    } else {
-      results.push({ name: entry.name, path: relPath, fullPath });
-    }
+    if (entry.isDirectory()) results = results.concat(getAllFilesRecursively(fullPath, relPath));
+    else results.push({ name: entry.name, path: relPath, fullPath });
   }
   return results;
 }
@@ -239,88 +207,51 @@ function getIconForFile(fileName) {
   return '📄';
 }
 
-// ==================== INJECT ALL FILES INTO HOMEPAGE ====================
 function injectAllFilesIntoHomepage(allFiles) {
   const sourceIndex = path.join(process.cwd(), 'index.html');
-  if (!fs.existsSync(sourceIndex)) {
-    console.error('❌ index.html not found in root!');
-    return;
-  }
+  if (!fs.existsSync(sourceIndex)) { console.error('index.html not found'); return; }
   let html = fs.readFileSync(sourceIndex, 'utf8');
-  if (allFiles.length === 0) {
-    fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), html);
-    console.log('✅ Homepage copied (no extra files found).');
-    return;
-  }
+  if (allFiles.length === 0) { fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), html); return; }
   let extraCards = '';
   for (const file of allFiles) {
     const icon = getIconForFile(file.name);
-    let url = '/' + file.path.replace(/\\/g, '/');
-    extraCards += `
-      <div class="movie-card" onclick="location.href='${url}'">
-        <div class="badge-quality">${icon}</div>
-        <div class="movie-title">${escapeHtml(file.path)}</div>
-        <div class="rating">📁 Repo File</div>
-      </div>
-    `;
+    const url = '/' + file.path.replace(/\\/g, '/');
+    extraCards += `<div class="movie-card" onclick="location.href='${url}'"><div class="badge-quality">${icon}</div><div class="movie-title">${escapeHtml(file.path)}</div><div class="rating">📁 Repo File</div></div>`;
   }
-  const extraSection = `
-    <h2 class="section-title">📁 All Repository Files (Auto‑Linked)</h2>
-    <div class="movie-grid" id="repoFilesGrid">
-      ${extraCards}
-    </div>
-  `;
-  if (html.includes('id="loadMoreBtn"')) {
-    html = html.replace('id="loadMoreBtn"', `id="loadMoreBtn"\n\n  ${extraSection}`);
-  } else {
-    html = html.replace('</main>', `${extraSection}</main>`);
-  }
+  const extraSection = `<h2 class="section-title">📁 All Repository Files (Auto‑Linked)</h2><div class="movie-grid" id="repoFilesGrid">${extraCards}</div>`;
+  if (html.includes('id="loadMoreBtn"')) html = html.replace('id="loadMoreBtn"', `id="loadMoreBtn"\n\n${extraSection}`);
+  else html = html.replace('</main>', `${extraSection}</main>`);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), html);
-  console.log(`✅ Homepage updated with ${allFiles.length} repository file(s).`);
+  console.log(`✅ Homepage updated with ${allFiles.length} files.`);
 }
 
-// ==================== SITEMAP & ROBOTS ====================
 function generateSitemap(movies, allFiles) {
   let urls = `<url><loc>${SITE_URL}/</loc><priority>1.0</priority></url>`;
-  for (const movie of movies) {
-    urls += `<url><loc>${SITE_URL}/movie/${movie.id}/</loc><priority>0.8</priority></url>`;
-  }
-  for (const file of allFiles) {
-    const url = `${SITE_URL}/${file.path.replace(/\\/g, '/')}`;
-    urls += `<url><loc>${url}</loc><priority>0.5</priority></url>`;
-  }
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`;
-  fs.writeFileSync(path.join(OUTPUT_DIR, 'sitemap.xml'), sitemap);
-  console.log('✅ sitemap.xml generated');
+  for (const movie of movies) urls += `<url><loc>${SITE_URL}/movie/${movie.id}/</loc><priority>0.8</priority></url>`;
+  for (const file of allFiles) urls += `<url><loc>${SITE_URL}/${file.path.replace(/\\/g, '/')}</loc><priority>0.5</priority></url>`;
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'sitemap.xml'), `<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
 }
 
 function generateRobots() {
   fs.writeFileSync(path.join(OUTPUT_DIR, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml`);
 }
 
-// ==================== MAIN ====================
 (async () => {
-  console.log('🚀 Starting static site generation...');
-  console.log('📂 Copying entire repository (except .git, node_modules, public) to ./public ...');
+  console.log('🚀 Generating site...');
   const rootDir = process.cwd();
   copyAllFilesRecursively(rootDir, OUTPUT_DIR);
-  console.log('✅ All files copied.');
-
-  console.log('🔍 Scanning all files for homepage links...');
   const allFiles = getAllFilesRecursively(rootDir);
-  console.log(`Found ${allFiles.length} file(s) total.`);
+  console.log(`📄 Copied ${allFiles.length} repo files.`);
 
-  console.log('🎬 Fetching movies from TMDB...');
   const allMovies = await getAllMovies();
-  console.log(`📦 Total movies fetched: ${allMovies.length}`);
+  console.log(`🎬 ${allMovies.length} movies fetched.`);
   for (let i = 0; i < allMovies.length; i++) {
-    const movie = allMovies[i];
-    const details = await getMovieDetails(movie.id);
-    await generateMoviePage(movie, details);
-    console.log(`   Progress: ${i+1}/${allMovies.length}`);
+    const details = await getMovieDetails(allMovies[i].id);
+    await generateMoviePage(allMovies[i], details);
+    console.log(`   ${i+1}/${allMovies.length}`);
   }
   injectAllFilesIntoHomepage(allFiles);
   generateSitemap(allMovies, allFiles);
   generateRobots();
-  console.log('🎉 Build complete! Output folder: ./public');
+  console.log('🎉 Build complete!');
 })();
