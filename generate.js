@@ -239,6 +239,7 @@ function generateRobots() {
 (async () => {
   console.log('🚀 Generating site...');
   const rootDir = process.cwd();
+  if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   copyAllFilesRecursively(rootDir, OUTPUT_DIR);
   const allFiles = getAllFilesRecursively(rootDir);
   console.log(`📄 Copied ${allFiles.length} repo files.`);
