@@ -1,4 +1,4 @@
-// functions/movie/[id].js – पूरा मूवी पेज (10 सर्वर + SEO)
+// functions/movie/[id].js – Full TMDB + 10 Embeds + SEO
 const TMDB_API_KEY = '174d0214bf933dd59b3d5ec68a0c967f';
 const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
 const SITE_URL = 'https://u-tv.pages.dev';
@@ -16,9 +16,7 @@ const EMBED_SERVERS = [
   { name: 'Server 10 (VidSrc CC)', url: 'https://vidsrc.cc/v2/embed/movie/%ID%' }
 ];
 
-function escapeHtml(str) {
-  return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
-}
+function escapeHtml(s) { return String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
 
 async function fetchTMDB(endpoint) {
   const url = `https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}&language=hi-IN`;
@@ -58,7 +56,7 @@ export async function onRequest(context) {
       serverButtons += `<button class="server-btn" data-url="${url}">${s.name}</button>`;
     }
     if (trailer) {
-      serverButtons += `<button class="server-btn" data-url="https://www.youtube.com/embed/${trailer.key}">🎬 Trailer (YouTube)</button>`;
+      serverButtons += `<button class="server-btn" data-url="https://www.youtube.com/embed/${trailer.key}">🎬 Official Trailer (YouTube)</button>`;
     }
 
     const html = `<!DOCTYPE html>
@@ -72,6 +70,19 @@ export async function onRequest(context) {
   <meta property="og:title" content="${escapeHtml(title)} (${year})">
   <meta property="og:image" content="${backdrop}">
   <meta property="og:type" content="video.movie">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Movie",
+    "name": "${escapeHtml(title)}",
+    "description": "${escapeHtml(overview.replace(/"/g, '\\"'))}",
+    "image": "https://image.tmdb.org/t/p/original${movie.poster_path || ''}",
+    "datePublished": "${movie.release_date || ''}",
+    "genre": ${JSON.stringify(genres.split(', '))},
+    "duration": "PT${movie.runtime || 0}M",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": ${movie.vote_average || 0}, "ratingCount": ${movie.vote_count || 0} }
+  }
+  </script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#050508;color:#fff;font-family:sans-serif;padding:20px}
@@ -81,7 +92,7 @@ export async function onRequest(context) {
     h1{color:#e50914;margin-bottom:10px}
     .meta{color:#aaa;margin:10px 0;display:flex;gap:20px;flex-wrap:wrap}
     .server-buttons{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
-    .server-btn{background:#e50914;border:none;padding:10px 16px;border-radius:40px;cursor:pointer;color:#fff;font-weight:bold;font-size:0.8rem}
+    .server-btn{background:#e50914;border:none;padding:8px 14px;border-radius:40px;cursor:pointer;color:#fff;font-weight:bold}
     .server-btn:hover{background:#b00710}
     .player{position:relative;padding-bottom:56.25%;height:0;margin-top:20px}
     .player iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:16px}
