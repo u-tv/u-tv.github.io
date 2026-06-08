@@ -1,6 +1,0 @@
-dependencies.lock
-.next
-node_modules
-out
-.env.local
-.env.production
