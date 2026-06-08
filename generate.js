@@ -9,7 +9,7 @@ const TMDB_API_KEYS = [
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_BASE = 'https://image.tmdb.org/t/p';
 const SITE_URL = 'https://u-tv.pages.dev';
-const OUTPUT_DIR = './';
+const OUTPUT_DIR = './public';  // ✅ public directory
 const MAX_PAGES = 50;
 const DELAY_MS = 200;
 
@@ -121,7 +121,6 @@ async function generateMoviePage(movie, details) {
   const tagline = details.tagline || '';
   const overview = movie.overview || 'No description available.';
 
-  // Server buttons with active class on first
   const serverButtons = EMBED_SERVERS.map((s, i) => `<button class="server-btn ${i === 0 ? 'active' : ''}" data-url="${s.url.replace('%ID%', movie.id)}">${s.name}</button>`).join('');
 
   const html = `<!DOCTYPE html>
@@ -131,7 +130,7 @@ async function generateMoviePage(movie, details) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(movie.title)} (${releaseYear}) - Watch Free HD Online | U-TV</title>
   <meta name="description" content="Watch ${escapeHtml(movie.title)} (${releaseYear}) full movie free online in HD. ⭐ ${voteAverage}/10 | ${runtime} | ${genres}. Starring: ${escapeHtml(cast.substring(0, 100))}">
-  <meta name="keywords" content="${escapeHtml(movie.title)}, watch ${escapeHtml(movie.title)} online, free movie, ${releaseYear} movies, ${genres}, hindi dubbed">
+  <meta name="keywords" content="${escapeHtml(movie.title)}, watch ${escapeHtml(movie.title)} online, free movie, ${releaseYear} movies, ${genres}">
   <link rel="canonical" href="${SITE_URL}/movie/${movie.id}/">
   <meta property="og:title" content="${escapeHtml(movie.title)} (${releaseYear})">
   <meta property="og:description" content="${escapeHtml(overview.substring(0, 160))}">
@@ -221,62 +220,80 @@ async function generateMoviePage(movie, details) {
   console.log(`✅ Movie: /movie/${movie.id}/`);
 }
 
-// ✅ FIXED SITEMAP - Sahi format mein
+// ✅ Copy index.html to public folder
+function copyHomepage() {
+  const sourceIndex = path.join(process.cwd(), 'index.html');
+  const destIndex = path.join(OUTPUT_DIR, 'index.html');
+  
+  if (fs.existsSync(sourceIndex)) {
+    fs.copyFileSync(sourceIndex, destIndex);
+    console.log('✅ Homepage copied to public/');
+  } else {
+    console.error('❌ index.html not found in root!');
+  }
+}
+
+// ✅ FIXED SITEMAP - public folder mein
 function generateSitemap(movies) {
   let urls = '<?xml version="1.0" encoding="UTF-8"?>\n';
   urls += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
   
-  // Homepage
   urls += `  <url>\n    <loc>${SITE_URL}/</loc>\n    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n    <priority>1.0</priority>\n  </url>\n`;
   
-  // Movie pages - sahi format mein
   for (const movie of movies) {
     urls += `  <url>\n    <loc>${SITE_URL}/movie/${movie.id}/</loc>\n    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n    <priority>0.8</priority>\n  </url>\n`;
   }
   
   urls += '</urlset>';
   fs.writeFileSync(path.join(OUTPUT_DIR, 'sitemap.xml'), urls);
-  console.log('✅ sitemap.xml generated correctly with', movies.length, 'movies');
+  console.log(`✅ sitemap.xml generated with ${movies.length} movies`);
 }
 
 function generateRobots() {
-  const robots = `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n\n# Crawl delay for bots\nCrawl-delay: 1\n\n# Block unwanted bots\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: CCBot\nDisallow: /`;
+  const robots = `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n\nCrawl-delay: 1\n\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: CCBot\nDisallow: /`;
   fs.writeFileSync(path.join(OUTPUT_DIR, 'robots.txt'), robots);
   console.log('✅ robots.txt generated');
 }
 
-// ========== MAIN FUNCTION ==========
+// ========== MAIN ==========
 (async () => {
-  console.log('🚀 Starting movie page generation...');
-  console.log('📡 Fetching movies from TMDB...');
+  console.log('🚀 Generating site to public/ directory...');
+  
+  // Create public directory if not exists
+  if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  }
+  
+  // Copy homepage
+  copyHomepage();
   
   try {
     const allMovies = await getAllMovies();
     console.log(`🎬 Total ${allMovies.length} movies fetched.`);
     
-    // Clean old movie folders (optional - comment if you want to keep)
-    if (fs.existsSync('./movie')) {
+    // Clean old movie folders
+    const movieDir = path.join(OUTPUT_DIR, 'movie');
+    if (fs.existsSync(movieDir)) {
       console.log('🗑️ Cleaning old movie folders...');
-      fs.rmSync('./movie', { recursive: true, force: true });
+      fs.rmSync(movieDir, { recursive: true, force: true });
     }
-    fs.mkdirSync('./movie', { recursive: true });
+    fs.mkdirSync(movieDir, { recursive: true });
     
     for (let i = 0; i < allMovies.length; i++) {
-      console.log(`📝 Generating page ${i+1}/${allMovies.length}: ${allMovies[i].title}`);
+      console.log(`📝 ${i+1}/${allMovies.length}: ${allMovies[i].title}`);
       const details = await getMovieDetails(allMovies[i].id).catch(() => null);
       if (details) {
         await generateMoviePage(allMovies[i], details);
-      } else {
-        console.log(`   ⚠️ Skipping ${allMovies[i].title} - details not found`);
       }
       await new Promise(r => setTimeout(r, DELAY_MS));
     }
     
     generateSitemap(allMovies);
     generateRobots();
-    console.log('🎉 Build complete successfully!');
-    console.log('✅ Sitemap URL:', SITE_URL + '/sitemap.xml');
-    console.log('✅ Robots URL:', SITE_URL + '/robots.txt');
+    
+    console.log('🎉 Build complete!');
+    console.log(`📁 Output directory: ${OUTPUT_DIR}/`);
+    console.log(`🌐 Site URL: ${SITE_URL}`);
     
   } catch (err) {
     console.error(`❌ Build Failed: ${err.message}`);
