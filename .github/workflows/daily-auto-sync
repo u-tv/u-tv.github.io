@@ -1,0 +1,29 @@
+name: Daily Auto-Sync Movies
+
+on:
+  schedule:
+    - cron: '30 18 * * *'   # IST midnight (UTC 18:30)
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies (if any)
+        run: npm ci || true   # Ignores if no package-lock.json
+      
+      - name: Generate movie pages
+        run: node generate.js
+      
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🔄 Daily auto-sync: fresh movies & sitemap"
+          file_pattern: "public/movie/** public/sitemap.xml public/robots.txt"
+          commit_user_name: "Auto-Sync Bot"
+          commit_user_email: "bot@u-tv.com"
