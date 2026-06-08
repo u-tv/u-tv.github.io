@@ -14,6 +14,13 @@
   <meta property="og:image" content="https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Booster Mode: Preconnect & Prefetch -->
+  <link rel="preconnect" href="https://api.themoviedb.org">
+  <link rel="dns-prefetch" href="https://api.themoviedb.org">
+  <link rel="preconnect" href="https://image.tmdb.org">
+  <link rel="dns-prefetch" href="https://image.tmdb.org">
+  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: system-ui, 'Segoe UI', 'Inter', sans-serif; transition: background 0.2s, color 0.2s; }
@@ -57,7 +64,7 @@
   </style>
 </head>
 <body class="dark">
-<script data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
+<script data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js" async></script>
 
 <div class="navbar">
   <div class="logo" onclick="location.href='/'">U‑TV</div>
@@ -74,7 +81,7 @@
   <button class="cat-btn" data-cat="web">🌐 Web Series</button>
   <button class="cat-btn" data-cat="hindi">🇮🇳 Hindi</button>
   <button class="cat-btn" data-cat="english">🇬🇧 English</button>
-  <button class="cat-btn" data-cat="south">🎭 South</button>
+  <button class="cat-btn" data-cat="south">🎭 South (Tamil/Telugu/Malayalam)</button>
 </div>
 
 <div class="trending-bar" id="trendingBar">
@@ -104,6 +111,7 @@
 </footer>
 
 <script>
+  // ==================== TMDB API CONFIG ====================
   const TMDB_API_KEYS = [
     '174d0214bf933dd59b3d5ec68a0c967f',
     '5bf61a62fd4647aa7debed7d6f2db079'
@@ -118,6 +126,7 @@
   let hasMore = true;
   let currentSearchQuery = null;
 
+  // ==================== FETCH WITH FALLBACK ====================
   async function fetchTMDB(endpoint, params = {}) {
     for (let attempt = 0; attempt < TMDB_API_KEYS.length; attempt++) {
       const key = TMDB_API_KEYS[currentKeyIndex];
@@ -128,15 +137,18 @@
         for (const [k, v] of Object.entries(params)) if (v) url.searchParams.append(k, v);
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        let data = await res.json();
+        const data = await res.json();
+        // Keep the working key (do not reset to 0)
         return data;
       } catch (err) {
+        console.warn(`Key ${key.slice(0,8)} failed, switching`);
         currentKeyIndex = (currentKeyIndex + 1) % TMDB_API_KEYS.length;
       }
     }
     throw new Error('All TMDB API keys exhausted');
   }
 
+  // ==================== ENDPOINT HELPER ====================
   function getEndpoint(cat, page) {
     if (currentSearchQuery) return `/search/multi?query=${encodeURIComponent(currentSearchQuery)}&page=${page}`;
     switch(cat) {
@@ -150,6 +162,7 @@
     }
   }
 
+  // ==================== UI HELPERS ====================
   function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
   function getQuality(rating) { return rating >= 7 ? 'FULL HD' : rating >= 5 ? 'HD' : 'SD'; }
 
@@ -158,7 +171,7 @@
     const poster = item.poster_path ? IMG_BASE + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
     const rating = item.vote_average?.toFixed(1) || 'N/A';
     const id = item.id;
-    const type = 'movie'; 
+    const type = item.media_type || (currentCategory === 'tv' || currentCategory === 'web' ? 'tv' : 'movie');
     const quality = getQuality(parseFloat(item.vote_average));
     return `
       <div class="movie-card" data-id="${id}" data-type="${type}" data-title="${escapeHtml(title)}">
@@ -170,6 +183,7 @@
     `;
   }
 
+  // ==================== LOAD MOVIES ====================
   async function loadMovies(reset = true) {
     if (isLoading) return;
     isLoading = true;
@@ -184,7 +198,12 @@
       let results = data.results || [];
       if (currentCategory === 'web') results = results.filter(r => r.original_language === 'en');
       if (results.length === 0 && currentPage === 1) {
-        document.getElementById('moviesGrid').innerHTML = '<div style="text-align:center;padding:50px;">No results found.</div>';
+        // No results – show trending as recommendations
+        document.getElementById('moviesGrid').innerHTML = '<div style="text-align:center;padding:50px;">No results found. Showing recommendations.</div>';
+        const trendingData = await fetchTMDB('/trending/movie/day', { page: 1 });
+        const recResults = trendingData.results || [];
+        const html = recResults.slice(0, 20).map(createCard).join('');
+        document.getElementById('moviesGrid').innerHTML = html;
         hasMore = false;
         isLoading = false;
         return;
@@ -198,17 +217,19 @@
     isLoading = false;
   }
 
+  // ==================== TRENDING ====================
   async function loadTrending() {
     const data = await fetchTMDB('/trending/movie/day', { page: 1 });
     if (data.results) {
       const trendingDiv = document.getElementById('trendingList');
       trendingDiv.innerHTML = data.results.slice(0,12).map(m => `<span class="trending-item" data-id="${m.id}" data-type="movie">${escapeHtml(m.title)}</span>`).join(' • ');
       document.querySelectorAll('.trending-item').forEach(el => {
-        el.onclick = () => { window.location.href = '/movie/' + el.dataset.id + '/'; };
+        el.onclick = () => { window.location.href = '/' + el.dataset.type + '/' + el.dataset.id + '/'; };
       });
     }
   }
 
+  // ==================== CATEGORY SWITCH ====================
   async function switchCategory(cat) {
     currentCategory = cat;
     currentSearchQuery = null;
@@ -223,6 +244,7 @@
     });
   }
 
+  // ==================== SEARCH WITH RECOMMENDATIONS ====================
   async function globalSearch() {
     const q = document.getElementById('globalSearch').value.trim();
     if (!q) return;
@@ -234,6 +256,7 @@
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
   }
 
+  // ==================== EVENT LISTENERS ====================
   document.getElementById('loadMoreBtn').onclick = () => {
     if (!isLoading && hasMore) loadMovies(false);
   };
@@ -242,10 +265,12 @@
     const card = e.target.closest('.movie-card');
     if (card) {
       const id = card.dataset.id;
-      window.location.href = '/movie/' + id + '/';
+      const type = card.dataset.type;
+      window.location.href = '/' + type + '/' + id + '/';
     }
   });
 
+  // ==================== THEME TOGGLE ====================
   const themeBtn = document.getElementById('themeToggleBtn');
   themeBtn.onclick = () => {
     const isDark = document.body.classList.contains('dark');
@@ -267,6 +292,7 @@
     themeBtn.innerHTML = '🌞 Light';
   }
 
+  // ==================== LEGAL MODALS ====================
   function showLegalModal(title, content) {
     const modalDiv = document.createElement('div');
     modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:3000;';
@@ -279,6 +305,7 @@
   document.getElementById('securityLink').onclick = () => showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected.');
   document.getElementById('termsLink').onclick = () => showLegalModal('Terms & Conditions', 'By using U-TV, you agree that we are not responsible for third‑party embedded content. You must be 18+ years old.');
 
+  // ==================== INIT ====================
   document.querySelectorAll('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => switchCategory(btn.dataset.cat));
   });
