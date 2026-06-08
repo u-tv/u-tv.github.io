@@ -57,7 +57,6 @@
   </style>
 </head>
 <body class="dark">
-<!-- Adsterra Popunder -->
 <script src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
 
 <div class="navbar">
@@ -75,7 +74,7 @@
   <button class="cat-btn" data-cat="web">🌐 Web Series</button>
   <button class="cat-btn" data-cat="hindi">🇮🇳 Hindi</button>
   <button class="cat-btn" data-cat="english">🇬🇧 English</button>
-  <button class="cat-btn" data-cat="south">🎭 South (Tamil/Telugu/Malayalam)</button>
+  <button class="cat-btn" data-cat="south">🎭 South</button>
 </div>
 
 <div class="trending-bar" id="trendingBar">
@@ -89,25 +88,22 @@
   <button id="loadMoreBtn" class="load-more">LOAD MORE</button>
 </main>
 
-<!-- Adsterra Native Banner -->
 <div class="ad-container">
   <script async="async" data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
   <div id="container-e1fcb13904d27c4fe4e794fb5b4db78d"></div>
 </div>
 
-<!-- Adsterra Smart Link -->
 <div class="ad-container">
   <a class="smart-link" href="https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0" target="_blank" rel="noopener">⚡ High‑Speed Stream Mirror / Download</a>
 </div>
 
 <footer class="footer">
-  <div>© 2025 U-TV | All content from TMDB | No videos hosted</div>
+  <div>© 2026 U-TV | All content from TMDB | No videos hosted</div>
   <div><a id="dmcaLink">DMCA</a> | <a id="securityLink">Security</a> | <a id="termsLink">Terms & Conditions</a></div>
   <div>DMCA / Report: <a href="mailto:HELP.WOWMOVIES@GMAIL.COM">HELP.WOWMOVIES@GMAIL.COM</a></div>
 </footer>
 
 <script>
-  // ==================== TMDB API KEYS ====================
   const TMDB_API_KEYS = [
     '174d0214bf933dd59b3d5ec68a0c967f',
     '5bf61a62fd4647aa7debed7d6f2db079'
@@ -122,7 +118,6 @@
   let hasMore = true;
   let currentSearchQuery = null;
 
-  // ==================== TMDB FETCH ====================
   async function fetchTMDB(endpoint, params = {}) {
     for (let attempt = 0; attempt < TMDB_API_KEYS.length; attempt++) {
       const key = TMDB_API_KEYS[currentKeyIndex];
@@ -134,18 +129,8 @@
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         let data = await res.json();
-        if (data.results && data.results.length === 0 && (endpoint.includes('/movie/') || endpoint.includes('/tv/'))) {
-          const enUrl = new URL(`${BASE_URL}${endpoint}`);
-          enUrl.searchParams.append('api_key', key);
-          enUrl.searchParams.append('language', 'en-US');
-          for (const [k, v] of Object.entries(params)) if (v) enUrl.searchParams.append(k, v);
-          const enRes = await fetch(enUrl);
-          if (enRes.ok) data = await enRes.json();
-        }
-        currentKeyIndex = 0;
         return data;
       } catch (err) {
-        console.warn(`Key ${key.slice(0,8)}... failed, switching`);
         currentKeyIndex = (currentKeyIndex + 1) % TMDB_API_KEYS.length;
       }
     }
@@ -173,7 +158,7 @@
     const poster = item.poster_path ? IMG_BASE + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
     const rating = item.vote_average?.toFixed(1) || 'N/A';
     const id = item.id;
-    const type = item.media_type || (currentCategory === 'tv' || currentCategory === 'web' ? 'tv' : 'movie');
+    const type = 'movie'; 
     const quality = getQuality(parseFloat(item.vote_average));
     return `
       <div class="movie-card" data-id="${id}" data-type="${type}" data-title="${escapeHtml(title)}">
@@ -185,7 +170,6 @@
     `;
   }
 
-  // ==================== LOAD MOVIES ====================
   async function loadMovies(reset = true) {
     if (isLoading) return;
     isLoading = true;
@@ -214,19 +198,17 @@
     isLoading = false;
   }
 
-  // ==================== TRENDING (redirect to static page) ====================
   async function loadTrending() {
     const data = await fetchTMDB('/trending/movie/day', { page: 1 });
     if (data.results) {
       const trendingDiv = document.getElementById('trendingList');
       trendingDiv.innerHTML = data.results.slice(0,12).map(m => `<span class="trending-item" data-id="${m.id}" data-type="movie">${escapeHtml(m.title)}</span>`).join(' • ');
       document.querySelectorAll('.trending-item').forEach(el => {
-        el.onclick = () => { window.location.href = '/' + el.dataset.type + '/' + el.dataset.id + '/'; };
+        el.onclick = () => { window.location.href = '/movie/' + el.dataset.id + '/'; };
       });
     }
   }
 
-  // ==================== CATEGORY, SEARCH, LOAD MORE ====================
   async function switchCategory(cat) {
     currentCategory = cat;
     currentSearchQuery = null;
@@ -256,18 +238,14 @@
     if (!isLoading && hasMore) loadMovies(false);
   };
 
-  // ==================== REDIRECT ON CARD CLICK (Dynamic Routing) ====================
   document.getElementById('moviesGrid').addEventListener('click', (e) => {
     const card = e.target.closest('.movie-card');
     if (card) {
-      const type = card.dataset.type;
       const id = card.dataset.id;
-      // Redirect to static page: /movie/123/ or /tv/456/
-      window.location.href = '/' + type + '/' + id + '/';
+      window.location.href = '/movie/' + id + '/';
     }
   });
 
-  // ==================== THEME TOGGLE ====================
   const themeBtn = document.getElementById('themeToggleBtn');
   themeBtn.onclick = () => {
     const isDark = document.body.classList.contains('dark');
@@ -289,7 +267,6 @@
     themeBtn.innerHTML = '🌞 Light';
   }
 
-  // ==================== LEGAL MODALS ====================
   function showLegalModal(title, content) {
     const modalDiv = document.createElement('div');
     modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:3000;';
@@ -302,7 +279,6 @@
   document.getElementById('securityLink').onclick = () => showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected.');
   document.getElementById('termsLink').onclick = () => showLegalModal('Terms & Conditions', 'By using U-TV, you agree that we are not responsible for third‑party embedded content. You must be 18+ years old.');
 
-  // ==================== INIT ====================
   document.querySelectorAll('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => switchCategory(btn.dataset.cat));
   });
