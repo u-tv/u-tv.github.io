@@ -1,0 +1,21 @@
+name: Scraper Auto-Sync (3-Hourly)
+on:
+  schedule:
+    - cron: '0 */3 * * *'   # हर 3 घंटे
+  workflow_dispatch:          # मैन्युअल भी चला सकते हैं
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: node scraper.js
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🔄 Auto-sync: updated movies & embed servers"
+          file_pattern: "movie/*/index.html index.html sitemap.xml robots.txt"
