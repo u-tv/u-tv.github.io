@@ -1,21 +1,39 @@
 name: Scraper Auto-Sync (3-Hourly)
 on:
   schedule:
-    - cron: '0 */3 * * *'   # हर 3 घंटे
-  workflow_dispatch:          # मैन्युअल भी चला सकते हैं
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-      - run: node scraper.js
+
+      - name: Install dependencies
+        run: npm install axios cheerio || true
+
+      - name: Run scraper (with retry)
+        run: |
+          for i in 1 2 3; do
+            echo "Attempt $i..."
+            node scraper.js && break
+            echo "Attempt $i failed, waiting 10s..."
+            sleep 10
+          done
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-      - uses: stefanzweifel/git-auto-commit-action@v5
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🔄 Auto-sync: updated movies & embed servers"
-          file_pattern: "movie/*/index.html index.html sitemap.xml robots.txt"
+          commit_message: "🔄 Auto-sync: updated movie pages & sitemap"
+          file_pattern: "movie/*/index.html sitemap.xml robots.txt"
+          commit_user_name: "Auto-Sync Bot"
+          commit_user_email: "bot@u-tv.com"
