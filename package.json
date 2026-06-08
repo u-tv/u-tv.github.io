@@ -1,19 +1,15 @@
 {
-  "name": "u-tv",
-  "version": "0.1.0",
-  "private": true,
+  "name": "u-tv-movie-site",
+  "version": "1.0.0",
+  "description": "Auto-sync movie site with TMDB + embed scraper",
+  "main": "scraper.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "node scraper.js"
   },
   "dependencies": {
-    "next": "^15.3.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "author": "U-TV",
+  "license": "MIT"
 }
