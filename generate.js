@@ -9,11 +9,10 @@ const TMDB_API_KEYS = [
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_BASE = 'https://image.tmdb.org/t/p';
 const SITE_URL = 'https://u-tv.pages.dev';
-const OUTPUT_DIR = './public';  // ✅ public directory
+const OUTPUT_DIR = './public';
 const MAX_PAGES = 50;
 const DELAY_MS = 200;
 
-// ✅ 10 WORKING EMBED SERVERS
 const EMBED_SERVERS = [
   { name: 'Server 1 (VidSrc.to)', url: 'https://vidsrc.to/embed/movie/%ID%' },
   { name: 'Server 2 (VidSrc.xyz)', url: 'https://vidsrc.xyz/embed/movie/%ID%' },
@@ -119,7 +118,8 @@ async function generateMoviePage(movie, details) {
   const voteAverage = movie.vote_average?.toFixed(1) || 'N/A';
   const voteCount = details.vote_count || 0;
   const tagline = details.tagline || '';
-  const overview = movie.overview || 'No description available.';
+  // ✅ FIXED: details.overview pehle use karo
+  const overview = details.overview || movie.overview || 'No description available.';
 
   const serverButtons = EMBED_SERVERS.map((s, i) => `<button class="server-btn ${i === 0 ? 'active' : ''}" data-url="${s.url.replace('%ID%', movie.id)}">${s.name}</button>`).join('');
 
@@ -220,7 +220,6 @@ async function generateMoviePage(movie, details) {
   console.log(`✅ Movie: /movie/${movie.id}/`);
 }
 
-// ✅ Copy index.html to public folder
 function copyHomepage() {
   const sourceIndex = path.join(process.cwd(), 'index.html');
   const destIndex = path.join(OUTPUT_DIR, 'index.html');
@@ -233,7 +232,6 @@ function copyHomepage() {
   }
 }
 
-// ✅ FIXED SITEMAP - public folder mein
 function generateSitemap(movies) {
   let urls = '<?xml version="1.0" encoding="UTF-8"?>\n';
   urls += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
@@ -255,23 +253,19 @@ function generateRobots() {
   console.log('✅ robots.txt generated');
 }
 
-// ========== MAIN ==========
 (async () => {
   console.log('🚀 Generating site to public/ directory...');
   
-  // Create public directory if not exists
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
   
-  // Copy homepage
   copyHomepage();
   
   try {
     const allMovies = await getAllMovies();
     console.log(`🎬 Total ${allMovies.length} movies fetched.`);
     
-    // Clean old movie folders
     const movieDir = path.join(OUTPUT_DIR, 'movie');
     if (fs.existsSync(movieDir)) {
       console.log('🗑️ Cleaning old movie folders...');
