@@ -2,7 +2,7 @@
 <html lang="hi-IN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>U-TV – Watch Free Movies, TV Shows, Web Series in HD</title>
   <meta name="description" content="Unlimited free streaming of movies, TV series, web series in Hindi, English, South Indian languages. 10+ fast servers.">
   <meta name="keywords" content="free movies, watch online, hindi dubbed, south movies, web series, tv series, U-TV">
@@ -15,52 +15,322 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Booster Mode: Preconnect & Prefetch -->
+  <!-- Performance: preconnect and prefetch -->
   <link rel="preconnect" href="https://api.themoviedb.org">
   <link rel="dns-prefetch" href="https://api.themoviedb.org">
   <link rel="preconnect" href="https://image.tmdb.org">
   <link rel="dns-prefetch" href="https://image.tmdb.org">
   
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: system-ui, 'Segoe UI', 'Inter', sans-serif; transition: background 0.2s, color 0.2s; }
-    body.dark { background: #050508; color: #e2e8f0; }
-    body.light { background: #f8fafc; color: #1e293b; }
-    .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; padding: 12px 24px; background: rgba(5,5,8,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(229,9,20,0.5); }
-    .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #fff, #e50914); background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; }
-    .nav-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .search-input { background: #0e0f16; border: 1px solid #2a2a35; border-radius: 40px; padding: 8px 16px; color: white; width: 200px; outline: none; transition: 0.2s; }
-    .search-input:focus { border-color: #e50914; width: 240px; }
-    body.light .search-input { background: white; border-color: #cbd5e1; color: black; }
-    .search-btn, .theme-toggle { background: #e50914; border: none; border-radius: 40px; padding: 8px 20px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
-    .theme-toggle { background: #334155; margin-left: 8px; }
-    body.light .theme-toggle { background: #64748b; }
-    .search-btn:hover, .theme-toggle:hover { filter: brightness(0.9); transform: scale(0.98); }
-    .categories { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 20px 20px 0; }
-    .cat-btn { background: #1e1f2a; border: none; padding: 8px 20px; border-radius: 40px; font-weight: 600; color: #e2e8f0; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-    body.light .cat-btn { background: #e2e8f0; color: #1e293b; }
-    .cat-btn.active { background: #e50914; color: white; }
-    .trending-bar { background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 8px 16px; margin: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
-    .trending-label { font-weight: bold; color: #e50914; }
-    .trending-item { color: white; font-size: 0.85rem; cursor: pointer; transition: 0.1s; }
-    .trending-item:hover { color: #e50914; text-shadow: 0 0 5px #e50914; }
-    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-    .section-title { font-size: 1.6rem; margin: 30px 0 20px; border-left: 4px solid #e50914; padding-left: 15px; }
-    .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
-    .movie-card { background: #0e0f16; border-radius: 20px; overflow: hidden; transition: 0.25s; cursor: pointer; border: 1px solid #1e1f2a; position: relative; }
-    body.light .movie-card { background: #ffffff; border-color: #e2e8f0; }
-    .movie-card:hover { transform: translateY(-6px); border-color: #e50914; box-shadow: 0 15px 25px -10px rgba(229,9,20,0.4); }
-    .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-    .movie-title { padding: 10px 8px 5px; font-weight: 600; text-align: center; font-size: 0.9rem; }
-    .rating { padding: 0 8px 10px; text-align: center; color: #d4af37; font-size: 0.75rem; }
-    .badge-quality { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; background: #e50914; color: white; }
-    .load-more { background: #e50914; border: none; color: white; padding: 12px 30px; border-radius: 40px; font-weight: bold; cursor: pointer; display: block; margin: 40px auto; transition: 0.2s; }
-    .load-more:hover { background: #b00710; transform: scale(1.02); }
-    .ad-container { background: #0e0f16; margin: 20px 0; padding: 12px; border-radius: 12px; text-align: center; }
-    .smart-link { display: inline-block; background: #e50914; color: white; padding: 10px 20px; border-radius: 40px; text-decoration: none; font-weight: bold; }
-    .footer { background: #0a0a0f; text-align: center; padding: 30px; margin-top: 50px; border-top: 1px solid #1e1f2a; font-size: 0.8rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-    .footer a { color: #e50914; text-decoration: none; margin: 0 5px; cursor: pointer; }
-    @media (max-width: 768px) { .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } .search-input { width: 140px; } }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: background 0.2s, color 0.2s;
+    }
+    body.dark {
+      background: #050508;
+      color: #e2e8f0;
+    }
+    body.light {
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    /* Modern navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 20px;
+      background: rgba(5,5,8,0.95);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(229,9,20,0.6);
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #e50914);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nav-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      background: #0e0f16;
+      border: 1px solid #2a2a35;
+      border-radius: 40px;
+      padding: 8px 16px;
+      color: white;
+      width: 180px;
+      outline: none;
+      transition: 0.2s;
+      font-size: 0.85rem;
+    }
+    .search-input:focus {
+      border-color: #e50914;
+      width: 220px;
+    }
+    body.light .search-input {
+      background: white;
+      border-color: #cbd5e1;
+      color: black;
+    }
+    .search-btn, .theme-toggle {
+      background: #e50914;
+      border: none;
+      border-radius: 40px;
+      padding: 8px 16px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.8rem;
+    }
+    .theme-toggle {
+      background: #334155;
+      margin-left: 0;
+    }
+    body.light .theme-toggle {
+      background: #64748b;
+    }
+    .search-btn:hover, .theme-toggle:hover {
+      filter: brightness(0.9);
+      transform: scale(0.98);
+    }
+    /* Horizontal scroll categories (mobile friendly) */
+    .categories-wrapper {
+      overflow-x: auto;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      margin: 12px 0 0;
+      padding: 0 16px 8px;
+    }
+    .categories {
+      display: flex;
+      gap: 12px;
+      flex-wrap: nowrap;
+    }
+    .cat-btn {
+      background: #1e1f2a;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: #e2e8f0;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+      font-size: 0.85rem;
+    }
+    body.light .cat-btn {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    .cat-btn.active {
+      background: #e50914;
+      color: white;
+    }
+    /* Trending bar */
+    .trending-bar {
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      margin: 12px 16px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: thin;
+      font-size: 0.8rem;
+    }
+    .trending-label {
+      font-weight: bold;
+      color: #e50914;
+    }
+    .trending-item {
+      color: white;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .trending-item:hover {
+      color: #e50914;
+      text-shadow: 0 0 5px #e50914;
+    }
+    /* Main container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      margin: 24px 0 16px;
+      border-left: 4px solid #e50914;
+      padding-left: 12px;
+    }
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+    }
+    .movie-card {
+      background: #0e0f16;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: 0.25s;
+      cursor: pointer;
+      border: 1px solid #1e1f2a;
+      position: relative;
+    }
+    body.light .movie-card {
+      background: #ffffff;
+      border-color: #e2e8f0;
+    }
+    .movie-card:hover {
+      transform: translateY(-6px);
+      border-color: #e50914;
+      box-shadow: 0 15px 25px -10px rgba(229,9,20,0.4);
+    }
+    .movie-card img {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+    }
+    .movie-title {
+      padding: 10px 8px 5px;
+      font-weight: 600;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    .rating {
+      padding: 0 8px 10px;
+      text-align: center;
+      color: #d4af37;
+      font-size: 0.7rem;
+    }
+    .badge-quality {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.7);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      background: #e50914;
+      color: white;
+    }
+    .load-more {
+      background: #e50914;
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      display: block;
+      margin: 32px auto;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .load-more:hover {
+      background: #b00710;
+      transform: scale(1.02);
+    }
+    .ad-container {
+      background: #0e0f16;
+      margin: 20px 0;
+      padding: 12px;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .smart-link {
+      display: inline-block;
+      background: #e50914;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .footer {
+      background: #0a0a0f;
+      text-align: center;
+      padding: 24px 16px;
+      margin-top: 40px;
+      border-top: 1px solid #1e1f2a;
+      font-size: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+    .footer a {
+      color: #e50914;
+      text-decoration: none;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    /* Responsive improvements */
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .nav-right {
+        justify-content: space-between;
+      }
+      .search-input {
+        width: 100%;
+        max-width: none;
+      }
+      .search-input:focus {
+        width: 100%;
+      }
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px;
+      }
+      .movie-title {
+        font-size: 0.75rem;
+      }
+      .section-title {
+        font-size: 1.3rem;
+      }
+      .trending-bar {
+        font-size: 0.7rem;
+        margin: 8px 12px;
+      }
+      .cat-btn {
+        padding: 6px 14px;
+        font-size: 0.75rem;
+      }
+    }
+    @media (min-width: 768px) {
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 24px;
+      }
+    }
   </style>
 </head>
 <body class="dark">
@@ -75,13 +345,15 @@
   </div>
 </div>
 
-<div class="categories" id="categoryBar">
-  <button class="cat-btn active" data-cat="movie">🎬 Movies</button>
-  <button class="cat-btn" data-cat="tv">📺 TV Series</button>
-  <button class="cat-btn" data-cat="web">🌐 Web Series</button>
-  <button class="cat-btn" data-cat="hindi">🇮🇳 Hindi</button>
-  <button class="cat-btn" data-cat="english">🇬🇧 English</button>
-  <button class="cat-btn" data-cat="south">🎭 South (Tamil/Telugu/Malayalam)</button>
+<div class="categories-wrapper">
+  <div class="categories" id="categoryBar">
+    <button class="cat-btn active" data-cat="movie">🎬 Movies</button>
+    <button class="cat-btn" data-cat="tv">📺 TV Series</button>
+    <button class="cat-btn" data-cat="web">🌐 Web Series</button>
+    <button class="cat-btn" data-cat="hindi">🇮🇳 Hindi</button>
+    <button class="cat-btn" data-cat="english">🇬🇧 English</button>
+    <button class="cat-btn" data-cat="south">🎭 South</button>
+  </div>
 </div>
 
 <div class="trending-bar" id="trendingBar">
@@ -138,7 +410,6 @@
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        // Keep the working key (do not reset to 0)
         return data;
       } catch (err) {
         console.warn(`Key ${key.slice(0,8)} failed, switching`);
@@ -198,7 +469,6 @@
       let results = data.results || [];
       if (currentCategory === 'web') results = results.filter(r => r.original_language === 'en');
       if (results.length === 0 && currentPage === 1) {
-        // No results – show trending as recommendations
         document.getElementById('moviesGrid').innerHTML = '<div style="text-align:center;padding:50px;">No results found. Showing recommendations.</div>';
         const trendingData = await fetchTMDB('/trending/movie/day', { page: 1 });
         const recResults = trendingData.results || [];
