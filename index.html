@@ -1,11 +1,12 @@
+```html
 <!DOCTYPE html>
 <html lang="hi-IN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>U-TV – Watch Free Movies, TV Shows, Web Series</title>
-  <meta name="description" content="Free streaming of movies, TV series, web series in Hindi, English, Punjabi, South languages. HD quality.">
-  <meta name="keywords" content="free movies, watch online, hindi dubbed, south movies, web series, tv series, U-TV">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>U-TV HUB – Free Movies, Web Series, Trailers</title>
+  <meta name="description" content="Stream free movies, web series, trailers. Hindi, English, Punjabi, South. Clean ultra‑fast interface.">
+  <meta name="theme-color" content="#0b0c10">
   <link rel="preconnect" href="https://api.themoviedb.org">
   <link rel="preconnect" href="https://image.tmdb.org">
   <style>
@@ -16,582 +17,454 @@
       -webkit-tap-highlight-color: transparent;
     }
     body {
-      font-family: system-ui, -apple-system, 'Segoe UI', 'Inter', sans-serif;
       background: #0b0c10;
       color: #e2e8f0;
+      font-family: system-ui, -apple-system, 'Inter', sans-serif;
       overflow-x: hidden;
-      width: 100%;
     }
-    
-    /* Sticky Top Navigation Design Pattern */
+    /* clean header – no extra decorative gaps */
     .header {
       background: #0b0c10;
-      padding: 12px 16px;
+      padding: 10px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
+      border-bottom: 1px solid #1e202b;
     }
-    .top-navbar {
+    .top-flex {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
-    }
-    .logo-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
     }
     .logo {
-      font-size: 2rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: -0.5px;
-    }
-    .live-status {
-      background: rgba(234, 76, 35, 0.15);
-      border: 1px solid rgba(234, 76, 35, 0.3);
-      padding: 3px 8px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.7rem;
+      font-size: 1.6rem;
       font-weight: 800;
+      background: linear-gradient(135deg, #fff, #ea4c23);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .live-badge {
+      background: rgba(234,76,35,0.15);
+      border-radius: 30px;
+      padding: 4px 10px;
+      font-size: 0.65rem;
+      font-weight: 700;
       color: #ea4c23;
     }
-    .live-status i {
-      width: 6px;
-      height: 6px;
-      background: #ea4c23;
-      border-radius: 50%;
-    }
-    
-    /* Modern Search Row Structure */
-    .search-wrapper {
-      position: relative;
+    .search-wrap {
       display: flex;
-      max-width: 420px;
-      width: 100%;
       background: #14151f;
-      border: 1px solid #222431;
-      border-radius: 20px;
+      border-radius: 40px;
+      border: 1px solid #262838;
       overflow: hidden;
     }
     .search-input {
-      flex: 1;
       background: transparent;
       border: none;
-      padding: 8px 14px;
-      color: #ffffff;
-      font-size: 0.8rem;
+      padding: 8px 12px;
+      color: white;
+      font-size: 0.75rem;
       outline: none;
-    }
-    .search-input::placeholder {
-      color: #52556b;
+      width: 180px;
     }
     .search-btn {
       background: #ea4c23;
       border: none;
-      padding: 0 16px;
-      color: #ffffff;
-      font-size: 0.75rem;
-      font-weight: 700;
+      padding: 0 14px;
+      color: white;
+      font-weight: 600;
       cursor: pointer;
+      font-size: 0.7rem;
     }
-
-    /* Premium Horizontal Scroll Category Buttons */
-    .categories-scroll {
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      margin-bottom: 4px;
-    }
-    .categories-scroll::-webkit-scrollbar {
-      display: none;
-    }
-    .categories-list {
-      display: inline-flex;
+    .category-row {
+      display: flex;
       gap: 8px;
-      padding-bottom: 4px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 6px;
     }
-    .cat-pill {
+    .cat-chip {
       background: #14151f;
       border: 1px solid #1f212e;
-      padding: 8px 16px;
-      border-radius: 20px;
-      color: #9295a8;
+      border-radius: 30px;
+      padding: 5px 14px;
+      font-size: 0.7rem;
       font-weight: 600;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      color: #9da0b5;
       white-space: nowrap;
+      cursor: pointer;
     }
-    .cat-pill.active {
+    .cat-chip.active {
       background: #ff9500;
       color: #0b0c10;
       border-color: #ff9500;
-      font-weight: 700;
     }
 
-    /* Hero Banner Dynamic Component */
-    .hero-banner {
-      width: 100%;
-      height: 240px;
-      background: #14151f;
+    /* hero banner - minimalist no extra overlap */
+    .hero-mini {
+      margin: 12px 16px;
+      border-radius: 24px;
+      height: 180px;
       position: relative;
       overflow: hidden;
+      background: #101117;
     }
-    .hero-image {
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center 15%;
+    .hero-slide {
       position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center 20%;
       opacity: 0;
-      transition: opacity 0.8s ease-in-out;
+      transition: opacity 1s;
     }
-    .hero-image.active {
-      opacity: 1;
-    }
-    .hero-banner::after {
+    .hero-slide.active { opacity: 1; }
+    .hero-mini::after {
       content: '';
       position: absolute;
       bottom: 0;
       left: 0;
-      width: 100%;
-      height: 60%;
+      right: 0;
+      height: 55%;
       background: linear-gradient(to top, #0b0c10, transparent);
     }
 
-    /* Customized Dynamic Capsules Trending Grid */
-    .section-header {
-      margin: 18px 16px 12px;
-    }
-    .section-title-row {
+    /* section headers clean */
+    .section-head {
+      padding: 0 16px;
+      margin: 20px 0 12px;
       display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .section-title {
       font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 0.2px;
-    }
-    .title-indicator {
-      width: 3px;
-      height: 12px;
-      background: #ea4c23;
-    }
-    .trending-scroll-container {
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding: 4px 16px;
-    }
-    .trending-scroll-container::-webkit-scrollbar {
-      display: none;
-    }
-    .capsule-flex {
-      display: inline-flex;
-      gap: 10px;
-    }
-    .capsule-card {
-      width: 76px;
-      height: 195px;
-      position: relative;
-      border-radius: 38px 38px 8px 8px;
-      overflow: hidden;
-      background: #14151f;
-      border: 1px solid #1f212e;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-    .capsule-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .capsule-badge {
-      position: absolute;
-      top: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ffb800;
-      color: #0b0c10;
-      font-size: 0.6rem;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 10px;
+      font-size: 1rem;
+      border-left: 3px solid #ea4c23;
+      padding-left: 10px;
     }
 
-    /* Standard Grid Architecture */
-    .main-layout {
-      padding: 0 16px 16px;
-    }
-    .content-grid {
+    /* movie grid – standard, no oversized gaps */
+    .movie-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 12px;
+      padding: 0 16px;
     }
-    .standard-card {
+    .movie-card {
       background: #14151f;
-      border-radius: 6px;
+      border-radius: 16px;
       overflow: hidden;
-      border: 1px solid #1c1d27;
+      border: 1px solid #20212c;
       cursor: pointer;
-      position: relative;
+      transition: 0.1s;
     }
-    .poster-wrap {
+    .movie-card:active { transform: scale(0.97); }
+    .poster-area {
       position: relative;
-      width: 100%;
       aspect-ratio: 2/3;
     }
-    .standard-card img {
+    .movie-card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    .card-rating {
+    .rating-badge {
       position: absolute;
-      top: 4px;
-      left: 4px;
-      background: rgba(11, 12, 16, 0.8);
-      color: #ffb800;
+      bottom: 6px;
+      left: 6px;
+      background: rgba(0,0,0,0.6);
+      color: #ffb347;
       font-size: 0.6rem;
-      font-weight: 700;
-      padding: 2px 4px;
-      border-radius: 3px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 20px;
     }
-    .card-details {
-      padding: 6px;
-    }
-    .card-title {
+    .movie-title {
       font-size: 0.7rem;
       font-weight: 600;
-      color: #e2e8f0;
+      padding: 8px 5px;
+      text-align: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* Bottom Action Controls */
-    .pagination-trigger {
-      background: #14151f;
-      border: 1px solid #1f212e;
-      color: #ffffff;
-      padding: 10px 24px;
-      border-radius: 4px;
+    .load-more-btn {
+      background: #1f212e;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 40px;
       font-weight: 600;
-      font-size: 0.75rem;
-      margin: 20px auto;
       display: block;
+      margin: 28px auto;
       cursor: pointer;
     }
 
-    /* Exact Placement of Overlapping Telegram Trigger Button */
-    .telegram-floating-trigger {
-      position: fixed;
-      bottom: 20px;
-      left: 16px;
-      background: #2496c6;
-      color: #ffffff;
-      text-decoration: none;
-      padding: 8px 14px;
-      border-radius: 16px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      z-index: 200;
-    }
-
-    /* Core Footprint Information Area */
-    .app-footer {
+    footer {
       background: #06070a;
-      padding: 24px 16px 80px;
+      padding: 20px 16px;
       text-align: center;
       font-size: 0.65rem;
       border-top: 1px solid #14151f;
-      color: #4a4d61;
+      margin-top: 30px;
     }
-    .footer-nav {
-      margin: 6px 0;
-    }
-    .footer-nav a {
+    .footer-links a {
       color: #7e8299;
       text-decoration: none;
-      margin: 0 4px;
+      margin: 0 6px;
+      cursor: pointer;
     }
-
-    /* Desktop Responsive Adaptive Viewports */
     @media (min-width: 480px) {
-      .content-grid { grid-template-columns: repeat(4, 1fr); }
-      .hero-banner { height: 280px; }
+      .movie-grid { grid-template-columns: repeat(4,1fr); }
+      .hero-mini { height: 230px; }
     }
     @media (min-width: 768px) {
-      .content-grid { grid-template-columns: repeat(5, 1fr); gap: 12px; }
-      .hero-banner { height: 340px; }
-      .card-title { font-size: 0.75rem; }
+      .movie-grid { grid-template-columns: repeat(5,1fr); gap: 16px; }
+      .hero-mini { height: 280px; }
     }
-    @media (min-width: 1025px) {
-      .content-grid { grid-template-columns: repeat(6, 1fr); }
-      .hero-banner { height: 400px; }
+    @media (min-width: 1024px) {
+      .movie-grid { grid-template-columns: repeat(6,1fr); }
     }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="top-navbar">
-    <div class="logo-group">
-      <div class="logo">U-TV</div>
-      <div class="live-status"><i></i> LIVE: <span id="liveViewers">45,733</span></div>
+  <div class="top-flex">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span class="logo">U‑TV HUB</span>
+      <div class="live-badge">🔴 LIVE <span id="liveCount">46,732</span></div>
     </div>
-    <div class="search-wrapper">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search global hits..." onkeypress="if(event.key==='Enter') searchGlobal()">
-      <button class="search-btn" onclick="searchGlobal()">SEARCH</button>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search movies..." onkeypress="if(event.key==='Enter') triggerSearch()">
+      <button class="search-btn" onclick="triggerSearch()">GO</button>
     </div>
   </div>
-  
-  <div class="categories-scroll">
-    <div class="categories-list" id="categoryBar">
-      <button class="cat-pill active" data-cat="hindi">IN HINDI</button>
-      <button class="cat-pill" data-cat="english">US ENGLISH</button>
-      <button class="cat-pill" data-cat="punjabi">PUNJABI</button>
-      <button class="cat-pill" data-cat="south">SOUTH</button>
-      <button class="cat-pill" data-cat="movie">MOVIES</button>
-      <button class="cat-pill" data-cat="tv">WEBSERIES</button>
-    </div>
+  <div class="category-row" id="categoryContainer">
+    <div class="cat-chip active" data-cat="hindi">🇮🇳 HINDI</div>
+    <div class="cat-chip" data-cat="english">🌍 ENGLISH</div>
+    <div class="cat-chip" data-cat="punjabi">🟧 PUNJABI</div>
+    <div class="cat-chip" data-cat="south">🎭 SOUTH</div>
+    <div class="cat-chip" data-cat="movie">🎬 MOVIES</div>
+    <div class="cat-chip" data-cat="tv">📺 WEBSERIES</div>
   </div>
 </div>
 
-<div class="hero-banner" id="heroSlider"></div>
+<div class="hero-mini" id="heroContainer"></div>
 
-<div class="section-header">
-  <div class="section-title-row">
-    <div class="title-indicator"></div>
-    <span>WORLDWIDE TRENDING</span>
-  </div>
+<div class="section-head">
+  <div class="section-title">🔥 TRENDING NOW</div>
 </div>
+<div id="trendingGrid" class="movie-grid"></div>
 
-<div class="trending-scroll-container">
-  <div class="capsule-flex" id="trendingList"></div>
+<div class="section-head">
+  <div class="section-title" id="dynamicTitle">⭐ POPULAR MOVIES</div>
 </div>
+<div id="moviesGrid" class="movie-grid"></div>
+<button id="loadMoreButton" class="load-more-btn">LOAD MORE</button>
 
-<main class="main-layout">
-  <div class="section-header" style="margin: 16px 0 10px 0;">
-    <div class="section-title-row">
-      <div class="title-indicator"></div>
-      <span id="sectionTitle">POPULAR NOW</span>
-    </div>
+<footer>
+  <div class="footer-links">
+    <a id="aboutUsBtn">About</a> • <a id="dmcaBtn">DMCA</a> • <a id="disclaimerBtn">Disclaimer</a>
   </div>
-  <div id="moviesGrid" class="content-grid"></div>
-  <button id="loadMoreBtn" class="pagination-trigger">LOAD MORE</button>
-</main>
-
-<a href="https://t.me/utv_official" class="telegram-floating-trigger" target="_blank">
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-  JOIN TELEGRAM
-</a>
-
-<footer class="app-footer">
-  <div>© 2026 U-TV | Managed pattern database systems</div>
-  <div class="footer-nav">
-    <a id="dmcaLink">DMCA</a> • <a id="securityLink">Security</a> • <a id="termsLink">Terms</a>
-  </div>
-  <div>Support Desk: <a href="mailto:HELP.WOWMOVIES@GMAIL.COM" style="color: #ea4c23; text-decoration: none;">HELP.WOWMOVIES@GMAIL.COM</a></div>
+  <div>© 2026 U-TV HUB | Embedded third‑party streams</div>
+  <div style="margin-top: 6px;"><a href="mailto:HELP.WOWMOVIES@GMAIL.COM" style="color:#ea4c23;">HELP.WOWMOVIES@GMAIL.COM</a></div>
 </footer>
 
 <script>
-  const API_KEYS = ['174d0214bf933dd59b3d5ec68a0c967f', '5bf61a62fd4647aa7debed7d6f2db079'];
-  let activeKey = 0;
+  // ---------- dual TMDB key configuration ----------
+  const TMDB_KEYS = ['174d0214bf933dd59b3d5ec68a0c967f', '5bf61a62fd4647aa7debed7d6f2db079'];
+  let currentKeyIdx = 0;
   const BASE = 'https://api.themoviedb.org/3';
-  const IMG_P = 'https://image.tmdb.org/t/p/w342';
-  const IMG_B = 'https://image.tmdb.org/t/p/w780';
+  const IMG_URL = 'https://image.tmdb.org/t/p/w342';
+  const BACKDROP_URL = 'https://image.tmdb.org/t/p/w780';
 
-  let currentCat = 'hindi';
-  let page = 1;
-  let loading = false;
-  let hasMore = true;
-  let searchQuery = null;
+  let activeCategory = 'hindi';
+  let pageNumber = 1;
+  let isLoadingMore = false;
+  let endOfList = false;
+  let searchKeyword = null;
 
-  async function tmdbFetch(endpoint, params = {}) {
-    for (let tries = 0; tries < API_KEYS.length; tries++) {
-      const key = API_KEYS[activeKey];
+  async function tmdbRequest(endpoint, params = {}) {
+    for (let attempt = 0; attempt < TMDB_KEYS.length; attempt++) {
       try {
         const url = new URL(BASE + endpoint);
-        url.searchParams.append('api_key', key);
-        for (const [k, v] of Object.entries(params)) if (v) url.searchParams.append(k, v);
-        const res = await fetch(url);
-        if (!res.ok) throw new Error();
-        return await res.json();
-      } catch (err) {
-        activeKey = (activeKey + 1) % API_KEYS.length;
+        url.searchParams.append('api_key', TMDB_KEYS[currentKeyIdx]);
+        if (!params.language) url.searchParams.append('language', 'hi-IN');
+        for (let [k, val] of Object.entries(params)) if (val) url.searchParams.append(k, val);
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error('api fail');
+        return await resp.json();
+      } catch(e) {
+        currentKeyIdx = (currentKeyIdx + 1) % TMDB_KEYS.length;
       }
     }
-    throw new Error('API Error');
+    throw new Error('All TMDB keys exhausted');
   }
 
-  function getEndpoint(cat, pg) {
-    if (searchQuery) return `/search/multi?query=${encodeURIComponent(searchQuery)}&page=${pg}`;
-    const map = {
-      hindi: `/discover/movie?with_original_language=hi&sort_by=popularity.desc&page=${pg}`,
-      english: `/discover/movie?with_original_language=en&sort_by=popularity.desc&page=${pg}`,
-      punjabi: `/discover/movie?with_original_language=pa&sort_by=popularity.desc&page=${pg}`,
-      south: `/discover/movie?with_original_language=ta%2Cte%2Cml%2Ckn&sort_by=popularity.desc&page=${pg}`,
-      movie: `/movie/popular?page=${pg}`,
-      tv: `/tv/popular?page=${pg}`
+  function getEndPoint(cat, page) {
+    if (searchKeyword) return `/search/multi?query=${encodeURIComponent(searchKeyword)}&page=${page}`;
+    const routes = {
+      hindi: `/discover/movie?with_original_language=hi&sort_by=popularity.desc&page=${page}`,
+      english: `/discover/movie?with_original_language=en&sort_by=popularity.desc&page=${page}`,
+      punjabi: `/discover/movie?with_original_language=pa&sort_by=popularity.desc&page=${page}`,
+      south: `/discover/movie?with_original_language=ta%2Cte%2Cml%2Ckn&sort_by=popularity.desc&page=${page}`,
+      movie: `/movie/popular?page=${page}`,
+      tv: `/tv/popular?page=${page}`
     };
-    return map[cat] || `/movie/popular?page=${pg}`;
+    return routes[cat] || `/movie/popular?page=${page}`;
   }
 
-  function getTitle(cat) {
-    const titles = { hindi:'POPULAR IN HINDI', english:'POPULAR IN ENGLISH', punjabi:'POPULAR IN PUNJABI', south:'POPULAR IN SOUTH', movie:'POPULAR MOVIES', tv:'POPULAR WEBSERIES' };
+  function sectionTitle(cat) {
+    if (searchKeyword) return `🔍 SEARCH: ${searchKeyword}`;
+    const titles = {
+      hindi: '🇮🇳 HINDI CINEMA',
+      english: '🌍 ENGLISH TOP PICKS',
+      punjabi: 'PUNJABI HITS',
+      south: 'SOUTH SUPERSTARS',
+      movie: '🎬 POPULAR MOVIES',
+      tv: '📺 TRENDING WEBSERIES'
+    };
     return titles[cat] || 'POPULAR NOW';
   }
 
-  function escapeHtml(s) { return String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
+  function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
 
-  function createCapsule(item) {
-    const poster = item.poster_path ? IMG_P + item.poster_path : 'https://placehold.co/150x300?text=No+Image';
-    const rating = item.vote_average ? item.vote_average.toFixed(1) : '0.0';
-    return `
-      <div class="capsule-card" data-id="${item.id}" data-type="${item.media_type || 'movie'}">
-        <img src="${poster}" alt="" loading="lazy">
-        <span class="capsule-badge">${rating}</span>
-      </div>
-    `;
+  function buildMovieCard(m) {
+    const title = m.title || m.name || 'Untitled';
+    const poster = m.poster_path ? IMG_URL + m.poster_path : 'https://placehold.co/342x513?text=No+Poster';
+    const rating = m.vote_average ? m.vote_average.toFixed(1) : '0.0';
+    const media = m.media_type || (activeCategory === 'tv' ? 'tv' : 'movie');
+    return `<div class="movie-card" data-id="${m.id}" data-type="${media}">
+      <div class="poster-area"><img src="${poster}" alt="${escapeHtml(title)}" loading="lazy"><div class="rating-badge">⭐ ${rating}</div></div>
+      <div class="movie-title">${escapeHtml(title)}</div>
+    </div>`;
   }
 
-  function createCard(item) {
-    const title = item.title || item.name || 'Untitled';
-    const poster = item.poster_path ? IMG_P + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
-    const rating = item.vote_average ? item.vote_average.toFixed(1) : '0.0';
-    return `
-      <div class="standard-card" data-id="${item.id}" data-type="${item.media_type || (currentCat === 'tv' ? 'tv' : 'movie')}">
-        <div class="poster-wrap">
-          <img src="${poster}" alt="${escapeHtml(title)}" loading="lazy">
-          <span class="card-rating">${rating}</span>
-        </div>
-        <div class="card-details">
-          <div class="card-title">${escapeHtml(title)}</div>
-        </div>
-      </div>
-    `;
+  async function loadTrendingSection() {
+    try {
+      const data = await tmdbRequest('/trending/all/week', { page: 1 });
+      if (data.results) {
+        const trendItems = data.results.filter(i => i.poster_path).slice(0, 12);
+        document.getElementById('trendingGrid').innerHTML = trendItems.map(buildMovieCard).join('');
+      }
+    } catch(e) {}
   }
 
-  async function loadContent(reset = true) {
-    if (loading) return;
-    loading = true;
+  async function loadMainMovies(reset = true) {
+    if (isLoadingMore) return;
+    isLoadingMore = true;
     if (reset) {
-      page = 1;
-      document.getElementById('moviesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#4a4d61;">Loading...</div>';
-      hasMore = true;
+      pageNumber = 1;
+      endOfList = false;
+      document.getElementById('moviesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;">⏳ loading...</div>';
     }
     try {
-      const data = await tmdbFetch(getEndpoint(currentCat, page));
-      const results = data.results || [];
-      const html = results.map(createCard).join('');
+      const apiPath = getEndPoint(activeCategory, pageNumber);
+      const result = await tmdbRequest(apiPath);
+      let items = result.results || [];
+      if (activeCategory === 'south') items = items.filter(i => i.poster_path);
+      const html = items.map(buildMovieCard).join('');
       if (reset) document.getElementById('moviesGrid').innerHTML = html;
       else document.getElementById('moviesGrid').insertAdjacentHTML('beforeend', html);
-      page++;
-      hasMore = results.length > 0;
-    } catch(e) { console.error(e); }
-    loading = false;
+      pageNumber++;
+      endOfList = items.length < 18;
+    } catch(e) { console.warn(e); }
+    isLoadingMore = false;
   }
 
-  async function initHeroAndTrending() {
-    try {
-      const data = await tmdbFetch('/trending/all/day', { page: 1 });
-      if (data.results) {
-        const items = data.results.slice(0, 12);
-        
-        // Dynamic Backdrop Sliders Engine
-        const slider = document.getElementById('heroSlider');
-        slider.innerHTML = items.filter(m => m.backdrop_path).map((m, i) => `
-          <div class="hero-image ${i === 0 ? 'active' : ''}" style="background-image:url('${IMG_B + m.backdrop_path}');"></div>
-        `).join('');
-        
-        let current = 0;
-        setInterval(() => {
-          const images = document.querySelectorAll('.hero-image');
-          if(images.length > 1) {
-            images[current].classList.remove('active');
-            current = (current + 1) % images.length;
-            images[current].classList.add('active');
-          }
-        }, 4500);
-
-        // Render Dynamic Capsule Layout Configuration
-        document.getElementById('trendingList').innerHTML = items.map(createCapsule).join('');
-      }
-    } catch(e) { console.error(e); }
-  }
-
-  async function switchCategory(cat) {
-    currentCat = cat;
-    searchQuery = null;
+  async function changeCategory(cat) {
+    activeCategory = cat;
+    searchKeyword = null;
     document.getElementById('searchInput').value = '';
-    document.getElementById('sectionTitle').innerHTML = getTitle(cat);
-    await loadContent(true);
-    document.querySelectorAll('.cat-pill').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.cat === cat);
+    document.getElementById('dynamicTitle').innerText = sectionTitle(cat);
+    await loadMainMovies(true);
+    document.querySelectorAll('.cat-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.cat === cat);
     });
   }
 
-  async function searchGlobal() {
-    const q = document.getElementById('searchInput').value.trim();
-    if (!q) return;
-    searchQuery = q;
-    document.getElementById('sectionTitle').innerHTML = `SEARCH RESULTS: "${escapeHtml(q)}"`;
-    await loadContent(true);
-    document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('active'));
+  async function triggerSearch() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (!query) return;
+    searchKeyword = query;
+    activeCategory = 'movie';
+    document.getElementById('dynamicTitle').innerHTML = `🔍 SEARCH: ${escapeHtml(query)}`;
+    await loadMainMovies(true);
   }
 
-  function navigateToItem(id, type) {
-    window.location.href = '/' + type + '/' + id + '/';
+  // HERO carousel minimal
+  async function initHero() {
+    try {
+      const heroData = await tmdbRequest('/trending/movie/day', { page: 1 });
+      if (heroData.results) {
+        const slides = heroData.results.filter(s => s.backdrop_path).slice(0, 5);
+        const container = document.getElementById('heroContainer');
+        container.innerHTML = slides.map((s, idx) => `<div class="hero-slide ${idx === 0 ? 'active' : ''}" style="background-image:url('${BACKDROP_URL + s.backdrop_path}');"></div>`).join('');
+        container.insertAdjacentHTML('beforeend', '<div class="hero-gradient" style="position:absolute; bottom:0; left:0; right:0; height:50%; background:linear-gradient(to top,#0b0c10,transparent);"></div>');
+        let currentSlide = 0;
+        setInterval(() => {
+          const all = document.querySelectorAll('.hero-slide');
+          if (all.length) {
+            all[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % all.length;
+            all[currentSlide].classList.add('active');
+          }
+        }, 4800);
+      }
+    } catch(e) {}
   }
 
-  // Bind Event Interactions
-  document.getElementById('loadMoreBtn').onclick = () => { if(!loading && hasMore) loadContent(false); };
-  
-  document.getElementById('moviesGrid').addEventListener('click', (e) => {
-    const target = e.target.closest('.standard-card');
-    if(target) navigateToItem(target.dataset.id, target.dataset.type);
-  });
+  // handle navigation to movie detail page
+  function attachCardListeners() {
+    document.querySelectorAll('.movie-card').forEach(card => {
+      if (card.getAttribute('data-listener')) return;
+      card.setAttribute('data-listener', 'true');
+      card.addEventListener('click', (e) => {
+        const id = card.dataset.id;
+        if (id) window.location.href = `https://u-tv.pages.dev/movie/${id}/`;
+      });
+    });
+  }
 
-  document.getElementById('trendingList').addEventListener('click', (e) => {
-    const target = e.target.closest('.capsule-card');
-    if(target) navigateToItem(target.dataset.id, target.dataset.type);
-  });
+  const gridObserver = new MutationObserver(() => attachCardListeners());
+  gridObserver.observe(document.getElementById('moviesGrid'), { childList: true, subtree: true });
+  gridObserver.observe(document.getElementById('trendingGrid'), { childList: true, subtree: true });
 
-  document.querySelectorAll('.cat-pill').forEach(btn => {
-    btn.onclick = () => switchCategory(btn.dataset.cat);
+  document.querySelectorAll('.cat-chip').forEach(btn => {
+    btn.addEventListener('click', () => changeCategory(btn.dataset.cat));
   });
+  document.getElementById('loadMoreButton').onclick = () => { if (!isLoadingMore && !endOfList) loadMainMovies(false); };
 
+  // live viewer random
   setInterval(() => {
-    const count = Math.floor(40000 + Math.random() * 12000);
-    document.getElementById('liveViewers').innerText = count.toLocaleString();
-  }, 8000);
+    const liveSpan = document.getElementById('liveCount');
+    if (liveSpan) liveSpan.innerText = (43000 + Math.floor(Math.random() * 15000)).toLocaleString();
+  }, 7000);
 
-  // Legal Modal triggers
-  function loadLegalModal(title, msg) {
-    const m = document.createElement('div');
-    m.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(11,12,16,0.95);display:flex;align-items:center;justify-content:center;z-index:999;padding:16px;';
-    m.innerHTML = `<div style="background:#14151f;max-width:380px;width:100%;border-radius:8px;padding:20px;border:1px solid #1f212e;"><h4 style="color:#ffffff;margin-bottom:8px;">${title}</h4><p style="color:#7e8299;font-size:0.75rem;line-height:1.5;">${msg}</p><button id="closeM" style="background:#ea4c23;border:none;padding:6px 12px;color:white;border-radius:4px;margin-top:14px;cursor:pointer;width:100%;font-size:0.75rem;font-weight:700;">Close</button></div>`;
-    document.body.appendChild(m);
-    document.getElementById('closeM').onclick = () => m.remove();
+  // legal modals clean
+  function showInfoModal(title, msg) {
+    const d = document.createElement('div');
+    d.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:1000;';
+    d.innerHTML = `<div style="background:#14151f;max-width:360px;width:90%;border-radius:24px;padding:20px;"><h4 style="color:#ea4c23;margin-bottom:8px;">${title}</h4><p style="color:#cbd5e1;font-size:0.75rem;">${msg}</p><button id="closeModalBtn" style="background:#ea4c23;border:none;margin-top:16px;padding:6px 16px;border-radius:30px;color:white;cursor:pointer;">OK</button></div>`;
+    document.body.appendChild(d);
+    document.getElementById('closeModalBtn').onclick = () => d.remove();
   }
-  document.getElementById('dmcaLink').onclick = () => loadLegalModal('DMCA Notice', 'Content aggregated under third-party indexing rules.');
-  document.getElementById('securityLink').onclick = () => loadLegalModal('Security Overview', 'Secure browser end-to-end framework layers applied.');
-  document.getElementById('termsLink').onclick = () => loadLegalModal('Terms & Conditions', 'Platform visual framework template system verification.');
+  document.getElementById('aboutUsBtn').onclick = () => showInfoModal('About U-TV HUB', 'We index third-party streaming embeds. No files hosted. All metadata from TMDB.');
+  document.getElementById('dmcaBtn').onclick = () => showInfoModal('DMCA Notice', 'Respect copyright. Takedown requests: HELP.WOWMOVIES@GMAIL.COM');
+  document.getElementById('disclaimerBtn').onclick = () => showInfoModal('Disclaimer', 'Streams embedded from external sources. We are not responsible for external content.');
 
-  // Initialize Core Runtime
-  initHeroAndTrending();
-  switchCategory('hindi');
+  // initial load
+  initHero();
+  loadTrendingSection();
+  changeCategory('hindi');
+  setTimeout(attachCardListeners, 500);
 </script>
 </body>
 </html>
-
 ```
