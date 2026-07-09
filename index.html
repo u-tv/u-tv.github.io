@@ -14,7 +14,6 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://u-tv.pages.dev/">
   <meta property="og:image" content="https://u-tv.pages.dev/og-image.jpg">
-
   <meta name="google-site-verification" content="PASTE_YOUR_SEARCH_CONSOLE_CODE_HERE">
 
   <script type="application/ld+json">
@@ -47,6 +46,7 @@
     html{scroll-behavior:smooth}
     body{background:#0b0c10;color:#e2e8f0;font-family:system-ui,-apple-system,'Inter',sans-serif;overflow-x:hidden}
     a{color:inherit;text-decoration:none}
+    a:focus, button:focus, input:focus{outline:2px solid #ff9500;outline-offset:2px}
     .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .skip-link:focus{left:16px;top:16px;width:auto;height:auto;z-index:9999;background:#ff9500;color:#0b0c10;padding:10px 14px;border-radius:12px}
     .header{background:#0b0c10;padding:10px 16px;position:sticky;top:0;z-index:100;border-bottom:1px solid #1e202b}
@@ -83,6 +83,7 @@
     .contact-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
     .contact-btn{display:inline-flex;align-items:center;gap:8px;background:#ea4c23;color:#fff;text-decoration:none;padding:10px 14px;border-radius:999px;font-size:.85rem;font-weight:700}
     .ad-slot{margin:18px 16px;padding:12px;border:1px dashed #2b2f40;border-radius:16px;background:#0f1017}
+    .ad-fallback{font-size:.8rem;color:#9da0b5;text-align:center}
     .info-box{margin:24px 16px;padding:16px;border:1px solid #20212c;border-radius:18px;background:#0f1017;line-height:1.65;color:#cbd5e1}
     .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
     .info-item{background:#14151f;border:1px solid #20212c;border-radius:14px;padding:12px}
@@ -106,20 +107,21 @@
       <div class="live-badge">🔴 LIVE <span id="liveCount">46,732</span></div>
     </div>
     <div class="search-wrap" role="search" aria-label="Search movies">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search movies..." aria-label="Search movies" onkeypress="if(event.key==='Enter') triggerSearch()">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search movies..." aria-label="Search movies">
       <button class="search-btn" onclick="triggerSearch()" aria-label="Search">GO</button>
     </div>
   </div>
 
   <nav class="category-row" aria-label="Content categories">
-    <div class="cat-chip active" data-cat="hindi">🇮🇳 HINDI</div>
-    <div class="cat-chip" data-cat="english">🌍 ENGLISH</div>
-    <div class="cat-chip" data-cat="punjabi">🟧 PUNJABI</div>
-    <div class="cat-chip" data-cat="south">🎭 SOUTH</div>
-    <div class="cat-chip" data-cat="movie">🎬 MOVIES</div>
-    <div class="cat-chip" data-cat="tv">📺 WEBSERIES</div>
+    <button class="cat-chip active" data-cat="hindi" type="button">🇮🇳 HINDI</button>
+    <button class="cat-chip" data-cat="english" type="button">🌍 ENGLISH</button>
+    <button class="cat-chip" data-cat="punjabi" type="button">🟧 PUNJABI</button>
+    <button class="cat-chip" data-cat="south" type="button">🎭 SOUTH</button>
+    <button class="cat-chip" data-cat="movie" type="button">🎬 MOVIES</button>
+    <button class="cat-chip" data-cat="tv" type="button">📺 WEBSERIES</button>
   </nav>
 </header>
+
 <main id="mainContent">
   <section class="hero-mini" id="heroContainer" aria-label="Featured content"></section>
 
@@ -133,7 +135,7 @@
     <div class="section-title" id="dynamicTitle">⭐ POPULAR MOVIES</div>
   </section>
   <section id="moviesGrid" class="movie-grid" aria-label="Content grid"></section>
-  <button id="loadMoreButton" class="load-more-btn">LOAD MORE</button>
+  <button id="loadMoreButton" class="load-more-btn" type="button">LOAD MORE</button>
 
   <section class="site-pages" aria-label="Important pages">
     <a class="page-card" href="/about/"><strong>About Us</strong><span>Learn more about U-TV HUB and our platform.</span></a>
@@ -154,15 +156,18 @@
   </section>
 
   <div class="ad-slot">
-    <script src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
+    <div class="ad-fallback">Advertisement loading...</div>
+    <script src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js" async defer></script>
   </div>
 
   <div class="ad-slot">
-    <script async="async" data-cfasync="false" src="https://pl28831972.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
+    <div class="ad-fallback">Sponsored content loading...</div>
+    <script async data-cfasync="false" src="https://pl28831972.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
     <div id="container-e1fcb13904d27c4fe4e794fb5b4db78d"></div>
   </div>
 
   <div class="ad-slot">
+    <div class="ad-fallback">External sponsor link</div>
     <a class="contact-btn" href="https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0" target="_blank" rel="noopener noreferrer">Open Smart Link</a>
   </div>
 
@@ -194,7 +199,7 @@
 const TMDB_KEYS=['174d0214bf933dd59b3d5ec68a0c967f','5bf61a62fd4647aa7debed7d6f2db079'];
 let keyIndex=0, activeCategory='hindi', pageNumber=1, isLoading=false, endOfList=false, searchKeyword=null;
 const BASE='https://api.themoviedb.org/3', IMG_URL='https://image.tmdb.org/t/p/w342', BACKDROP='https://image.tmdb.org/t/p/w780';
-const escapeHtml=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
 async function tmdbRequest(endpoint, params={}){
   for(let i=0;i<TMDB_KEYS.length;i++){
@@ -202,7 +207,7 @@ async function tmdbRequest(endpoint, params={}){
       const url=new URL(BASE+endpoint);
       url.searchParams.set('api_key',TMDB_KEYS[keyIndex]);
       if(!('language' in params)) url.searchParams.set('language','en-US');
-      for(const[k,v]of Object.entries(params)) if(v!==undefined&&v!==null&&v!=='') url.searchParams.set(k,v);
+      for(const [k,v] of Object.entries(params)) if(v!==undefined&&v!==null&&v!=='') url.searchParams.set(k,v);
       const r=await fetch(url);
       if(!r.ok) throw new Error('bad');
       return await r.json();
@@ -237,17 +242,16 @@ function buildCard(m){
   const rating=m.vote_average?m.vote_average.toFixed(1):'0.0';
   let type=m.media_type||(activeCategory==='tv'?'tv':'movie');
   if(type!=='movie'&&type!=='tv') type='movie';
-  return `<div class="movie-card" data-id="${m.id}" data-type="${type}"><div class="poster-area"><img src="${poster}" alt="${escapeHtml(title)}" loading="lazy"><div class="rating-badge">⭐ ${rating}</div></div><div class="movie-title">${escapeHtml(title)}</div></div>`;
+  return `<div class="movie-card" data-id="${m.id}" data-type="${type}" tabindex="0" role="link" aria-label="${esc(title)}"><div class="poster-area"><img src="${poster}" alt="${esc(title)}" loading="lazy"><div class="rating-badge">⭐ ${rating}</div></div><div class="movie-title">${esc(title)}</div></div>`;
 }
 
 function attachListeners(){
   document.querySelectorAll('.movie-card').forEach(card=>{
     if(card.dataset.listener) return;
     card.dataset.listener='1';
-    card.addEventListener('click',()=>{
-      const id=card.dataset.id, type=card.dataset.type||'movie';
-      if(id) location.href=`https://u-tv.pages.dev/${type}/${id}/`;
-    });
+    const go=()=>{ const id=card.dataset.id, type=card.dataset.type||'movie'; if(id) location.href=`https://u-tv.pages.dev/${type}/${id}/`; };
+    card.addEventListener('click', go);
+    card.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') go(); });
   });
 }
 
@@ -325,6 +329,7 @@ async function initHero(){
 
 document.querySelectorAll('.cat-chip').forEach(btn=>btn.addEventListener('click',()=>changeCategory(btn.dataset.cat)));
 document.getElementById('loadMoreButton').onclick=()=>{ if(!isLoading&&!endOfList) loadMain(false); };
+document.getElementById('searchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') triggerSearch(); });
 
 setInterval(()=>{
   const el=document.getElementById('liveCount');
