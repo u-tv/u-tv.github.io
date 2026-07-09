@@ -1,470 +1,339 @@
-```html
 <!DOCTYPE html>
-<html lang="hi-IN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>U-TV HUB – Free Movies, Web Series, Trailers</title>
-  <meta name="description" content="Stream free movies, web series, trailers. Hindi, English, Punjabi, South. Clean ultra‑fast interface.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0b0c10">
-  <link rel="preconnect" href="https://api.themoviedb.org">
-  <link rel="preconnect" href="https://image.tmdb.org">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="U-TV HUB provides fast movie, web series, and trailer discovery with search, categories, trending content, business details, and easy contact access.">
+  <meta name="keywords" content="U-TV HUB, movies, web series, trailers, Hindi, English, Punjabi, South, contact, about, DMCA, disclaimer">
+  <link rel="canonical" href="https://u-tv.pages.dev/">
+  <title>U-TV HUB | Movies, Web Series, Trailers & Contact</title>
+  <meta property="og:title" content="U-TV HUB | Movies, Web Series, Trailers & Contact">
+  <meta property="og:description" content="Fast movie and web series discovery with clear pages, business details, and easy contact options.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://u-tv.pages.dev/">
+  <meta property="og:image" content="https://u-tv.pages.dev/og-image.jpg">
+
+  <meta name="google-site-verification" content="PASTE_YOUR_SEARCH_CONSOLE_CODE_HERE">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "U-TV HUB",
+    "url": "https://u-tv.pages.dev/",
+    "description": "U-TV HUB provides fast movie, web series, trailer discovery with search and categories.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://u-tv.pages.dev/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "U-TV HUB",
+    "url": "https://u-tv.pages.dev/",
+    "email": "help.wowmovies@gmail.com"
+  }
+  </script>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body {
-      background: #0b0c10;
-      color: #e2e8f0;
-      font-family: system-ui, -apple-system, 'Inter', sans-serif;
-      overflow-x: hidden;
-    }
-    /* clean header – no extra decorative gaps */
-    .header {
-      background: #0b0c10;
-      padding: 10px 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid #1e202b;
-    }
-    .top-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff, #ea4c23);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-    .live-badge {
-      background: rgba(234,76,35,0.15);
-      border-radius: 30px;
-      padding: 4px 10px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: #ea4c23;
-    }
-    .search-wrap {
-      display: flex;
-      background: #14151f;
-      border-radius: 40px;
-      border: 1px solid #262838;
-      overflow: hidden;
-    }
-    .search-input {
-      background: transparent;
-      border: none;
-      padding: 8px 12px;
-      color: white;
-      font-size: 0.75rem;
-      outline: none;
-      width: 180px;
-    }
-    .search-btn {
-      background: #ea4c23;
-      border: none;
-      padding: 0 14px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.7rem;
-    }
-    .category-row {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      padding-bottom: 6px;
-    }
-    .cat-chip {
-      background: #14151f;
-      border: 1px solid #1f212e;
-      border-radius: 30px;
-      padding: 5px 14px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #9da0b5;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-    .cat-chip.active {
-      background: #ff9500;
-      color: #0b0c10;
-      border-color: #ff9500;
-    }
-
-    /* hero banner - minimalist no extra overlap */
-    .hero-mini {
-      margin: 12px 16px;
-      border-radius: 24px;
-      height: 180px;
-      position: relative;
-      overflow: hidden;
-      background: #101117;
-    }
-    .hero-slide {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center 20%;
-      opacity: 0;
-      transition: opacity 1s;
-    }
-    .hero-slide.active { opacity: 1; }
-    .hero-mini::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 55%;
-      background: linear-gradient(to top, #0b0c10, transparent);
-    }
-
-    /* section headers clean */
-    .section-head {
-      padding: 0 16px;
-      margin: 20px 0 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-    .section-title {
-      font-weight: 800;
-      font-size: 1rem;
-      border-left: 3px solid #ea4c23;
-      padding-left: 10px;
-    }
-
-    /* movie grid – standard, no oversized gaps */
-    .movie-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      padding: 0 16px;
-    }
-    .movie-card {
-      background: #14151f;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid #20212c;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-    .movie-card:active { transform: scale(0.97); }
-    .poster-area {
-      position: relative;
-      aspect-ratio: 2/3;
-    }
-    .movie-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .rating-badge {
-      position: absolute;
-      bottom: 6px;
-      left: 6px;
-      background: rgba(0,0,0,0.6);
-      color: #ffb347;
-      font-size: 0.6rem;
-      font-weight: bold;
-      padding: 2px 6px;
-      border-radius: 20px;
-    }
-    .movie-title {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 8px 5px;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .load-more-btn {
-      background: #1f212e;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 40px;
-      font-weight: 600;
-      display: block;
-      margin: 28px auto;
-      cursor: pointer;
-    }
-
-    footer {
-      background: #06070a;
-      padding: 20px 16px;
-      text-align: center;
-      font-size: 0.65rem;
-      border-top: 1px solid #14151f;
-      margin-top: 30px;
-    }
-    .footer-links a {
-      color: #7e8299;
-      text-decoration: none;
-      margin: 0 6px;
-      cursor: pointer;
-    }
-    @media (min-width: 480px) {
-      .movie-grid { grid-template-columns: repeat(4,1fr); }
-      .hero-mini { height: 230px; }
-    }
-    @media (min-width: 768px) {
-      .movie-grid { grid-template-columns: repeat(5,1fr); gap: 16px; }
-      .hero-mini { height: 280px; }
-    }
-    @media (min-width: 1024px) {
-      .movie-grid { grid-template-columns: repeat(6,1fr); }
-    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{background:#0b0c10;color:#e2e8f0;font-family:system-ui,-apple-system,'Inter',sans-serif;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip-link:focus{left:16px;top:16px;width:auto;height:auto;z-index:9999;background:#ff9500;color:#0b0c10;padding:10px 14px;border-radius:12px}
+    .header{background:#0b0c10;padding:10px 16px;position:sticky;top:0;z-index:100;border-bottom:1px solid #1e202b}
+    .top-flex{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+    .logo{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#fff,#ea4c23);background-clip:text;-webkit-background-clip:text;color:transparent;cursor:pointer}
+    .live-badge{background:rgba(234,76,35,.15);border-radius:30px;padding:4px 10px;font-size:.65rem;font-weight:700;color:#ea4c23}
+    .search-wrap{display:flex;background:#14151f;border-radius:40px;border:1px solid #262838;overflow:hidden}
+    .search-input{background:transparent;border:none;padding:8px 12px;color:white;font-size:.75rem;outline:none;width:180px}
+    .search-btn{background:#ea4c23;border:none;padding:0 14px;color:white;font-weight:600;cursor:pointer;font-size:.7rem}
+    .category-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;padding-bottom:6px}
+    .category-row::-webkit-scrollbar{display:none}
+    .cat-chip{background:#14151f;border:1px solid #1f212e;border-radius:30px;padding:5px 14px;font-size:.7rem;font-weight:600;color:#9da0b5;white-space:nowrap;cursor:pointer;transition:all .2s}
+    .cat-chip.active{background:#ff9500;color:#0b0c10;border-color:#ff9500}
+    .hero-mini{margin:12px 16px;border-radius:24px;height:180px;position:relative;overflow:hidden;background:#101117}
+    .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center 20%;opacity:0;transition:opacity 1s}
+    .hero-slide.active{opacity:1}
+    .hero-mini::after{content:'';position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,#0b0c10,transparent)}
+    .section-head{padding:0 16px;margin:20px 0 12px;display:flex;justify-content:space-between;align-items:baseline}
+    .section-title{font-weight:800;font-size:1rem;border-left:3px solid #ea4c23;padding-left:10px}
+    .movie-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 16px}
+    .movie-card{background:#14151f;border-radius:16px;overflow:hidden;border:1px solid #20212c;cursor:pointer;transition:.1s}
+    .movie-card:active{transform:scale(.97)}
+    .poster-area{position:relative;aspect-ratio:2/3}
+    .movie-card img{width:100%;height:100%;object-fit:cover}
+    .rating-badge{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.6);color:#ffb347;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:20px}
+    .movie-title{font-size:.7rem;font-weight:600;padding:8px 5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .load-more-btn{background:#1f212e;border:none;color:white;padding:10px 20px;border-radius:40px;font-weight:600;display:block;margin:28px auto;cursor:pointer}
+    .site-pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;padding:0 16px;margin-top:12px}
+    .page-card{background:#14151f;border:1px solid #20212c;border-radius:16px;padding:14px;text-decoration:none;display:block}
+    .page-card strong{display:block;margin-bottom:6px;color:#fff}
+    .page-card span{font-size:.8rem;color:#9da0b5;line-height:1.5}
+    .contact-box{margin:24px 16px;padding:16px;border:1px solid #20212c;border-radius:18px;background:#0f1017}
+    .contact-box h2,.info-box h2{font-size:1rem;margin-bottom:10px}
+    .contact-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .contact-btn{display:inline-flex;align-items:center;gap:8px;background:#ea4c23;color:#fff;text-decoration:none;padding:10px 14px;border-radius:999px;font-size:.85rem;font-weight:700}
+    .ad-slot{margin:18px 16px;padding:12px;border:1px dashed #2b2f40;border-radius:16px;background:#0f1017}
+    .info-box{margin:24px 16px;padding:16px;border:1px solid #20212c;border-radius:18px;background:#0f1017;line-height:1.65;color:#cbd5e1}
+    .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+    .info-item{background:#14151f;border:1px solid #20212c;border-radius:14px;padding:12px}
+    .info-item strong{display:block;color:#fff;margin-bottom:6px}
+    footer{background:#06070a;padding:20px 16px;text-align:center;font-size:.75rem;border-top:1px solid #14151f;margin-top:30px}
+    .footer-links a{color:#7e8299;text-decoration:none;margin:0 6px;cursor:pointer}
+    .footer-note{color:#9da0b5;max-width:880px;margin:10px auto 0;line-height:1.6}
+    .section-link{color:#ffb347;text-decoration:none;font-size:.8rem}
+    @media(min-width:480px){.movie-grid{grid-template-columns:repeat(4,1fr)}.hero-mini{height:230px}}
+    @media(min-width:768px){.movie-grid{grid-template-columns:repeat(5,1fr);gap:16px}.hero-mini{height:280px}}
+    @media(min-width:1024px){.movie-grid{grid-template-columns:repeat(6,1fr)}}
   </style>
 </head>
 <body>
+<a class="skip-link" href="#mainContent">Skip to main content</a>
 
-<div class="header">
+<header class="header">
   <div class="top-flex">
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <span class="logo">U‑TV HUB</span>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="logo" onclick="changeCategory('hindi')">U‑TV HUB</span>
       <div class="live-badge">🔴 LIVE <span id="liveCount">46,732</span></div>
     </div>
-    <div class="search-wrap">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search movies..." onkeypress="if(event.key==='Enter') triggerSearch()">
-      <button class="search-btn" onclick="triggerSearch()">GO</button>
+    <div class="search-wrap" role="search" aria-label="Search movies">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search movies..." aria-label="Search movies" onkeypress="if(event.key==='Enter') triggerSearch()">
+      <button class="search-btn" onclick="triggerSearch()" aria-label="Search">GO</button>
     </div>
   </div>
-  <div class="category-row" id="categoryContainer">
+
+  <nav class="category-row" aria-label="Content categories">
     <div class="cat-chip active" data-cat="hindi">🇮🇳 HINDI</div>
     <div class="cat-chip" data-cat="english">🌍 ENGLISH</div>
     <div class="cat-chip" data-cat="punjabi">🟧 PUNJABI</div>
     <div class="cat-chip" data-cat="south">🎭 SOUTH</div>
     <div class="cat-chip" data-cat="movie">🎬 MOVIES</div>
     <div class="cat-chip" data-cat="tv">📺 WEBSERIES</div>
+  </nav>
+</header>
+<main id="mainContent">
+  <section class="hero-mini" id="heroContainer" aria-label="Featured content"></section>
+
+  <section class="section-head">
+    <div class="section-title">🔥 TRENDING NOW</div>
+    <a href="#contentGrid" class="section-link">View more</a>
+  </section>
+  <section id="trendingGrid" class="movie-grid" aria-label="Trending content"></section>
+
+  <section class="section-head" id="contentGrid">
+    <div class="section-title" id="dynamicTitle">⭐ POPULAR MOVIES</div>
+  </section>
+  <section id="moviesGrid" class="movie-grid" aria-label="Content grid"></section>
+  <button id="loadMoreButton" class="load-more-btn">LOAD MORE</button>
+
+  <section class="site-pages" aria-label="Important pages">
+    <a class="page-card" href="/about/"><strong>About Us</strong><span>Learn more about U-TV HUB and our platform.</span></a>
+    <a class="page-card" href="/dmca/"><strong>DMCA Policy</strong><span>Read our content removal and copyright policy.</span></a>
+    <a class="page-card" href="/disclaimer/"><strong>Disclaimer</strong><span>Important legal notices regarding third-party content.</span></a>
+    <a class="page-card" href="/contact/"><strong>Contact</strong><span>Get in touch with our team for help and requests.</span></a>
+    <a class="page-card" href="/privacy/"><strong>Privacy Policy</strong><span>How we handle data and cookies.</span></a>
+    <a class="page-card" href="/terms/"><strong>Terms of Use</strong><span>Rules for using this website.</span></a>
+  </section>
+
+  <section class="contact-box" id="contactSection">
+    <h2>📬 Contact Support</h2>
+    <p>Have issues or queries? Reach out to us via our official support channel.</p>
+    <div class="contact-list">
+      <a href="mailto:help.wowmovies@gmail.com" class="contact-btn">Email: help.wowmovies@gmail.com</a>
+      <a href="tel:+910000000000" class="contact-btn">Phone: +91 00000 00000</a>
+    </div>
+  </section>
+
+  <div class="ad-slot">
+    <script src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
   </div>
-</div>
 
-<div class="hero-mini" id="heroContainer"></div>
+  <div class="ad-slot">
+    <script async="async" data-cfasync="false" src="https://pl28831972.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
+    <div id="container-e1fcb13904d27c4fe4e794fb5b4db78d"></div>
+  </div>
 
-<div class="section-head">
-  <div class="section-title">🔥 TRENDING NOW</div>
-</div>
-<div id="trendingGrid" class="movie-grid"></div>
+  <div class="ad-slot">
+    <a class="contact-btn" href="https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0" target="_blank" rel="noopener noreferrer">Open Smart Link</a>
+  </div>
 
-<div class="section-head">
-  <div class="section-title" id="dynamicTitle">⭐ POPULAR MOVIES</div>
-</div>
-<div id="moviesGrid" class="movie-grid"></div>
-<button id="loadMoreButton" class="load-more-btn">LOAD MORE</button>
+  <section class="info-box" id="businessInfo">
+    <h2>Business Details</h2>
+    <div class="info-grid">
+      <div class="info-item"><strong>Business Name</strong>U-TV HUB</div>
+      <div class="info-item"><strong>Email</strong><a href="mailto:help.wowmovies@gmail.com">help.wowmovies@gmail.com</a></div>
+      <div class="info-item"><strong>Website</strong><a href="https://u-tv.pages.dev/">u-tv.pages.dev</a></div>
+      <div class="info-item"><strong>Support</strong>Fast reply by email for support and site requests.</div>
+    </div>
+  </section>
+</main>
 
 <footer>
   <div class="footer-links">
-    <a id="aboutUsBtn">About</a> • <a id="dmcaBtn">DMCA</a> • <a id="disclaimerBtn">Disclaimer</a>
+    <a href="/">Home</a> |
+    <a href="/about/">About Us</a> |
+    <a href="/dmca/">DMCA</a> |
+    <a href="/disclaimer/">Disclaimer</a> |
+    <a href="/contact/">Contact</a> |
+    <a href="/privacy/">Privacy</a> |
+    <a href="/terms/">Terms</a>
   </div>
-  <div>© 2026 U-TV HUB | Embedded third‑party streams</div>
-  <div style="margin-top: 6px;"><a href="mailto:HELP.WOWMOVIES@GMAIL.COM" style="color:#ea4c23;">HELP.WOWMOVIES@GMAIL.COM</a></div>
+  <p class="footer-note">© 2026 U-TV HUB | Embedded third-party streams. All rights reserved.</p>
 </footer>
 
 <script>
-  // ---------- dual TMDB key configuration ----------
-  const TMDB_KEYS = ['174d0214bf933dd59b3d5ec68a0c967f', '5bf61a62fd4647aa7debed7d6f2db079'];
-  let currentKeyIdx = 0;
-  const BASE = 'https://api.themoviedb.org/3';
-  const IMG_URL = 'https://image.tmdb.org/t/p/w342';
-  const BACKDROP_URL = 'https://image.tmdb.org/t/p/w780';
+const TMDB_KEYS=['174d0214bf933dd59b3d5ec68a0c967f','5bf61a62fd4647aa7debed7d6f2db079'];
+let keyIndex=0, activeCategory='hindi', pageNumber=1, isLoading=false, endOfList=false, searchKeyword=null;
+const BASE='https://api.themoviedb.org/3', IMG_URL='https://image.tmdb.org/t/p/w342', BACKDROP='https://image.tmdb.org/t/p/w780';
+const escapeHtml=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-  let activeCategory = 'hindi';
-  let pageNumber = 1;
-  let isLoadingMore = false;
-  let endOfList = false;
-  let searchKeyword = null;
-
-  async function tmdbRequest(endpoint, params = {}) {
-    for (let attempt = 0; attempt < TMDB_KEYS.length; attempt++) {
-      try {
-        const url = new URL(BASE + endpoint);
-        url.searchParams.append('api_key', TMDB_KEYS[currentKeyIdx]);
-        if (!params.language) url.searchParams.append('language', 'hi-IN');
-        for (let [k, val] of Object.entries(params)) if (val) url.searchParams.append(k, val);
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error('api fail');
-        return await resp.json();
-      } catch(e) {
-        currentKeyIdx = (currentKeyIdx + 1) % TMDB_KEYS.length;
-      }
+async function tmdbRequest(endpoint, params={}){
+  for(let i=0;i<TMDB_KEYS.length;i++){
+    try{
+      const url=new URL(BASE+endpoint);
+      url.searchParams.set('api_key',TMDB_KEYS[keyIndex]);
+      if(!('language' in params)) url.searchParams.set('language','en-US');
+      for(const[k,v]of Object.entries(params)) if(v!==undefined&&v!==null&&v!=='') url.searchParams.set(k,v);
+      const r=await fetch(url);
+      if(!r.ok) throw new Error('bad');
+      return await r.json();
+    }catch(e){
+      keyIndex=(keyIndex+1)%TMDB_KEYS.length;
     }
-    throw new Error('All TMDB keys exhausted');
   }
+  throw new Error('TMDB failed');
+}
 
-  function getEndPoint(cat, page) {
-    if (searchKeyword) return `/search/multi?query=${encodeURIComponent(searchKeyword)}&page=${page}`;
-    const routes = {
-      hindi: `/discover/movie?with_original_language=hi&sort_by=popularity.desc&page=${page}`,
-      english: `/discover/movie?with_original_language=en&sort_by=popularity.desc&page=${page}`,
-      punjabi: `/discover/movie?with_original_language=pa&sort_by=popularity.desc&page=${page}`,
-      south: `/discover/movie?with_original_language=ta%2Cte%2Cml%2Ckn&sort_by=popularity.desc&page=${page}`,
-      movie: `/movie/popular?page=${page}`,
-      tv: `/tv/popular?page=${page}`
-    };
-    return routes[cat] || `/movie/popular?page=${page}`;
-  }
+function getEndpoint(cat,page){
+  if(searchKeyword) return `/search/multi?query=${encodeURIComponent(searchKeyword)}&page=${page}&include_adult=false`;
+  const r={
+    hindi:`/discover/movie?with_original_language=hi&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    english:`/discover/movie?with_original_language=en&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    punjabi:`/discover/movie?with_original_language=pa&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    south:`/discover/movie?with_original_language=ta|te|ml|kn&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    movie:`/movie/popular?page=${page}`,
+    tv:`/tv/popular?page=${page}`
+  };
+  return r[cat]||r.movie;
+}
 
-  function sectionTitle(cat) {
-    if (searchKeyword) return `🔍 SEARCH: ${searchKeyword}`;
-    const titles = {
-      hindi: '🇮🇳 HINDI CINEMA',
-      english: '🌍 ENGLISH TOP PICKS',
-      punjabi: 'PUNJABI HITS',
-      south: 'SOUTH SUPERSTARS',
-      movie: '🎬 POPULAR MOVIES',
-      tv: '📺 TRENDING WEBSERIES'
-    };
-    return titles[cat] || 'POPULAR NOW';
-  }
+function sectionTitle(cat){
+  if(searchKeyword) return `🔍 SEARCH: ${searchKeyword}`;
+  return {hindi:'🇮🇳 HINDI CINEMA',english:'🌍 ENGLISH TOP PICKS',punjabi:'PUNJABI HITS',south:'SOUTH SUPERSTARS',movie:'🎬 POPULAR MOVIES',tv:'📺 TRENDING WEBSERIES'}[cat]||'POPULAR NOW';
+}
 
-  function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
+function buildCard(m){
+  const title=m.title||m.name||'Untitled';
+  const poster=m.poster_path?IMG_URL+m.poster_path:'https://placehold.co/342x513?text=No+Poster';
+  const rating=m.vote_average?m.vote_average.toFixed(1):'0.0';
+  let type=m.media_type||(activeCategory==='tv'?'tv':'movie');
+  if(type!=='movie'&&type!=='tv') type='movie';
+  return `<div class="movie-card" data-id="${m.id}" data-type="${type}"><div class="poster-area"><img src="${poster}" alt="${escapeHtml(title)}" loading="lazy"><div class="rating-badge">⭐ ${rating}</div></div><div class="movie-title">${escapeHtml(title)}</div></div>`;
+}
 
-  function buildMovieCard(m) {
-    const title = m.title || m.name || 'Untitled';
-    const poster = m.poster_path ? IMG_URL + m.poster_path : 'https://placehold.co/342x513?text=No+Poster';
-    const rating = m.vote_average ? m.vote_average.toFixed(1) : '0.0';
-    const media = m.media_type || (activeCategory === 'tv' ? 'tv' : 'movie');
-    return `<div class="movie-card" data-id="${m.id}" data-type="${media}">
-      <div class="poster-area"><img src="${poster}" alt="${escapeHtml(title)}" loading="lazy"><div class="rating-badge">⭐ ${rating}</div></div>
-      <div class="movie-title">${escapeHtml(title)}</div>
-    </div>`;
-  }
-
-  async function loadTrendingSection() {
-    try {
-      const data = await tmdbRequest('/trending/all/week', { page: 1 });
-      if (data.results) {
-        const trendItems = data.results.filter(i => i.poster_path).slice(0, 12);
-        document.getElementById('trendingGrid').innerHTML = trendItems.map(buildMovieCard).join('');
-      }
-    } catch(e) {}
-  }
-
-  async function loadMainMovies(reset = true) {
-    if (isLoadingMore) return;
-    isLoadingMore = true;
-    if (reset) {
-      pageNumber = 1;
-      endOfList = false;
-      document.getElementById('moviesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;">⏳ loading...</div>';
-    }
-    try {
-      const apiPath = getEndPoint(activeCategory, pageNumber);
-      const result = await tmdbRequest(apiPath);
-      let items = result.results || [];
-      if (activeCategory === 'south') items = items.filter(i => i.poster_path);
-      const html = items.map(buildMovieCard).join('');
-      if (reset) document.getElementById('moviesGrid').innerHTML = html;
-      else document.getElementById('moviesGrid').insertAdjacentHTML('beforeend', html);
-      pageNumber++;
-      endOfList = items.length < 18;
-    } catch(e) { console.warn(e); }
-    isLoadingMore = false;
-  }
-
-  async function changeCategory(cat) {
-    activeCategory = cat;
-    searchKeyword = null;
-    document.getElementById('searchInput').value = '';
-    document.getElementById('dynamicTitle').innerText = sectionTitle(cat);
-    await loadMainMovies(true);
-    document.querySelectorAll('.cat-chip').forEach(chip => {
-      chip.classList.toggle('active', chip.dataset.cat === cat);
+function attachListeners(){
+  document.querySelectorAll('.movie-card').forEach(card=>{
+    if(card.dataset.listener) return;
+    card.dataset.listener='1';
+    card.addEventListener('click',()=>{
+      const id=card.dataset.id, type=card.dataset.type||'movie';
+      if(id) location.href=`https://u-tv.pages.dev/${type}/${id}/`;
     });
-  }
-
-  async function triggerSearch() {
-    const query = document.getElementById('searchInput').value.trim();
-    if (!query) return;
-    searchKeyword = query;
-    activeCategory = 'movie';
-    document.getElementById('dynamicTitle').innerHTML = `🔍 SEARCH: ${escapeHtml(query)}`;
-    await loadMainMovies(true);
-  }
-
-  // HERO carousel minimal
-  async function initHero() {
-    try {
-      const heroData = await tmdbRequest('/trending/movie/day', { page: 1 });
-      if (heroData.results) {
-        const slides = heroData.results.filter(s => s.backdrop_path).slice(0, 5);
-        const container = document.getElementById('heroContainer');
-        container.innerHTML = slides.map((s, idx) => `<div class="hero-slide ${idx === 0 ? 'active' : ''}" style="background-image:url('${BACKDROP_URL + s.backdrop_path}');"></div>`).join('');
-        container.insertAdjacentHTML('beforeend', '<div class="hero-gradient" style="position:absolute; bottom:0; left:0; right:0; height:50%; background:linear-gradient(to top,#0b0c10,transparent);"></div>');
-        let currentSlide = 0;
-        setInterval(() => {
-          const all = document.querySelectorAll('.hero-slide');
-          if (all.length) {
-            all[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % all.length;
-            all[currentSlide].classList.add('active');
-          }
-        }, 4800);
-      }
-    } catch(e) {}
-  }
-
-  // handle navigation to movie detail page
-  function attachCardListeners() {
-    document.querySelectorAll('.movie-card').forEach(card => {
-      if (card.getAttribute('data-listener')) return;
-      card.setAttribute('data-listener', 'true');
-      card.addEventListener('click', (e) => {
-        const id = card.dataset.id;
-        if (id) window.location.href = `https://u-tv.pages.dev/movie/${id}/`;
-      });
-    });
-  }
-
-  const gridObserver = new MutationObserver(() => attachCardListeners());
-  gridObserver.observe(document.getElementById('moviesGrid'), { childList: true, subtree: true });
-  gridObserver.observe(document.getElementById('trendingGrid'), { childList: true, subtree: true });
-
-  document.querySelectorAll('.cat-chip').forEach(btn => {
-    btn.addEventListener('click', () => changeCategory(btn.dataset.cat));
   });
-  document.getElementById('loadMoreButton').onclick = () => { if (!isLoadingMore && !endOfList) loadMainMovies(false); };
+}
 
-  // live viewer random
-  setInterval(() => {
-    const liveSpan = document.getElementById('liveCount');
-    if (liveSpan) liveSpan.innerText = (43000 + Math.floor(Math.random() * 15000)).toLocaleString();
-  }, 7000);
-
-  // legal modals clean
-  function showInfoModal(title, msg) {
-    const d = document.createElement('div');
-    d.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:1000;';
-    d.innerHTML = `<div style="background:#14151f;max-width:360px;width:90%;border-radius:24px;padding:20px;"><h4 style="color:#ea4c23;margin-bottom:8px;">${title}</h4><p style="color:#cbd5e1;font-size:0.75rem;">${msg}</p><button id="closeModalBtn" style="background:#ea4c23;border:none;margin-top:16px;padding:6px 16px;border-radius:30px;color:white;cursor:pointer;">OK</button></div>`;
-    document.body.appendChild(d);
-    document.getElementById('closeModalBtn').onclick = () => d.remove();
+async function loadTrending(){
+  try{
+    const data=await tmdbRequest('/trending/all/week',{page:1});
+    const items=(data.results||[]).filter(i=>i.poster_path).slice(0,12);
+    document.getElementById('trendingGrid').innerHTML=items.map(buildCard).join('');
+    attachListeners();
+  }catch(e){
+    document.getElementById('trendingGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;">Trending load failed</div>';
   }
-  document.getElementById('aboutUsBtn').onclick = () => showInfoModal('About U-TV HUB', 'We index third-party streaming embeds. No files hosted. All metadata from TMDB.');
-  document.getElementById('dmcaBtn').onclick = () => showInfoModal('DMCA Notice', 'Respect copyright. Takedown requests: HELP.WOWMOVIES@GMAIL.COM');
-  document.getElementById('disclaimerBtn').onclick = () => showInfoModal('Disclaimer', 'Streams embedded from external sources. We are not responsible for external content.');
+}
 
-  // initial load
-  initHero();
-  loadTrendingSection();
-  changeCategory('hindi');
-  setTimeout(attachCardListeners, 500);
+async function loadMain(reset=true){
+  if(isLoading) return;
+  isLoading=true;
+  if(reset){
+    pageNumber=1;
+    endOfList=false;
+    document.getElementById('moviesGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;">⏳ loading...</div>';
+  }
+  try{
+    const res=await tmdbRequest(getEndpoint(activeCategory,pageNumber));
+    let items=res.results||[];
+    if(activeCategory==='south'&&!searchKeyword) items=items.filter(i=>i.poster_path);
+    const html=items.map(buildCard).join('');
+    if(reset) document.getElementById('moviesGrid').innerHTML=html;
+    else document.getElementById('moviesGrid').insertAdjacentHTML('beforeend',html);
+    pageNumber++;
+    endOfList=items.length<18;
+    document.getElementById('loadMoreButton').style.display=endOfList?'none':'block';
+    attachListeners();
+  }catch(e){
+    document.getElementById('moviesGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;">Failed to load content</div>';
+  }
+  isLoading=false;
+}
+
+async function changeCategory(cat){
+  activeCategory=cat;
+  searchKeyword=null;
+  document.getElementById('searchInput').value='';
+  document.getElementById('dynamicTitle').innerText=sectionTitle(cat);
+  document.querySelectorAll('.cat-chip').forEach(ch=>ch.classList.toggle('active',ch.dataset.cat===cat));
+  await loadMain(true);
+}
+
+async function triggerSearch(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(!q) return;
+  searchKeyword=q;
+  activeCategory='movie';
+  document.querySelectorAll('.cat-chip').forEach(ch=>ch.classList.remove('active'));
+  document.getElementById('dynamicTitle').innerText=sectionTitle('movie');
+  await loadMain(true);
+}
+
+async function initHero(){
+  try{
+    const data=await tmdbRequest('/trending/movie/day',{page:1});
+    const slides=(data.results||[]).filter(s=>s.backdrop_path).slice(0,5);
+    const container=document.getElementById('heroContainer');
+    container.innerHTML=slides.map((s,i)=>`<div class="hero-slide ${i===0?'active':''}" style="background-image:url('${BACKDROP+s.backdrop_path}')"></div>`).join('');
+    setInterval(()=>{
+      const all=document.querySelectorAll('.hero-slide');
+      if(!all.length) return;
+      let current=[...all].findIndex(x=>x.classList.contains('active'));
+      all[current].classList.remove('active');
+      current=(current+1)%all.length;
+      all[current].classList.add('active');
+    },4800);
+  }catch(e){}
+}
+
+document.querySelectorAll('.cat-chip').forEach(btn=>btn.addEventListener('click',()=>changeCategory(btn.dataset.cat)));
+document.getElementById('loadMoreButton').onclick=()=>{ if(!isLoading&&!endOfList) loadMain(false); };
+
+setInterval(()=>{
+  const el=document.getElementById('liveCount');
+  if(el) el.innerText=(43000+Math.floor(Math.random()*15000)).toLocaleString();
+},7000);
+
+initHero();
+loadTrending();
+changeCategory('hindi');
 </script>
 </body>
 </html>
-```
