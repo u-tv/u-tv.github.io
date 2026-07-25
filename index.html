@@ -32,30 +32,6 @@
     <link rel="preconnect" href="https://pl28831952.effectivegatecpm.com">
     <link rel="dns-prefetch" href="https://pl28831952.effectivegatecpm.com">
 
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "U-TV HUB",
-            "url": "https://u-tv.pages.dev/",
-            "description": "U-TV HUB provides fast movie, web series, trailer discovery with search and categories.",
-            "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://u-tv.pages.dev/?q={search_term_string}",
-                "query-input": "required name=search_term_string"
-            }
-        }
-    </script>
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "U-TV HUB",
-            "url": "https://u-tv.pages.dev/",
-            "email": "help.wowmovies@gmail.com"
-        }
-    </script>
-
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -218,48 +194,71 @@
             background: #ff6b3d
         }
 
-        /* ===== CATEGORY ROW - MOBILE FRIENDLY HORIZONTAL SCROLL ===== */
+        /* ===== CATEGORY ROW - 3 LINES, BOLD, 3D COLORFUL ===== */
         .category-row {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 8px;
-            overflow-x: auto;
-            padding: 4px 2px 10px 2px;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x proximity;
-        }
-        .category-row::-webkit-scrollbar {
-            display: none
+            padding: 10px 4px;
+            margin: 0 -4px;
         }
         .cat-chip {
-            background: #14151f;
-            border: 1px solid #1f212e;
-            border-radius: 30px;
-            padding: 6px 16px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #9da0b5;
+            background: linear-gradient(145deg, #1e202b, #14151f);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #e2e8f0;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
             font-family: inherit;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             flex-shrink: 0;
-            scroll-snap-align: start;
         }
+        .cat-chip .emoji {
+            font-size: 0.9rem;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+        }
+        /* 3D hover effect */
         .cat-chip:hover {
-            background: #1f212e;
-            color: #fff
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(234, 76, 35, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            background: linear-gradient(145deg, #2a2d3e, #1a1c2a);
         }
+        /* Active (Booster Mode) — colorful glow */
         .cat-chip.active {
-            background: #ff9500;
-            color: #0b0c10;
-            border-color: #ff9500
+            background: linear-gradient(135deg, #ff6b35, #ea4c23);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(234, 76, 35, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: scale(1.04);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         }
-        /* Mobile extra touch */
+        .cat-chip.active .emoji {
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
+        }
+        /* Responsive: smaller font on mobile, but still full names */
         @media(max-width:480px) {
             .cat-chip {
                 font-size: 0.6rem;
-                padding: 4px 12px;
+                padding: 5px 12px;
+            }
+            .cat-chip .emoji {
+                font-size: 0.75rem;
+            }
+        }
+        @media(max-width:380px) {
+            .cat-chip {
+                font-size: 0.55rem;
+                padding: 4px 10px;
             }
         }
 
@@ -653,30 +652,30 @@
             </div>
         </div>
 
-        <!-- ===== EXACT 22 CATEGORIES (as per your image) ===== -->
+        <!-- ===== EXACT 22 CATEGORIES – 3 LINES, BOLD, 3D, FULL NAMES ===== -->
         <nav class="category-row" aria-label="Content categories" id="categoryRow">
-            <button class="cat-chip active" data-cat="hindi" type="button">🇮🇳 HINDI</button>
-            <button class="cat-chip" data-cat="english" type="button">🌍 ENGLISH</button>
-            <button class="cat-chip" data-cat="punjabi" type="button">🟧 PUNJABI</button>
-            <button class="cat-chip" data-cat="south" type="button">🎭 SOUTH</button>
-            <button class="cat-chip" data-cat="movie" type="button">🎬 MOVIES</button>
-            <button class="cat-chip" data-cat="tv" type="button">📺 WEBSERIES</button>
-            <button class="cat-chip" data-cat="bollywood" type="button">🇮🇳 BOLLYWOOD</button>
-            <button class="cat-chip" data-cat="hollywood" type="button">🇺🇸 HOLLYWOOD</button>
-            <button class="cat-chip" data-cat="animation" type="button">🎨 ANIMATION</button>
-            <button class="cat-chip" data-cat="action" type="button">⚔️ ACTION</button>
-            <button class="cat-chip" data-cat="comedy" type="button">😂 COMEDY</button>
-            <button class="cat-chip" data-cat="horror" type="button">👻 HORROR</button>
-            <button class="cat-chip" data-cat="romance" type="button">❤️ ROMANCE</button>
-            <button class="cat-chip" data-cat="thriller" type="button">🔪 THRILLER</button>
-            <button class="cat-chip" data-cat="documentary" type="button">📽️ DOCUMENTARY</button>
-            <button class="cat-chip" data-cat="war" type="button">⚔️ WAR</button>
-            <button class="cat-chip" data-cat="adventure" type="button">🏔️ ADVENTURE</button>
-            <button class="cat-chip" data-cat="scifi" type="button">🚀 SCI-FI</button>
-            <button class="cat-chip" data-cat="fantasy" type="button">🧙 FANTASY</button>
-            <button class="cat-chip" data-cat="mystery" type="button">🔍 MYSTERY</button>
-            <button class="cat-chip" data-cat="drama" type="button">🎭 DRAMA</button>
-            <button class="cat-chip" data-cat="crime" type="button">🚔 CRIME</button>
+            <button class="cat-chip active" data-cat="hindi" type="button"><span class="emoji">🇮🇳</span> HINDI</button>
+            <button class="cat-chip" data-cat="english" type="button"><span class="emoji">🌍</span> ENGLISH</button>
+            <button class="cat-chip" data-cat="punjabi" type="button"><span class="emoji">🟧</span> PUNJABI</button>
+            <button class="cat-chip" data-cat="south" type="button"><span class="emoji">🎭</span> SOUTH</button>
+            <button class="cat-chip" data-cat="movie" type="button"><span class="emoji">🎬</span> MOVIES</button>
+            <button class="cat-chip" data-cat="tv" type="button"><span class="emoji">📺</span> WEBSERIES</button>
+            <button class="cat-chip" data-cat="bollywood" type="button"><span class="emoji">🇮🇳</span> BOLLYWOOD</button>
+            <button class="cat-chip" data-cat="hollywood" type="button"><span class="emoji">🇺🇸</span> HOLLYWOOD</button>
+            <button class="cat-chip" data-cat="animation" type="button"><span class="emoji">🎨</span> ANIMATION</button>
+            <button class="cat-chip" data-cat="action" type="button"><span class="emoji">⚔️</span> ACTION</button>
+            <button class="cat-chip" data-cat="comedy" type="button"><span class="emoji">😂</span> COMEDY</button>
+            <button class="cat-chip" data-cat="horror" type="button"><span class="emoji">👻</span> HORROR</button>
+            <button class="cat-chip" data-cat="romance" type="button"><span class="emoji">❤️</span> ROMANCE</button>
+            <button class="cat-chip" data-cat="thriller" type="button"><span class="emoji">🔪</span> THRILLER</button>
+            <button class="cat-chip" data-cat="documentary" type="button"><span class="emoji">📽️</span> DOCUMENTARY</button>
+            <button class="cat-chip" data-cat="war" type="button"><span class="emoji">⚔️</span> WAR</button>
+            <button class="cat-chip" data-cat="adventure" type="button"><span class="emoji">🏔️</span> ADVENTURE</button>
+            <button class="cat-chip" data-cat="scifi" type="button"><span class="emoji">🚀</span> SCI-FI</button>
+            <button class="cat-chip" data-cat="fantasy" type="button"><span class="emoji">🧙</span> FANTASY</button>
+            <button class="cat-chip" data-cat="mystery" type="button"><span class="emoji">🔍</span> MYSTERY</button>
+            <button class="cat-chip" data-cat="drama" type="button"><span class="emoji">🎭</span> DRAMA</button>
+            <button class="cat-chip" data-cat="crime" type="button"><span class="emoji">🚔</span> CRIME</button>
         </nav>
     </header>
 
@@ -1057,7 +1056,7 @@
         console.log('📊 TMDB API connected');
         console.log('✅ Google Verification Added');
         console.log('💰 All Ads Active');
-        console.log('📋 22 Categories Loaded (as per image)');
+        console.log('📋 22 Categories (3 lines, bold, 3D colorful)');
     </script>
 
 </body>
