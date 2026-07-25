@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="hi-IN">
 <head>
@@ -219,14 +218,15 @@
             background: #ff6b3d
         }
 
-        /* ===== CATEGORY ROW ===== */
+        /* ===== CATEGORY ROW - MOBILE FRIENDLY HORIZONTAL SCROLL ===== */
         .category-row {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 6px;
+            padding: 4px 2px 10px 2px;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
         }
         .category-row::-webkit-scrollbar {
             display: none
@@ -235,8 +235,8 @@
             background: #14151f;
             border: 1px solid #1f212e;
             border-radius: 30px;
-            padding: 5px 14px;
-            font-size: 0.65rem;
+            padding: 6px 16px;
+            font-size: 0.7rem;
             font-weight: 600;
             color: #9da0b5;
             white-space: nowrap;
@@ -244,6 +244,7 @@
             transition: all 0.2s;
             font-family: inherit;
             flex-shrink: 0;
+            scroll-snap-align: start;
         }
         .cat-chip:hover {
             background: #1f212e;
@@ -254,8 +255,12 @@
             color: #0b0c10;
             border-color: #ff9500
         }
-        .cat-chip .emoji {
-            margin-right: 4px;
+        /* Mobile extra touch */
+        @media(max-width:480px) {
+            .cat-chip {
+                font-size: 0.6rem;
+                padding: 4px 12px;
+            }
         }
 
         /* ===== HERO ===== */
@@ -593,10 +598,6 @@
             .logo {
                 font-size: 1.3rem
             }
-            .cat-chip {
-                font-size: 0.6rem;
-                padding: 4px 10px;
-            }
         }
         @media(max-width:400px) {
             .movie-grid {
@@ -652,30 +653,30 @@
             </div>
         </div>
 
-        <!-- ===== FULL CATEGORY ROW (exactly as in image) ===== -->
+        <!-- ===== EXACT 22 CATEGORIES (as per your image) ===== -->
         <nav class="category-row" aria-label="Content categories" id="categoryRow">
-            <button class="cat-chip active" data-cat="hindi" type="button" aria-label="Hindi movies">🇮🇳 HINDI</button>
-            <button class="cat-chip" data-cat="english" type="button" aria-label="English movies">🌍 ENGLISH</button>
-            <button class="cat-chip" data-cat="punjabi" type="button" aria-label="Punjabi movies">🟧 PUNJABI</button>
-            <button class="cat-chip" data-cat="south" type="button" aria-label="South Indian movies">🎭 SOUTH</button>
-            <button class="cat-chip" data-cat="movie" type="button" aria-label="All movies">🎬 MOVIES</button>
-            <button class="cat-chip" data-cat="tv" type="button" aria-label="TV shows and web series">📺 WEBSERIES</button>
-            <button class="cat-chip" data-cat="bollywood" type="button" aria-label="Bollywood movies">🇮🇳 BOLLYWOOD</button>
-            <button class="cat-chip" data-cat="hollywood" type="button" aria-label="Hollywood movies">🇺🇸 HOLLYWOOD</button>
-            <button class="cat-chip" data-cat="animation" type="button" aria-label="Animation movies">🎨 ANIMATION</button>
-            <button class="cat-chip" data-cat="action" type="button" aria-label="Action movies">⚔️ ACTION</button>
-            <button class="cat-chip" data-cat="comedy" type="button" aria-label="Comedy movies">😂 COMEDY</button>
-            <button class="cat-chip" data-cat="horror" type="button" aria-label="Horror movies">👻 HORROR</button>
-            <button class="cat-chip" data-cat="romance" type="button" aria-label="Romance movies">❤️ ROMANCE</button>
-            <button class="cat-chip" data-cat="thriller" type="button" aria-label="Thriller movies">🔪 THRILLER</button>
-            <button class="cat-chip" data-cat="documentary" type="button" aria-label="Documentary movies">📽️ DOCUMENTARY</button>
-            <button class="cat-chip" data-cat="war" type="button" aria-label="War movies">⚔️ WAR</button>
-            <button class="cat-chip" data-cat="adventure" type="button" aria-label="Adventure movies">🏔️ ADVENTURE</button>
-            <button class="cat-chip" data-cat="scifi" type="button" aria-label="Sci-Fi movies">🚀 SCI-FI</button>
-            <button class="cat-chip" data-cat="fantasy" type="button" aria-label="Fantasy movies">🧙 FANTASY</button>
-            <button class="cat-chip" data-cat="mystery" type="button" aria-label="Mystery movies">🔍 MYSTERY</button>
-            <button class="cat-chip" data-cat="drama" type="button" aria-label="Drama movies">🎭 DRAMA</button>
-            <button class="cat-chip" data-cat="crime" type="button" aria-label="Crime movies">🚔 CRIME</button>
+            <button class="cat-chip active" data-cat="hindi" type="button">🇮🇳 HINDI</button>
+            <button class="cat-chip" data-cat="english" type="button">🌍 ENGLISH</button>
+            <button class="cat-chip" data-cat="punjabi" type="button">🟧 PUNJABI</button>
+            <button class="cat-chip" data-cat="south" type="button">🎭 SOUTH</button>
+            <button class="cat-chip" data-cat="movie" type="button">🎬 MOVIES</button>
+            <button class="cat-chip" data-cat="tv" type="button">📺 WEBSERIES</button>
+            <button class="cat-chip" data-cat="bollywood" type="button">🇮🇳 BOLLYWOOD</button>
+            <button class="cat-chip" data-cat="hollywood" type="button">🇺🇸 HOLLYWOOD</button>
+            <button class="cat-chip" data-cat="animation" type="button">🎨 ANIMATION</button>
+            <button class="cat-chip" data-cat="action" type="button">⚔️ ACTION</button>
+            <button class="cat-chip" data-cat="comedy" type="button">😂 COMEDY</button>
+            <button class="cat-chip" data-cat="horror" type="button">👻 HORROR</button>
+            <button class="cat-chip" data-cat="romance" type="button">❤️ ROMANCE</button>
+            <button class="cat-chip" data-cat="thriller" type="button">🔪 THRILLER</button>
+            <button class="cat-chip" data-cat="documentary" type="button">📽️ DOCUMENTARY</button>
+            <button class="cat-chip" data-cat="war" type="button">⚔️ WAR</button>
+            <button class="cat-chip" data-cat="adventure" type="button">🏔️ ADVENTURE</button>
+            <button class="cat-chip" data-cat="scifi" type="button">🚀 SCI-FI</button>
+            <button class="cat-chip" data-cat="fantasy" type="button">🧙 FANTASY</button>
+            <button class="cat-chip" data-cat="mystery" type="button">🔍 MYSTERY</button>
+            <button class="cat-chip" data-cat="drama" type="button">🎭 DRAMA</button>
+            <button class="cat-chip" data-cat="crime" type="button">🚔 CRIME</button>
         </nav>
     </header>
 
@@ -799,7 +800,7 @@
                 // Type-based
                 movie: `/movie/popular?page=${page}`,
                 tv: `/tv/popular?page=${page}`,
-                // Genre-based (TMDB genre IDs)
+                // Genre-based
                 action: `/discover/movie?with_genres=28&sort_by=popularity.desc&include_adult=false&page=${page}`,
                 comedy: `/discover/movie?with_genres=35&sort_by=popularity.desc&include_adult=false&page=${page}`,
                 horror: `/discover/movie?with_genres=27&sort_by=popularity.desc&include_adult=false&page=${page}`,
@@ -875,19 +876,21 @@
         }
 
         // ============================================================
-        // BUILD CARD
+        // BUILD CARD (with referrerpolicy fix)
         // ============================================================
-        function buildCard(m) {
+        function buildCard(m, index) {
             const title = m.title || m.name || 'Untitled';
             const poster = m.poster_path ? IMG_URL + m.poster_path :
                 'https://placehold.co/342x513/14151f/ea4c23?text=No+Poster';
             const rating = m.vote_average ? m.vote_average.toFixed(1) : '0.0';
             let type = m.media_type || (activeCategory === 'tv' ? 'tv' : 'movie');
             if (type !== 'movie' && type !== 'tv') type = 'movie';
+            const fetchPriority = index < 6 ? 'fetchpriority="high"' : '';
             return `
                 <div class="movie-card" data-id="${m.id}" data-type="${type}" tabindex="0" role="listitem" aria-label="${esc(title)}">
                     <div class="poster-area">
-                        <img src="${poster}" alt="${esc(title)} movie poster" loading="lazy" width="342" height="513">
+                        <img src="${poster}" alt="${esc(title)} movie poster" loading="lazy" width="342" height="513" 
+                             referrerpolicy="no-referrer" crossorigin="anonymous" ${fetchPriority}>
                         <div class="rating-badge" aria-hidden="true">⭐ ${rating}</div>
                     </div>
                     <div class="movie-title">${esc(title)}</div>
@@ -922,7 +925,7 @@
             try {
                 const data = await tmdbRequest('/trending/all/week', { page: 1 });
                 const items = (data.results || []).filter(i => i.poster_path).slice(0, 12);
-                document.getElementById('trendingGrid').innerHTML = items.map(buildCard).join('');
+                document.getElementById('trendingGrid').innerHTML = items.map((m, i) => buildCard(m, i)).join('');
                 attachListeners();
             } catch (e) {
                 document.getElementById('trendingGrid').innerHTML =
@@ -945,14 +948,12 @@
             try {
                 const res = await tmdbRequest(getEndpoint(activeCategory, pageNumber));
                 let items = res.results || [];
-                // For south, filter to only those with poster (TMDB sometimes returns without)
-                if (activeCategory === 'south' && !searchKeyword) items = items.filter(i => i.poster_path);
-                // For genre-based categories, filter to ensure poster exists
-                const genreCats = ['action', 'comedy', 'horror', 'romance', 'thriller', 'documentary', 'war', 'adventure',
-                    'scifi', 'fantasy', 'mystery', 'drama', 'crime', 'animation'
+                // Filter for categories that may return items without poster
+                const filterCats = ['south', 'action', 'comedy', 'horror', 'romance', 'thriller', 'documentary', 'war',
+                    'adventure', 'scifi', 'fantasy', 'mystery', 'drama', 'crime', 'animation'
                 ];
-                if (genreCats.includes(activeCategory) && !searchKeyword) items = items.filter(i => i.poster_path);
-                const html = items.map(buildCard).join('');
+                if (filterCats.includes(activeCategory) && !searchKeyword) items = items.filter(i => i.poster_path);
+                const html = items.map((m, i) => buildCard(m, i + (reset ? 0 : pageNumber * 6))).join('');
                 if (reset) document.getElementById('moviesGrid').innerHTML = html;
                 else document.getElementById('moviesGrid').insertAdjacentHTML('beforeend', html);
                 pageNumber++;
@@ -1061,4 +1062,3 @@
 
 </body>
 </html>
-```
